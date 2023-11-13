@@ -1,4 +1,4 @@
-# .NET MVC Web app, Azure SQL
+# DevEx Day Contoso University app
 
 ## Introduction
 
