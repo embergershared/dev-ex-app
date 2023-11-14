@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = "";
@@ -27,6 +27,7 @@ builder.Services.AddDbContext<ContosoUniversityAPIContext>(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration);
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
@@ -36,10 +37,19 @@ await using (var scope = app.Services.CreateAsyncScope())
     await DbInitializer.Initialize(db);
 }
 
-//if (env.IsDevelopment())
-//{
-//    app.UseDeveloperExceptionPage();
-//}
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    app.UseExceptionHandler("/Error");
+
+    // The default HSTS value is 30 days.
+    // You may want to change this for production scenarios,
+    // see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
 
 app.UseHttpsRedirection();
 
@@ -51,6 +61,8 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
+
+app.UseHealthChecks("/healthz");
 
 // Register the Swagger generator and the Swagger UI middlewares
 app.UseOpenApi();
