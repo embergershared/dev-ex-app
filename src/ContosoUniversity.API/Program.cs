@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 #region Application Builder
 var builder = WebApplication.CreateBuilder(args);
 
+// ReSharper disable once RedundantAssignment
 var connectionString = string.Empty;
 if (builder.Configuration["AZURE_KEY_VAULT_ENDPOINT"] != null)
 {
