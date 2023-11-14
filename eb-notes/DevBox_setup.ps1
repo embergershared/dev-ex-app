@@ -4,7 +4,7 @@ $repoName = "dev-ex-app"
 $visualStudioPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv.exe"
 $repoPath = "$folderPath\$repoName"
 $solutionFilePath = "$repoPath\src\ContosoUniversity.sln"
-$webApiSettingsPath = "$repoPath\src\ContosoUniversity.API\appsettings.json"
+$webApiSettingsPath = "$repoPath\src\ContosoUniversity.API\appsettings.Development.json"
 
 # Create the GitHub organization folder
 if (!(Test-Path $folderPath)) { New-Item -Path $folderPath -ItemType Directory -Force }
@@ -31,7 +31,7 @@ docker run `
   mcr.microsoft.com/mssql/server:2022-latest
 
 # Update Web API connection string with SQL server sa account password
-((Get-Content -path $webApiSettingsPath -Raw) -replace '<pwd>', [pscredential]::new('user', $pw).GetNetworkCredential().Password) | Set-Content -Path $webApiSettingsPath
+((Get-Content -path $webApiSettingsPath -Raw) -replace 'ContosoUniversityAPIContextValue', "Server=localhost,1433; Database=ContosoUniversity; User Id=sa; Password=$([pscredential]::new('user', $pw).GetNetworkCredential().Password);MultipleActiveResultSets=true;TrustServerCertificate=true;") | Set-Content -Path $webApiSettingsPath
 
 # Launch Visual Studio
 Start-Process -FilePath $visualStudioPath -ArgumentList $solutionFilePath
