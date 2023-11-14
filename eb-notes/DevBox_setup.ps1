@@ -34,7 +34,7 @@ docker run `
 
 # Update Web API connection string with SQL server sa account password
 git update-index --assume-unchanged $webApiDevSettingsFile # revert with: git update-index --no-assume-unchanged $webApiDevSettingsFile
-((Get-Content -path $webApiDevSettingsPath -Raw) -replace 'ContosoUniversityAPIContextDevValue', "Server=localhost,1433; Database=ContosoUniversity; User Id=sa; Password=$([pscredential]::new('user', $pw).GetNetworkCredential().Password);MultipleActiveResultSets=true;TrustServerCertificate=true;") | Set-Content -Path $webApiDevSettingsPath
+((Get-Content -path $webApiDevSettingsPath -Raw) -replace 'ContosoUniversityAPIContextDevValue', "Server=localhost,1433;Database=ContosoUniversity;User Id=sa;Password=$([pscredential]::new('user', $pw).GetNetworkCredential().Password);MultipleActiveResultSets=true;TrustServerCertificate=true;") | Set-Content -Path $webApiDevSettingsPath
 
 # Launch Visual Studio
 Start-Process -FilePath $visualStudioPath -ArgumentList $solutionFilePath
