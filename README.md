@@ -11,7 +11,11 @@
 - Added with the following changes & improvements:
 
   - GitHub Actions using OIDC to authenticate and interact with Azure,
-  - GitHub Actions Workflow () uses publish to Application Service (WebApp and WebAPI) with Basic Authentication OFF,
+  - GitHub Actions Workflow used to publish to Application Service (WebApp and WebAPI) with Basic Authentication OFF,
+
+Notes:
+
+  - The code comes with `CodeUITest` and `Test` projects that were neither `used` nor `tested` for the DevEx day. They are provided "AS-IS".
 
 ## Tech stack
 
