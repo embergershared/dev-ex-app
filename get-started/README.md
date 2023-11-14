@@ -1,12 +1,45 @@
 # New developer setup
 
-## Hello!
+## Overview
 
+As a new developer in the Contoso University app team, you are given access to a DevBox environment pre-configured to speed up your on-boarding.
 
-## Get started
+The process to get started is:
 
-To get started, once connected to your DevBox, execute the script below in a Terminal.
-It will:
+1. Access the DevBox environment
+2. Log in with your account
+3. Create a DevBox machine (can take up to 45 minutes)
+4. Configure the Contoso University app on your DevBox
+5. Develop, debug, etc.,
+6. Turn the DevBox off.
+
+## DevBox access
+
+The DevBox machine is running in Azure. It can be accessed with:
+
+- either [the DevBox web portal](https://devportal.microsoft.com/),
+- or the remote desktop client:
+  - [For Windows](https://learn.microsoft.com/en-us/azure/dev-box/tutorial-connect-to-dev-box-with-remote-desktop-app?tabs=windows#tabpanel_1_windows),
+  - [For Non-Windows](https://learn.microsoft.com/en-us/azure/dev-box/tutorial-connect-to-dev-box-with-remote-desktop-app?tabs=windows#tabpanel_1_non-Windows).
+
+## Log in with your work account
+
+In both cases, you need to authenticate with your work microsoft account.
+
+## Create a DevBox
+
+Once logged-in, you can create a new DevBox by:
+
+1. Do this
+2. then that
+
+> Note: The portal will also show your existing DevBox(es). In that, case, skip the rest of these instructions (they should be done already).
+
+## Get and Start the Contoso University app
+
+To get started, once connected to your DevBox, execute the script [`get-started/get-start-local-app.ps1`](/get-started/get-start-local-app.ps1) in a PowerShell terminal.
+
+This script will:
 
 - Clone the application code on the DevBox,
 - Log you in in Azure (use the same account used to log in your DexBox),
@@ -16,47 +49,3 @@ It will:
 - Wire the settings in the application for it to run right-away,
 - Launch Visual Studio on our App solution.
 
-Use this PowerShell script:
-
-```powershell
-# Set script values
-$folderPath = "$HOME\source\repos\github\embergershared"
-$repoName = "dev-ex-app"
-$visualStudioPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv.exe"
-$repoPath = "$folderPath\$repoName"
-$solutionFilePath = "$repoPath\src\ContosoUniversity.sln"
-$webApiDevSettingsFile = "src\ContosoUniversity.API\appsettings.Development.json"
-$webApiDevSettingsPath = "$repoPath\$webApiDevSettingsFile"
-
-# Create the GitHub organization folder
-if (!(Test-Path $folderPath)) { New-Item -Path $folderPath -ItemType Directory -Force }
-Set-Location -Path $folderPath
-
-# Clone the project repo
-git clone https://github.com/embergershared/$repoName.git
-Set-Location $repoPath
-
-# Connect to Azure
-az login
-
-# Set git user name & email (using Azure AD)
-git config --global user.name "$(az ad signed-in-user show --query 'displayName' -o tsv)"
-git config --global user.email "$(az ad signed-in-user show --query 'userPrincipalName' -o tsv)"
-
-# Create a SQL Server container for development
-docker pull mcr.microsoft.com/mssql/server:2022-latest
-$pw = Read-Host "SQL container SA account password to use: " -AsSecureString
-docker run `
-  -e "ACCEPT_EULA=Y" `
-  -e "MSSQL_SA_PASSWORD=$([pscredential]::new('user',$pw).GetNetworkCredential().Password)" `
-  -p 1433:1433 --name local-sql --hostname sql `
-  -d `
-  mcr.microsoft.com/mssql/server:2022-latest
-
-# Update Web API connection string with SQL server sa account password
-git update-index --assume-unchanged $webApiDevSettingsFile # revert with: git update-index --no-assume-unchanged $webApiDevSettingsFile
-((Get-Content -path $webApiDevSettingsPath -Raw) -replace 'ContosoUniversityAPIContextDevValue', "Server=localhost,1433;Database=ContosoUniversity;User Id=sa;Password=$([pscredential]::new('user', $pw).GetNetworkCredential().Password);MultipleActiveResultSets=true;TrustServerCertificate=true;") | Set-Content -Path $webApiDevSettingsPath
-
-# Launch Visual Studio
-Start-Process -FilePath $visualStudioPath -ArgumentList $solutionFilePath
-```
