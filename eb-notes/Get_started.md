@@ -16,8 +16,8 @@ It will:
 - Wire the settings in the application for it to run right-away,
 - Launch Visual Studio on our App solution.
 
-
 Use this PowerShell script:
+
 ```powershell
 # Set script values
 $folderPath = "$HOME\source\repos\github\embergershared"
@@ -27,21 +27,21 @@ $repoPath = "$folderPath\$repoName"
 $solutionFilePath = "$repoPath\src\ContosoUniversity.sln"
 $webApiSettingsPath = "$repoPath\src\ContosoUniversity.API\appsettings.json"
 
-# Create the organization repos folder
+# Create the GitHub organization folder
 if (!(Test-Path $folderPath)) { New-Item -Path $folderPath -ItemType Directory -Force }
 Set-Location -Path $folderPath
 
-# clone the project repo
+# Clone the project repo
 git clone https://github.com/embergershared/$repoName.git
 
-# Connect to Azure AD
+# Connect to Azure
 az login
 
-# Set git user name & email (from Azure AD)
+# Set git user name & email (using Azure AD)
 git config --global user.name "$(az ad signed-in-user show --query 'displayName' -o tsv)"
 git config --global user.email "$(az ad signed-in-user show --query 'userPrincipalName' -o tsv)"
 
-# Create a SQL Server container to start development
+# Create a SQL Server container for development
 docker pull mcr.microsoft.com/mssql/server:2022-latest
 $pw = Read-Host "SQL container SA account password to use: " -AsSecureString
 docker run `
@@ -51,9 +51,9 @@ docker run `
    -d `
    mcr.microsoft.com/mssql/server:2022-latest
 
-# Update Web API connection string
+# Update Web API connection string with SQL server sa account password
 ((Get-Content -path $webApiSettingsPath -Raw) -replace '<pwd>', [pscredential]::new('user',$pw).GetNetworkCredential().Password) | Set-Content -Path $webApiSettingsPath
 
-# launch Visual Studio
+# Launch Visual Studio
 Start-Process -FilePath $visualStudioPath -ArgumentList $solutionFilePath
 ```
