@@ -47,8 +47,11 @@ The script clones the application repo on the DevBox machine.
 
 ## Use the local app setup script
 
-- in the locally cloned repository, go in the folder:
-- execute the script:
+- from the same prompt, execute the command:
+
+```powershell
+.\get-started\start-local-app.ps1
+```
 
 The script:
 
