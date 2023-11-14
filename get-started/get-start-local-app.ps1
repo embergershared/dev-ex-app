@@ -1,20 +1,21 @@
 # Set script values
-$folderPath = "$HOME\source\repos\github\embergershared"
+$orgName = "embergershared"
 $repoName = "dev-ex-app"
-$repoPath = "$folderPath\$repoName"
 
-$solutionFilePath = "$repoPath\src\ContosoUniversity.sln"
+$folderPath = "$HOME\source\repos\github\$orgName"
+$repoPath = "$folderPath\$repoName"
 $webApiDevSettingsFile = "src\ContosoUniversity.API\appsettings.Development.json"
 $webApiDevSettingsPath = "$repoPath\$webApiDevSettingsFile"
+$solutionFilePath = "$repoPath\src\ContosoUniversity.sln"
 $visualStudioPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv.exe"
 
 
-# # Create the GitHub organization folder
-# if (!(Test-Path $folderPath)) { New-Item -Path $folderPath -ItemType Directory -Force }
-# Set-Location -Path $folderPath
+# Create the GitHub organization folder
+if (!(Test-Path $folderPath)) { New-Item -Path $folderPath -ItemType Directory -Force }
+Set-Location -Path $folderPath
 
-# # Clone the project repo
-# git clone https://github.com/embergershared/$repoName.git
+# Clone the project repo
+git clone https://github.com/$orgName/$repoName.git
 Set-Location $repoPath
 
 # Connect to Azure
