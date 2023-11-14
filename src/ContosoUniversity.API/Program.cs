@@ -7,8 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
+#region Application Builder
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = "";
+
+var connectionString = string.Empty;
 if (builder.Configuration["AZURE_KEY_VAULT_ENDPOINT"] != null)
 {
     var credential = new DefaultAzureCredential();
@@ -26,20 +28,21 @@ builder.Services.AddDbContext<ContosoUniversityAPIContext>(options =>
 });
 
 builder.Services.AddControllers();
+
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration);
+
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();
+#endregion
 
-await using (var scope = app.Services.CreateAsyncScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<ContosoUniversityAPIContext>();
-    await DbInitializer.Initialize(db);
-}
-
+#region Application Middlewares and Run
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+    await using var scope = app.Services.CreateAsyncScope();
+    var db = scope.ServiceProvider.GetRequiredService<ContosoUniversityAPIContext>();
+    await DbInitializer.Initialize(db);
 }
 else
 {
@@ -64,8 +67,9 @@ app.UseEndpoints(endpoints =>
 
 app.UseHealthChecks("/healthz");
 
-// Register the Swagger generator and the Swagger UI middlewares
+// Register the Swagger generator and the Swagger UI middleware
 app.UseOpenApi();
 app.UseSwaggerUi3();
 
 app.Run();
+#endregion
