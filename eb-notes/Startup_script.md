@@ -5,7 +5,19 @@
 
 ## Get started
 
-Here is a PowerShell script that will get you started with our WebApp (runs as Admin to set the environment variable):
+To get started, once connected to your DevBox, execute the script below in a Terminal.
+It will:
+
+- Clone the application code on the DevBox,
+- Log you in in Azure (use the same account used to log in your DexBox),
+- Generate basics `git` settings for your commits,
+- Ask you to define a SQL Server administrator account,
+- Create a Microsoft SQL Server 2022 container for your dev database,
+- Wire the settings in the application for it to run right-away,
+- Launch Visual Studio on our App solution.
+
+
+Use this PowerShell script:
 ```powershell
 # Set script values
 $folderPath = "$HOME\source\repos\github\embergershared"
