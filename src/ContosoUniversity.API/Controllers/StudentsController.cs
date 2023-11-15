@@ -22,7 +22,7 @@ namespace ContosoUniversity.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetStudent(int? page)
         {
-            var students = _context.Student
+            var students = _context.Students
                 .Include(s => s.StudentCourse)
                 .ThenInclude(s => s.Course)
                 .AsNoTracking();
@@ -69,7 +69,7 @@ namespace ContosoUniversity.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var students = await _context.Student
+            var students = await _context.Students
                 .Include(s => s.StudentCourse)
                 .ThenInclude(s => s.Course)
                 .AsNoTracking()
@@ -111,7 +111,7 @@ namespace ContosoUniversity.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var student = await _context.Student
+            var student = await _context.Students
                 .Include(s => s.StudentCourse)
                 .ThenInclude(s => s.Course)
                 .AsNoTracking()
@@ -186,7 +186,7 @@ namespace ContosoUniversity.API.Controllers
                     return BadRequest(ModelState);
                 }
                 
-                _context.Student.Add(student);
+                _context.Students.Add(student);
                 await _context.SaveChangesAsync();
 
                 return CreatedAtAction("GetStudent", new { id = student.ID }, student);
@@ -206,13 +206,13 @@ namespace ContosoUniversity.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var student = await _context.Student.FindAsync(id);
+            var student = await _context.Students.FindAsync(id);
             if (student == null)
             {
                 return NotFound();
             }
 
-            _context.Student.Remove(student);
+            _context.Students.Remove(student);
             await _context.SaveChangesAsync();
 
             return Ok(student);
@@ -220,7 +220,7 @@ namespace ContosoUniversity.API.Controllers
 
         private bool StudentExists(int id)
         {
-            return _context.Student.Any(e => e.ID == id);
+            return _context.Students.Any(e => e.ID == id);
         }
     }
 }
