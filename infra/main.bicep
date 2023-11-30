@@ -13,13 +13,14 @@ param location string
 // "resourceGroupName": {
 //      "value": "myGroupName"
 // }
+param resourceGroupName string = ''
+
 param apiServiceName string = ''
 param applicationInsightsDashboardName string = ''
 param applicationInsightsName string = ''
 param appServicePlanName string = ''
 param keyVaultName string = ''
 param logAnalyticsName string = ''
-param resourceGroupName string = ''
 param sqlServerName string = ''
 param sqlDatabaseName string = ''
 param webServiceName string = ''
@@ -36,11 +37,12 @@ param sqlAdminPassword string
 param appUserPassword string
 
 var abbrs = loadJsonContent('./abbreviations.json')
-var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
+// var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
+var resourceToken = '${environmentName}-01'
 var tags = { 'azd-env-name': environmentName }
 
-// 'Telemetry is by default enabled. The software may collect information about you and your use of the software and send it to Microsoft. Microsoft may use this information to provide services and improve our products and services.
-var enableTelemetry = false
+// // 'Telemetry is by default enabled. The software may collect information about you and your use of the software and send it to Microsoft. Microsoft may use this information to provide services and improve our products and services.
+// var enableTelemetry = false
 
 // Organize resources in a resource group
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
@@ -155,6 +157,7 @@ module loadtest './app/loadtest.bicep' = {
   }
 }
 
+/*
 //  Telemetry Deployment
 @description('Enable usage and telemetry feedback to Microsoft.')
 var telemetryId = '69ef933a-eff0-450b-8a46-331cf62e160f-NETWEB-${location}'
@@ -171,6 +174,7 @@ resource telemetrydeployment 'Microsoft.Resources/deployments@2021-04-01' = if (
     }
   }
 }
+*/
 
 // Data outputs
 output AZURE_SQL_CONNECTION_STRING_KEY string = sqlServer.outputs.connectionStringKey
