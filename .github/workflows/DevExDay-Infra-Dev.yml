@@ -1,4 +1,4 @@
-name: DevExDay-Infra-DevEnv
+name: DevExDay-Infra
 
 on:
   # Automatic trigger
@@ -25,7 +25,7 @@ env:
 
 jobs:
   infra:
-    name: 'Deploy Infrastructure'
+    name: 'Deploy Infra with bicep'
     # environment: dev
     runs-on:
       # We use a GH organization Self-hosted runner wired in the Private VNET
