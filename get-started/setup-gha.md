@@ -33,10 +33,12 @@ The required Variables/Secrets to deploy with Github Actions are:
 - `AZ_LOCATION`
 - `AZ_SQL_SERVER_PASSWORD`
 - `AZ_APP_PASSWORD`
-- `AZURE_CREDENTIALS`
+
 - `AZURE_SUBSCRIPTION_ID`
 - `AZURE_TENANT_ID`
 - `AZURE_GHA_CLIENT_ID`
+
+> - `AZURE_CREDENTIALS`
 
 #### At repository level
 

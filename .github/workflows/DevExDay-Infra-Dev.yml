@@ -25,7 +25,7 @@ env:
 
 jobs:
   infra:
-    environment: dev
+    # environment: dev
     runs-on:
       # We use a GH organization Self-hosted runner wired in the Private VNET
       group: embergershared
