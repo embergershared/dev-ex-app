@@ -1,0 +1,148 @@
+name: ContosoUniversity
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'infra/**'
+      - '**/ContosoUniversity - Infra.yml'
+      - '**/README.md'
+  pull_request:
+    branches: 
+      - main
+    paths-ignore:
+      - 'infra/**'
+# We also want to be able to run this manually from Github
+  workflow_dispatch:
+
+env:
+  CONFIGURATION: release
+  AZ_APP_NAME: ${{ secrets.AZURE_ENVIRONMENT_NAME }}-app
+  AZ_API_NAME: ${{ secrets.AZURE_ENVIRONMENT_NAME }}-api
+
+# To use OIDC enabled SPN with Azure
+permissions:
+  id-token: write
+
+jobs:
+  build:
+    # # Default
+    # runs-on: ubuntu-latest
+    # # Set it to run on self-hosted runner
+    # runs-on: self-hosted
+    # Use Hermitage runners' group (organization level)
+    runs-on:
+      group: embergershared
+      labels: 446692
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+    
+    - name: Restore
+      run: dotnet restore src/ContosoUniversity.sln
+    
+    - name: Build
+      run: dotnet build src/ContosoUniversity.sln --configuration ${{ env.CONFIGURATION }} --no-restore
+    
+    - name: Test
+      run: dotnet test src/ContosoUniversity.Test/ContosoUniversity.Test.csproj --verbosity normal --logger trx --results-directory TestResults
+      
+    - name: Publish APP
+      run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApp src/ContosoUniversity.WebApplication/ContosoUniversity.WebApplication.csproj
+
+    - name: Publish API
+      run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApi src/ContosoUniversity.API/ContosoUniversity.API.csproj
+    
+    - name: Upload APP results
+      uses: actions/upload-artifact@v2
+      with:
+        name: app
+        path: PublishApp
+    
+    - name: Upload API results
+      uses: actions/upload-artifact@v2
+      with:
+        name: api
+        path: PublishApi
+  
+  release:
+    needs: build
+    # # Default
+    # runs-on: ubuntu-latest
+    # # Set it to run on self-hosted runner
+    # runs-on: self-hosted
+    # Use Hermitage runners' group (organization level)
+    runs-on:
+      group: embergershared
+      labels: 446692
+
+    steps:
+      - name: Download APP Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: app
+          path: app-artifact
+      
+      - name: Download API Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: api
+          path: api-artifact
+      
+      - name: Variable Substitution API
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: api-artifact/appsettings.json
+        env:
+          ConnectionStrings.ContosoUniversityAPIContext: ${{ secrets.AZURE_CONTOSO_CONN_STRING }}
+          ApplicationInsights.ConnectionString: ${{ secrets.AZURE_CONTOSO_APP_INSIGHTS }}
+      
+      - name: Variable Substitution APP
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: app-artifact/appsettings.json
+        env:
+          Api.Address: https://${{ env.AZ_API_NAME }}.azurewebsites.net/
+          ApplicationInsights.ConnectionString: ${{ secrets.AZURE_CONTOSO_APP_INSIGHTS }}
+      
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          # creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: "1c28ed60-d07f-4676-9796-4409497539ed"
+          tenant-id: "8c0e4ef1-25fa-4e52-b8da-835de296826e"
+          subscription-id: "34144584-4817-47a0-a912-bd00bae76495"
+
+      - name: az cli version
+        run: az version
+
+      - name: az account infos
+        run: |
+          az account show
+          echo "Subsc Name: $(az account show --query "name" -o tsv)"
+          echo "Subsc   Id: $(az account show --query "id" -o tsv)"
+          echo "SPN Name  : $(az account show --query "user.name" -o tsv)"
+
+      - name: pwd
+        run: pwd
+
+      - name: ls
+        run: ls -l
+
+      - name: Deploy API
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZ_API_NAME }}
+          package: api-artifact
+      
+      - name: Deploy APP
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZ_APP_NAME }}
+          package: app-artifact

@@ -33,8 +33,7 @@ jobs:
       labels: 912772
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout
+    - uses: actions/checkout
 
     - name: Azure Login
       uses: Azure/login@v1
