@@ -42,9 +42,9 @@ jobs:
     - name: Azure Login
       uses: Azure/login@v1
       with:
-        tenant-id: ${{ vars.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        client-id: ${{ vars.AZURE_GHA_CLIENT_ID }}
+        tenant-id: 'bed3f66f-00c5-402e-8f75-44abca53e730' # ${{ vars.AZURE_TENANT_ID }}
+        subscription-id: 'a73ced30-c712-4405-8828-67a833b1e39a' #${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        client-id: 'd8bf5cdc-b42f-485e-9863-cff285eaae5c' # ${{ vars.AZURE_GHA_CLIENT_ID }}
 
     # - name: Deploy Template
     #   uses: Azure/arm-deploy@v1.0.8
