@@ -43,11 +43,11 @@ jobs:
         client-id: ${{ vars.AZURE_GHA_CLIENT_ID }}
 
     - name: Deploy bicep Template
-      uses: Azure/arm-deploy@v1.0.8
+      uses: Azure/arm-deploy@v1
       with:
         scope: subscription
         subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-        region: ${{ env.AZ_LOCATION }}
+        # region: ${{ env.AZ_LOCATION }}
         template: infra/main.bicep
         deploymentMode: Incremental
         deploymentName: 'gh-actions'
