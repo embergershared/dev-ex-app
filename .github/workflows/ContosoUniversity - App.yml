@@ -37,7 +37,7 @@ jobs:
       labels: 446692
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
@@ -114,11 +114,10 @@ jobs:
       - name: Azure Login
         uses: Azure/login@v1
         with:
-          # creds: ${{ secrets.AZURE_CREDENTIALS }}
-          client-id: "1c28ed60-d07f-4676-9796-4409497539ed"
-          tenant-id: "8c0e4ef1-25fa-4e52-b8da-835de296826e"
-          subscription-id: "34144584-4817-47a0-a912-bd00bae76495"
-
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ vars.AZURE_GHA_CLIENT_ID }}
+    
       - name: az cli version
         run: az version
 
