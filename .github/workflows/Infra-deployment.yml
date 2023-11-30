@@ -47,7 +47,7 @@ jobs:
       with:
         scope: subscription
         subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}
-        # region: ${{ env.AZ_LOCATION }}
+        region: ${{ env.AZ_LOCATION }}
         template: infra/main.bicep
         deploymentMode: Incremental
         deploymentName: 'gh-actions'
