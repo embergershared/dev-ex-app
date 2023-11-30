@@ -13,34 +13,34 @@ param location string
 // "resourceGroupName": {
 //      "value": "myGroupName"
 // }
-param apiServiceName string = ''
-param applicationInsightsDashboardName string = ''
-param applicationInsightsName string = ''
-param appServicePlanName string = ''
-param keyVaultName string = ''
-param logAnalyticsName string = ''
+// param apiServiceName string = ''
+// param applicationInsightsDashboardName string = ''
+// param applicationInsightsName string = ''
+// param appServicePlanName string = ''
+// param keyVaultName string = ''
+// param logAnalyticsName string = ''
 param resourceGroupName string = ''
-param sqlServerName string = ''
-param sqlDatabaseName string = ''
-param webServiceName string = ''
+// param sqlServerName string = ''
+// param sqlDatabaseName string = ''
+// param webServiceName string = ''
 
-@description('Id of the user or app to assign application roles')
-param principalId string = ''
+// @description('Id of the user or app to assign application roles')
+// param principalId string = ''
 
-@secure()
-@description('SQL Server administrator password')
-param sqlAdminPassword string
+// @secure()
+// @description('SQL Server administrator password')
+// param sqlAdminPassword string
 
-@secure()
-@description('Application user password')
-param appUserPassword string
+// @secure()
+// @description('Application user password')
+// param appUserPassword string
 
 var abbrs = loadJsonContent('./abbreviations.json')
-var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
+// var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
 var tags = { 'azd-env-name': environmentName }
 
-// 'Telemetry is by default enabled. The software may collect information about you and your use of the software and send it to Microsoft. Microsoft may use this information to provide services and improve our products and services.
-var enableTelemetry = true
+// // 'Telemetry is by default enabled. The software may collect information about you and your use of the software and send it to Microsoft. Microsoft may use this information to provide services and improve our products and services.
+// var enableTelemetry = true
 
 // Organize resources in a resource group
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
