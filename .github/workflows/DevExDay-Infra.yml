@@ -1,11 +1,12 @@
 name: ContosoUniversity-Infra
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'infra/**'
+  # Automatic trigger
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'infra/**'
       
   # We also want to be able to run this manually from Github
   workflow_dispatch:
