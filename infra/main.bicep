@@ -40,7 +40,7 @@ var resourceToken = toLower(uniqueString(subscription().id, environmentName, loc
 var tags = { 'azd-env-name': environmentName }
 
 // 'Telemetry is by default enabled. The software may collect information about you and your use of the software and send it to Microsoft. Microsoft may use this information to provide services and improve our products and services.
-var enableTelemetry = true   
+var enableTelemetry = true
 
 // Organize resources in a resource group
 resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
@@ -49,6 +49,7 @@ resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   tags: tags
 }
 
+/*
 // The application frontend
 module web './app/web.bicep' = {
   name: 'web'
@@ -183,3 +184,4 @@ output AZURE_LOCATION string = location
 output AZURE_TENANT_ID string = tenant().tenantId
 output AZURE_LOAD_TEST_NAME string = loadtest.name
 output AZURE_LOAD_TEST_HOST string = web.outputs.SERVICE_WEB_HOSTNAME
+*/
