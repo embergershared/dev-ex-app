@@ -42,17 +42,17 @@ jobs:
         subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
         client-id: ${{ vars.AZURE_GHA_CLIENT_ID }}
 
-    # - name: Deploy Template
-    #   uses: Azure/arm-deploy@v1.0.8
-    #   with:
-    #     scope: subscription
-    #     subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-    #     region: ${{ env.AZ_LOCATION }}
-    #     template: infra/main.bicep
-    #     deploymentMode: Incremental
-    #     deploymentName: 'gh-actions'
-    #     parameters: environmentName=${{ env.AZ_ENVIRONMENT_NAME }} location=${{ env.AZ_LOCATION }} apiServiceName=${{ env.AZ_API_NAME }} webServiceName=${{ env.AZ_APP_NAME }} sqlAdminPassword=${{ env.AZ_SQL_SERVER_PASSWORD }} appUserPassword=${{ env.AZ_APP_PASSWORD }} resourceGroupName="rg-use2-912772-s1-${{ env.AZURE_ENVIRONMENT_NAME }}-01" # 'rg-use2-912772-s1-devexdays-app-01'
-    #     failOnStdErr: false
+    - name: Deploy bicep Template
+      uses: Azure/arm-deploy@v1.0.8
+      with:
+        scope: subscription
+        subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+        region: ${{ env.AZ_LOCATION }}
+        template: infra/main.bicep
+        deploymentMode: Incremental
+        deploymentName: 'gh-actions'
+        parameters: environmentName=${{ env.AZ_ENVIRONMENT_NAME }} location=${{ env.AZ_LOCATION }} apiServiceName=${{ env.AZ_API_NAME }} webServiceName=${{ env.AZ_APP_NAME }} sqlAdminPassword=${{ env.AZ_SQL_SERVER_PASSWORD }} appUserPassword=${{ env.AZ_APP_PASSWORD }} resourceGroupName="rg-use2-912772-s1-${{ env.AZURE_ENVIRONMENT_NAME }}-01" # 'rg-use2-912772-s1-devexdays-app-01'
+        failOnStdErr: false
 
     # - name: az cli version
     #   run: az version
