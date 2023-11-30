@@ -51,7 +51,7 @@ jobs:
         template: infra/main.bicep
         # deploymentMode: Incremental
         deploymentName: 'gh-actions'
-        parameters: environmentName=${{ env.AZ_ENVIRONMENT_NAME }} location=${{ env.AZ_LOCATION }} resourceGroupName=rg-use2-912772-s1-devexdays-app-dev-01 #apiServiceName=${{ env.AZ_API_NAME }} webServiceName=${{ env.AZ_APP_NAME }} sqlAdminPassword=${{ env.AZ_SQL_SERVER_PASSWORD }} appUserPassword=${{ env.AZ_APP_PASSWORD }}  #"rg-use2-912772-s1-${{ env.AZURE_ENVIRONMENT_NAME }}-01"
+        parameters: environmentName=${{ env.AZ_ENVIRONMENT_NAME }} location=${{ env.AZ_LOCATION }} resourceGroupName="rg-use2-912772-s1-${{ env.AZURE_ENVIRONMENT_NAME }}-01" #apiServiceName=${{ env.AZ_API_NAME }} webServiceName=${{ env.AZ_APP_NAME }} sqlAdminPassword=${{ env.AZ_SQL_SERVER_PASSWORD }} appUserPassword=${{ env.AZ_APP_PASSWORD }}  #"rg-use2-912772-s1-${{ env.AZURE_ENVIRONMENT_NAME }}-01"
         failOnStdErr: false
 
     # - name: az cli version
