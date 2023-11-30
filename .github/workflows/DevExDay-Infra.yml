@@ -8,20 +8,21 @@ on:
   #   paths:
   #     - 'infra/**'
       
-  # We also want to be able to run this manually from Github
+  # Enable manual run from Github UI (in repo / Actions tab)
   workflow_dispatch:
   
 env:
-  AZ_ENVIRONMENT_NAME: ${{ secrets.AZURE_ENVIRONMENT_NAME }}
-  AZ_LOCATION: ${{ secrets.AZURE_LOCATION }}
-  AZ_APP_NAME: ${{ secrets.AZURE_ENVIRONMENT_NAME }}-app
-  AZ_API_NAME: ${{ secrets.AZURE_ENVIRONMENT_NAME }}-api
+  AZ_ENVIRONMENT_NAME: ${{ vars.AZURE_ENVIRONMENT_NAME }}
+  AZ_LOCATION: ${{ vars.AZURE_LOCATION }}
+  AZ_APP_NAME: ${{ vars.AZURE_ENVIRONMENT_NAME }}-app
+  AZ_API_NAME: ${{ vars.AZURE_ENVIRONMENT_NAME }}-api
   AZ_SQL_SERVER_PASSWORD: ${{ secrets.AZURE_SQL_PASSWORD }}
   AZ_APP_PASSWORD: ${{secrets.AZURE_APP_PASSWORD}}
 
 jobs:
   infra:
     runs-on:
+      # We use a GH organization Self-hosted runner wired in the Private VNET
       group: embergershared
       labels: 912772
 
@@ -42,5 +43,5 @@ jobs:
         template: infra/main.bicep
         deploymentMode: Incremental
         deploymentName: 'gh-actions'
-        parameters: environmentName=${{ env.AZ_ENVIRONMENT_NAME }} location=${{ env.AZ_LOCATION }} apiServiceName=${{ env.AZ_API_NAME }} webServiceName=${{ env.AZ_APP_NAME }} sqlAdminPassword=${{ env.AZ_SQL_SERVER_PASSWORD }} appUserPassword=${{ env.AZ_APP_PASSWORD }} resourceGroupName='rg-use2-912772-s1-devexdays-app-01'
+        parameters: environmentName=${{ env.AZ_ENVIRONMENT_NAME }} location=${{ env.AZ_LOCATION }} apiServiceName=${{ env.AZ_API_NAME }} webServiceName=${{ env.AZ_APP_NAME }} sqlAdminPassword=${{ env.AZ_SQL_SERVER_PASSWORD }} appUserPassword=${{ env.AZ_APP_PASSWORD }} resourceGroupName="rg-use2-912772-s1-${{ env.AZURE_ENVIRONMENT_NAME }}-01" # 'rg-use2-912772-s1-devexdays-app-01'
         failOnStdErr: false
