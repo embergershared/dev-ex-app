@@ -1,18 +1,18 @@
 name: ContosoUniversity
 
 on:
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - 'infra/**'
-      - '**/ContosoUniversity - Infra.yml'
-      - '**/README.md'
-  pull_request:
-    branches: 
-      - main
-    paths-ignore:
-      - 'infra/**'
+  # push:
+  #   branches:
+  #     - main
+  #   paths-ignore:
+  #     - 'infra/**'
+  #     - '**/ContosoUniversity - Infra.yml'
+  #     - '**/README.md'
+  # pull_request:
+  #   branches: 
+  #     - main
+  #   paths-ignore:
+  #     - 'infra/**'
 # We also want to be able to run this manually from Github
   workflow_dispatch:
 
