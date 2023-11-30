@@ -1,4 +1,4 @@
-name: 'Dev - App build & update'
+name: 'Dev - App Build & Deploy'
 
 on:
   # push:
@@ -18,8 +18,8 @@ on:
 
 env:
   CONFIGURATION: release
-  AZ_APP_NAME: ${{ secrets.AZURE_ENVIRONMENT_NAME }}-app
-  AZ_API_NAME: ${{ secrets.AZURE_ENVIRONMENT_NAME }}-api
+  AZ_APP_NAME: ${{ vars.AZURE_ENVIRONMENT_NAME }}-app
+  AZ_API_NAME: ${{ vars.AZURE_ENVIRONMENT_NAME }}-api
 
 # To use OIDC enabled SPN with Azure
 permissions:
@@ -27,15 +27,13 @@ permissions:
 
 jobs:
   build:
-    # # Default
-    # runs-on: ubuntu-latest
-    # # Set it to run on self-hosted runner
-    # runs-on: self-hosted
-    # Use Hermitage runners' group (organization level)
+    name: 'Build WebApp & WebAPI'
+    environment: dev
     runs-on:
+      # We use a GH organization Self-hosted runner wired in the Private VNET
       group: embergershared
-      labels: 446692
-
+      labels: 912772
+  
     steps:
     - uses: actions/checkout@v3
     
@@ -73,14 +71,13 @@ jobs:
   
   release:
     needs: build
-    # # Default
-    # runs-on: ubuntu-latest
-    # # Set it to run on self-hosted runner
-    # runs-on: self-hosted
-    # Use Hermitage runners' group (organization level)
+
+    name: 'Deploy WebApp & WebAPI'
+    environment: dev
     runs-on:
+      # We use a GH organization Self-hosted runner wired in the Private VNET
       group: embergershared
-      labels: 446692
+      labels: 912772
 
     steps:
       - name: Download APP Artifact
