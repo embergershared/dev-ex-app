@@ -20,7 +20,9 @@ env:
 
 jobs:
   infra:
-    runs-on: ubuntu-latest
+    runs-on:
+      group: embergershared
+      labels: 912772
 
     steps:
     - uses: actions/checkout@v2
