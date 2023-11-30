@@ -26,10 +26,10 @@ env:
 jobs:
   infra:
     environment: dev
-    runs-on:
-      # We use a GH organization Self-hosted runner wired in the Private VNET
-      group: embergershared
-      labels: 912772
+    runs-on: self-hosted
+      # # We use a GH organization Self-hosted runner wired in the Private VNET
+      # group: embergershared
+      # labels: 912772
 
     steps:
     - uses: actions/checkout@v2
