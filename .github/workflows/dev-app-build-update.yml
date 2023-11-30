@@ -1,4 +1,4 @@
-name: ContosoUniversity
+name: 'Dev - App build & update'
 
 on:
   # push:
