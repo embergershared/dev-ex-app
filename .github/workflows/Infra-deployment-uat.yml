@@ -1,4 +1,4 @@
-name: 'Infra deployment'
+name: 'UAT infra deployment'
 
 on:
   # Automatic trigger
@@ -26,7 +26,7 @@ env:
 jobs:
   infra:
     name: 'Deploy Infra with bicep'
-    environment: dev
+    environment: uat
     runs-on:
       # We use a GH organization Self-hosted runner wired in the Private VNET
       group: embergershared
