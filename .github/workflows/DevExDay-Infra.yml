@@ -1,4 +1,4 @@
-name: ContosoUniversity-Infra
+name: DevExDay-Infra
 
 on:
   # Automatic trigger
