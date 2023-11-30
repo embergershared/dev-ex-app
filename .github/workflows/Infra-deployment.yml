@@ -1,4 +1,4 @@
-name: DevExDay-Infra-Infra-deployment
+name: 'Infra deployment'
 
 on:
   # Automatic trigger
