@@ -27,6 +27,17 @@ Environments have to be created in the UI. There are no `gh cli` commands to cre
 
 ### Create Variables & Secrets
 
+The required Variables/Secrets to deploy with Github Actions are:
+
+- `AZ_ENVIRONMENT_NAME`
+- `AZ_LOCATION`
+- `AZ_SQL_SERVER_PASSWORD`
+- `AZ_APP_PASSWORD`
+- `AZURE_CREDENTIALS`
+- `AZURE_SUBSCRIPTION_ID`
+- `AZURE_TENANT_ID`
+- `AZURE_GHA_CLIENT_ID`
+
 #### At repository level
 
 ```powershell
