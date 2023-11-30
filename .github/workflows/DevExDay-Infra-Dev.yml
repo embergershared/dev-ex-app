@@ -58,3 +58,13 @@ jobs:
     #     deploymentName: 'gh-actions'
     #     parameters: environmentName=${{ env.AZ_ENVIRONMENT_NAME }} location=${{ env.AZ_LOCATION }} apiServiceName=${{ env.AZ_API_NAME }} webServiceName=${{ env.AZ_APP_NAME }} sqlAdminPassword=${{ env.AZ_SQL_SERVER_PASSWORD }} appUserPassword=${{ env.AZ_APP_PASSWORD }} resourceGroupName="rg-use2-912772-s1-${{ env.AZURE_ENVIRONMENT_NAME }}-01" # 'rg-use2-912772-s1-devexdays-app-01'
     #     failOnStdErr: false
+
+    - name: az cli version
+      run: az version
+
+    - name: az account infos
+      run: |
+        az account show
+        echo "Subsc Name: $(az account show --query "name" -o tsv)"
+        echo "Subsc   Id: $(az account show --query "id" -o tsv)"
+        echo "SPN Name  : $(az account show --query "user.name" -o tsv)"
