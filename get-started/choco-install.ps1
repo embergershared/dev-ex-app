@@ -1,6 +1,15 @@
+# Launch the downloaded script:
+Set-Location $HOME\Downloads
+Set-ExecutionPolicy Bypass -Force
+.\choco-install.ps1
+
+# Log will be here: C:\ProgramData\chocolatey\logs\chocolatey.log
+
+# 1. Install Chocolatey
 # Copilot Q: add command to install chocolatey on windows from Powershell
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
+# 2. Load functions
 Function Install-ChocoPackages {
   param (
     [Parameter(Mandatory=$true)]
@@ -11,12 +20,29 @@ Function Install-ChocoPackages {
     choco install $package -y
   }
 }
+Function Uninstall-ChocoPackages {
+  param (
+    [Parameter(Mandatory=$true)]
+    [string[]]$Packages
+  )
 
-$packages = [System.Collections.Generic.HashSet[string]]@(
+  foreach ($package in $Packages) {
+    choco uninstall $package -y
+  }
+}
+
+# 3. Unistall packages that are in the image but defective after sysprep
+$uninstall_packages = @(
+  "docker-desktop"
+  # "notepadplusplus"
+)
+Uninstall-ChocoPackages -Packages $uninstall_packages
+
+# 4. Install packages
+$install_packages = @(
   "wireshark",
   "thunderbird",
   "postman",
-  "azure-functions-core-tools",
   "adobereader",
   "googlechrome",
   "notepadplusplus",
@@ -31,17 +57,18 @@ $packages = [System.Collections.Generic.HashSet[string]]@(
   "thunderbird",
   "docker-desktop",
   "postman",
-  "azure-functions-core-tools  --params='/x64:true'",
+  "azure-functions-core-tools --params='/x64:true'",
   "terrafrom",
   "python3",
   "azure-data-studio",
   "visioviewer"
 )
+Install-ChocoPackages -Packages $install_packages
 
-Install-ChocoPackages -Packages $packages
-
+# 5. Set WSL to v2
 wsl --set-default-version 2
-# choco install wsl-ubuntu-2204
+
+# 6. Install Ubuntu 22.04 distro in WSL
 Install-ChocoPackages -Packages @("wsl-ubuntu-2204")
 
 # choco install intellijidea-community
