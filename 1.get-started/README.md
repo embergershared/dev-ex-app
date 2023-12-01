@@ -53,7 +53,7 @@ or:
 
       4. Go grab lunch, coffee, etc.
 
-      5. See [Dev box access](#1-devbox-access) to log in to the new box
+      5. See [Dev box access](#1-devbox-access) to log in to the new box, once created and `Running`.
 
 ### 4. Install tooling
 
@@ -176,6 +176,6 @@ Here are some getting started suggested steps:
 
    - Click on the "3 dots"
 
-   - Select "Shutdown"
+   - Select `Shut down`
 
    ![shutdown](../assets/shut-down-devbox.png)
