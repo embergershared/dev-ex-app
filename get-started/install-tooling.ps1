@@ -47,7 +47,6 @@ $install_packages = @(
   "azure-cli",
   "microsoftazurestorageexplorer",
   "jdk8",
-  "wsl",
   "wireshark",
   "thunderbird",
   "docker-desktop",
@@ -60,17 +59,17 @@ $install_packages = @(
 )
 Install-ChocoPackages -Packages $install_packages
 
-# 5. Set WSL to v2
+# 5. Install Ubuntu 22.04 distro in WSL
 wsl --set-default-version 2
+wsl --install -d Ubuntu-22.04
+wsl -l -v
 
-# 6. Install Ubuntu 22.04 distro in WSL
-Install-ChocoPackages -Packages @("wsl-ubuntu-2204")
-
-# 7. Display installed packages
+# 6. Display installed packages
 choco list
 
-# 8. Displaying end of script
-Write-Host "Script choco-install.ps1 ended"
+# 7. Displaying end of script
+Write-Host
+Write-Host "==> Script choco-install.ps1 ended"
 
 # choco install intellijidea-community
 # choco install onedrive

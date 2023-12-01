@@ -40,11 +40,11 @@ Once logged-in, you can create a new DevBox by:
 
 ### 4. Install tooling
 
-1. Download the script: [choco-install.ps1](https://github.com/embergershared/dev-ex-app/blob/main/get-started/choco-install.ps1)
+1. Download the script: [install-tooling.ps1](https://github.com/embergershared/dev-ex-app/blob/main/get-started/install-tooling.ps1)
 
 2. Choose `Keep` when asked
 
-![Keep choco script](../assets/keep-choco-script.png)
+![Keep install script](../assets/keep-choco-script.png)
 
 2. Launch a terminal **AS Administrator**
 
@@ -54,7 +54,7 @@ Once logged-in, you can create a new DevBox by:
 # Launch the downloaded script:
 Set-Location $HOME\Downloads
 Set-ExecutionPolicy Bypass -Force
-.\choco-install.ps1
+.\install-tooling.ps1
 ```
 
 4. Finish Docker desktop install
