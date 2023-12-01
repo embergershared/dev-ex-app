@@ -38,9 +38,9 @@ Function Test-MsSqlPasswordRequirements {
       return $false
   }
 
-  # Check if the password contains any of the disallowed characters
-  if ($PlainPassword -cmatch "`0x27" -or $PlainPassword -cmatch "`0x5E" -or $PlainPassword -cmatch "`0x22") {
-    Write-Output "Password must not contain: ' or ^ or ""."
+  # Check if the password contains any of the disallowed characters (; for connection string)
+  if ($PlainPassword -cmatch ";") {
+    Write-Output "Password must not contain: ;."
     return $false
   }
 
@@ -61,7 +61,12 @@ $visualStudioPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Co
 
 # Clone the application repo
 # Create the GitHub organization folder
-if (!(Test-Path $folderPath)) { New-Item -Path $folderPath -ItemType Directory -Force }
+if (!(Test-Path $folderPath)) {
+  New-Item -Path $folderPath -ItemType Directory -Force
+} else {
+  Remove-Item -Path $folderPath -Recurse -Force
+  New-Item -Path $folderPath -ItemType Directory -Force
+}
 Set-Location -Path $folderPath
 
 # Clone the project repo
@@ -106,3 +111,6 @@ git update-index --assume-unchanged $webApiDevSettingsFile # To revert: git upda
 
 # Launch Visual Studio 2022
 Start-Process -FilePath $visualStudioPath -ArgumentList $solutionFilePath
+
+# Close the PowerShell window
+Exit-PSHostProcess
