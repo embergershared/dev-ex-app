@@ -45,6 +45,8 @@ Once logged-in, you can create a new DevBox by:
 
 4. Go grab lunch, coffee, etc.
 
+5. See [Dev box access](#1-devbox-access) to log in to the new box
+
 > Note: The portal will also show your existing DevBox(es). In that, case, skip the rest of these instructions (they should be done already).
 
 ### 4. Install tooling
