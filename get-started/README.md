@@ -52,24 +52,24 @@ Once logged-in, you can create a new DevBox by:
 
 4. Execute these commands:
 
-```powershell
-# Launch the downloaded script:
-Set-Location $HOME\Downloads
-Set-ExecutionPolicy Bypass -Force
-.\install-tooling.ps1
-```
+      ```powershell
+      # Launch the downloaded script:
+      Set-Location $HOME\Downloads
+      Set-ExecutionPolicy Bypass -Force
+      .\install-tooling.ps1
+      ```
 
 5. Finish Docker desktop install
 
-Docker desktop gets installed, but requires UI last steps:
+      Docker desktop gets installed, but requires UI last steps:
 
-- Launch the shortcut on the Desktop,
-- `Accept` the Service Agreement,
-- `Sign up`, `Sign in` or `Continue without signing in` - up to you,
-- `Skip` about your role - up to you,
-- go to settings to enable `Start Docker Desktop when you log in`,
-- `Apply & restart`,
-- Check `Engine running` status.
+      - Launch the shortcut on the Desktop,
+      - `Accept` the Service Agreement,
+      - `Sign up`, `Sign in` or `Continue without signing in` - up to you,
+      - `Skip` about your role - up to you,
+      - go to settings to enable `Start Docker Desktop when you log in`,
+      - `Apply & restart`,
+      - Check `Engine running` status.
 
 ### 5. Get and configure the app
 
