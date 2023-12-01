@@ -119,11 +119,11 @@ Here are some getting started suggested steps:
 
       ![Start the API](../assets/vs-start-api.png)
 
-      - Browse to SwaggerUI: [ContosoUniversity.API Swagger](https://localhost:58372/swagger)
+      - Browse to the Swagger UI: [https://localhost:58372/swagger](https://localhost:58372/swagger)
 
       ![WebAPI Swagger UI](../assets/vs-api-swagger.png)
 
-2. Configure APP and API startup:
+2. Configure APP and API to start together:
 
       - Go to configure Startup Projects:
 
@@ -139,15 +139,15 @@ Here are some getting started suggested steps:
 
       - Success looks like:
 
-          - Home page
+          - Home page:
 
             ![Success1](../assets/vs-multiproj-success1.png)
 
-          - Students list
+          - Students list:
 
             ![Success2](../assets/vs-multiproj-success2.png)
 
-          - Student details with embedded courses
+          - Student details with embedded courses' list:
 
             ![Success3](../assets/vs-multiproj-success3.png)
 
