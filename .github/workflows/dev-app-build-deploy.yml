@@ -123,10 +123,7 @@ jobs:
           # it uses ZIP Deploy
       
       - name: Deploy APP
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZ_APP_NAME }}
           package: app-artifact
-          type: ZIP
-          clean: false
-          restart: true
