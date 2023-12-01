@@ -11,17 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContosoUniversity.CodedUITe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContosoUniversity.Test", "ContosoUniversity.Test\ContosoUniversity.Test.csproj", "{36B19D13-F27D-461F-A21F-4EF417C05CFC}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "infra", "infra", "{66743DFB-9BD7-482D-B066-21DC764ED914}"
-	ProjectSection(SolutionItems) = preProject
-		..\infra\ContainerRegistry.bicep = ..\infra\ContainerRegistry.bicep
-		..\infra\HELP.txt = ..\infra\HELP.txt
-		..\infra\KeyVault.bicep = ..\infra\KeyVault.bicep
-		..\infra\Kubernetes.bicep = ..\infra\Kubernetes.bicep
-		..\infra\main.bicep = ..\infra\main.bicep
-		main.parameters.json = main.parameters.json
-		..\infra\SQLServer.bicep = ..\infra\SQLServer.bicep
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
