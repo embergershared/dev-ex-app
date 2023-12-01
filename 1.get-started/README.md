@@ -87,10 +87,12 @@ or:
 
       - `Accept` the Service Agreement,
       - `Sign up`, `Sign in` or `Continue without signing in` - up to you,
-      - `Skip` about your role - up to you,
-      - go to settings to enable `Start Docker Desktop when you log in`,
+      - `Fill` or `Skip` about your role - up to you,
+      - go to settings (gear in top right) and check enable `General` / `Start Docker Desktop when you log in`,
       - `Apply & restart`,
       - Check `Engine running` status.
+
+      > Note: you may need to restart the Dev box for full effect.
 
 ### 5. Get and configure the app
 
@@ -114,7 +116,12 @@ or:
       - Clones the app repo locally,
       - Logs you in Azure,
       - Generate basics `git` settings for your commits,
-      - Ask you to set a local container SQL Server administrator account,
+      - Your input is required:
+
+        - To set a local container SQL Server administrator account,
+
+        ![SQL sa password prompt](../assets/sql-container-sapwd-prompt.png)
+
       - Create a Microsoft SQL Server 2022 container for your dev database,
       - Wire the settings in the application for it to use the local container SQL Server,
       - Launch Visual Studio on the Contoso University App solution.
