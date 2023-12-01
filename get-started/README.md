@@ -97,6 +97,12 @@ The script:
 - Wire the settings in the application for it to use the local container SQL Server,
 - Launch Visual Studio on the Contoso University App solution.
 
+4. Sign in to Visual Studio
+
+5. Success looks like:
+
+![Success VS launch](../assets/vs-launch-success.png)
+
 ### 6. Develop, test, create a PR
 
 Development work, with Github Copilot help.
