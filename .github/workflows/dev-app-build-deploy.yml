@@ -81,13 +81,13 @@ jobs:
 
     steps:
       - name: Download APP Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: app
           path: app-artifact
       
       - name: Download API Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: api
           path: api-artifact
