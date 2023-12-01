@@ -40,11 +40,11 @@ Once logged-in, you can create a new DevBox by:
 
 ### 4. Install tooling
 
-1. Download the script: [install-tooling.ps1](https://github.com/embergershared/dev-ex-app/blob/main/get-started/install-tooling.ps1) (Suggestion: Open in a new tab)
+1. Download the script: [1-install-tooling.ps1](https://github.com/embergershared/dev-ex-app/blob/main/get-started/1-install-tooling.ps1) (Suggestion: Open in a new tab)
 
 2. Choose `Keep` when asked
 
-![Keep install script](../assets/keep-install-tooling.png)
+![Keep install script](../assets/keep-1-install-tooling.png)
 
 3. Launch a terminal **AS Administrator**
 
@@ -56,7 +56,7 @@ Once logged-in, you can create a new DevBox by:
       # Launch the downloaded script:
       Set-Location $HOME\Downloads
       Set-ExecutionPolicy Bypass -Force
-      .\install-tooling.ps1
+      .\1-install-tooling.ps1
       ```
 
 5. Finish Docker desktop install
@@ -73,9 +73,9 @@ Once logged-in, you can create a new DevBox by:
 
 ### 5. Get and configure the app
 
-1. Download the script: [local-app-setup](https://github.com/embergershared/dev-ex-app/blob/main/get-started/local-app-setup.ps1) (Suggestion: Open in a new tab)
+1. Download the script: [2-app-local-setup](https://github.com/embergershared/dev-ex-app/blob/main/get-started/2-app-local-setup.ps1) (Suggestion: Open in a new tab)
 
-![Keep setup script](../assets/keep-local-app-setup.png)
+![Keep setup script](../assets/keep-2-app-local-setup.png)
 
 2. Launch a terminal
 
@@ -84,7 +84,7 @@ Once logged-in, you can create a new DevBox by:
       ```powershell
       # Launch the downloaded script:
       Set-Location $HOME\Downloads
-      .\local-app-setup.ps1
+      .\2-app-local-setup.ps1
       ```
 
       The script:
