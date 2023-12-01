@@ -40,7 +40,7 @@ Once logged-in, you can create a new DevBox by:
 
 ### 4. Install tooling
 
-1. Download the script: [install-tooling.ps1](https://github.com/embergershared/dev-ex-app/blob/main/get-started/install-tooling.ps1)
+1. Download the script: [install-tooling.ps1](https://github.com/embergershared/dev-ex-app/blob/main/get-started/install-tooling.ps1) (Suggestion: Open in a new tab)
 
 2. Choose `Keep` when asked
 
