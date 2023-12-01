@@ -85,6 +85,8 @@ or:
 
       ![Restart](../assets/db-restart.png)
 
+      > Note: you need to restart for `Docker Desktop` to launch.
+
       - Launch the shortcut on the Desktop:
 
         ![Docker desktop](../assets/docker-desktop-launch.png)
@@ -98,8 +100,6 @@ or:
       - go to settings (gear in top right) and check enable `General` / `Start Docker Desktop when you log in`,
       - `Apply & restart`,
       - Check `Engine running` status.
-
-      > Note: you may need to restart the Dev box for full effect.
 
 ### 5. Get and configure the app
 
