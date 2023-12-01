@@ -28,6 +28,24 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
   resource database 'databases' = {
     name: databaseName
     location: location
+    sku: {
+      name: 'GP_S_Gen5'
+      tier: 'GeneralPurpose'
+      family: 'Gen5'
+      capacity: 1
+    }
+    properties: {
+      collation: 'SQL_Latin1_General_CP1_CI_AS'
+      maxSizeBytes: 34359738368
+      catalogCollation: 'SQL_Latin1_General_CP1_CI_AS'
+      zoneRedundant: false
+      readScale: 'Disabled'
+      autoPauseDelay: 60
+      requestedBackupStorageRedundancy: 'Local'
+      minCapacity: 0.5
+      isLedgerOn: false
+      availabilityZone: 'NoPreference'
+    }
   }
 
   resource firewall 'firewallRules' = {
