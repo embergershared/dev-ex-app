@@ -99,13 +99,19 @@ while ($attempts -lt $maxAttempts) {
   }
 }
 
-
+# Check if container aldready exists with the same name and remove it
+$containerName = "local-sql"
+if (docker ps -a --format '{{.Names}}' | Select-String -Pattern $containerName) {
+  docker rm -f $containerName
+}
+# Create a new container
 docker run `
   -e "ACCEPT_EULA=Y" `
   -e "MSSQL_SA_PASSWORD=$([pscredential]::new('user',$pw).GetNetworkCredential().Password)" `
-  -p 1433:1433 --name local-sql --hostname sql `
+  -p 1433:1433 --name $containerName --hostname sql `
   -d `
   mcr.microsoft.com/mssql/server:2022-latest
+  $containerName = "local-sql"
 
 # Update Web API connection string with SQL server sa account password
 git update-index --assume-unchanged $webApiDevSettingsFile # To revert: git update-index --no-assume-unchanged $webApiDevSettingsFile
