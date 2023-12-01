@@ -9,12 +9,14 @@ The process to get started is:
 1. Access the DevBox environment
 2. Log in with your account
 3. Create a DevBox machine (can take up to 45 minutes)
-4. Clone the Contoso University app repo on your DevBox
-5. Configure the Contoso University app on your DevBox
+4. Install development tooling
+5. Get and configure the Contoso University app on your DevBox
 6. Develop, debug, etc.,
 7. Turn the DevBox off.
 
-## DevBox access
+## Steps
+
+### 1. DevBox access
 
 The DevBox machine is running in Azure. It can be accessed with:
 
@@ -23,11 +25,11 @@ The DevBox machine is running in Azure. It can be accessed with:
   - [For Windows](https://learn.microsoft.com/en-us/azure/dev-box/tutorial-connect-to-dev-box-with-remote-desktop-app?tabs=windows#tabpanel_1_windows),
   - [For Non-Windows](https://learn.microsoft.com/en-us/azure/dev-box/tutorial-connect-to-dev-box-with-remote-desktop-app?tabs=windows#tabpanel_1_non-Windows).
 
-## Log in with your work account
+### 2. Log in with your work account
 
 In both cases, you need to authenticate with your work microsoft account.
 
-## Create a DevBox
+### 3. Create a DevBox
 
 Once logged-in, you can create a new DevBox by:
 
@@ -36,28 +38,56 @@ Once logged-in, you can create a new DevBox by:
 
 > Note: The portal will also show your existing DevBox(es). In that, case, skip the rest of these instructions (they should be done already).
 
-## Clone the Contoso University app repo
+### 4. Install tooling
 
-To get started, once connected to your DevBox:
+1. Download the script: [choco-install.ps1](https://github.com/embergershared/dev-ex-app/blob/main/get-started/choco-install.ps1)
 
-- go in the folder:
-- execute the script:
+2. Launch a terminal **AS Administrator**
 
-The script clones the application repo on the DevBox machine.
-
-## Use the local app setup script
-
-- from the same prompt, execute the command:
+3. Execute these commands:
 
 ```powershell
-.\get-started\start-local-app.ps1
+# Launch the downloaded script:
+Set-Location $HOME\Downloads
+Set-ExecutionPolicy Bypass -Force
+.\choco-install.ps1
+```
+
+### 5. Get and configure the app
+
+1. Download the script: [local-app-setup](https://github.com/embergershared/dev-ex-app/blob/main/get-started/local-app-setup.ps1)
+
+2. Execute these commands:
+
+```powershell
+# Launch the downloaded script:
+Set-Location $HOME\Downloads
+Set-ExecutionPolicy Bypass -Force
+.\local-app-setup.ps1
 ```
 
 The script:
 
-- logs you in Azure,
+- Clones the app repo locally,
+- Logs you in Azure,
 - Generate basics `git` settings for your commits,
-- Ask you to define a SQL Server administrator account,
+- Ask you to set a local container SQL Server administrator account,
 - Create a Microsoft SQL Server 2022 container for your dev database,
-- Wire the settings in the application for it to run right-away,
+- Wire the settings in the application for it to use the local container SQL Server,
 - Launch Visual Studio on the Contoso University App solution.
+
+### 6. Develop, test, create a PR
+
+Development work, with Github Copilot help.
+
+### 7. Shutdown the Dev box
+
+1. Go to the [DevBox web portal](https://devportal.microsoft.com/)
+
+2. On the dev box tile:
+
+   - Click on the "3 dots"
+
+   - Select "Shutdown"
+
+   ![shutdown](../assets/shut-down-devbox.png)
