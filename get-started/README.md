@@ -57,6 +57,12 @@ Set-ExecutionPolicy Bypass -Force
 .\choco-install.ps1
 ```
 
+4. Finish Docker desktop install
+
+Docker desktop gets installed, but requires UI last steps.
+
+Launch the shortcut on the Desktop, accept the EULA, go to settings to enable `Start at login`.
+
 ### 5. Get and configure the app
 
 1. Download the script: [local-app-setup](https://github.com/embergershared/dev-ex-app/blob/main/get-started/local-app-setup.ps1)
