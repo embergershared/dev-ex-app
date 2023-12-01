@@ -42,6 +42,8 @@ Once logged-in, you can create a new DevBox by:
 
 1. Download the script: [choco-install.ps1](https://github.com/embergershared/dev-ex-app/blob/main/get-started/choco-install.ps1)
 
+<a href="https://github.com/embergershared/dev-ex-app/blob/main/get-started/choco-install.ps1" target="_blank">choco-install.ps1 in a new tab</a>
+
 2. Launch a terminal **AS Administrator**
 
 3. Execute these commands:
