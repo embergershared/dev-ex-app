@@ -31,6 +31,8 @@ In both cases, you need to authenticate with your work microsoft account.
 
 ### 3. Create a DevBox
 
+Go to the [DevBox web portal](https://devportal.microsoft.com/) and log in.
+
 Once logged-in, you can create a new DevBox by:
 
 1. Click the `+ New dev box` button
