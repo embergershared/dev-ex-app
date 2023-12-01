@@ -121,4 +121,4 @@ git update-index --assume-unchanged $webApiDevSettingsFile # To revert: git upda
 Start-Process -FilePath $visualStudioPath -ArgumentList $solutionFilePath
 
 # Close the PowerShell window
-Exit-PSHostProcess
+exit
