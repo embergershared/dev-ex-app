@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   build:
-    name: 'Build WebApp & WebAPI'
+    name: 'Build APP & API'
     environment: dev
     runs-on:
       # We use a GH organization Self-hosted runner wired in the Private VNET
@@ -72,7 +72,7 @@ jobs:
   release:
     needs: build
 
-    name: 'Deploy WebApp & WebAPI'
+    name: 'Deploy APP & API'
     environment: dev
     runs-on:
       # We use a GH organization Self-hosted runner wired in the Private VNET
@@ -115,22 +115,6 @@ jobs:
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
           client-id: ${{ vars.AZURE_GHA_CLIENT_ID }}
     
-      - name: az cli version
-        run: az version
-
-      - name: az account infos
-        run: |
-          az account show
-          echo "Subsc Name: $(az account show --query "name" -o tsv)"
-          echo "Subsc   Id: $(az account show --query "id" -o tsv)"
-          echo "SPN Name  : $(az account show --query "user.name" -o tsv)"
-
-      - name: pwd
-        run: pwd
-
-      - name: ls
-        run: ls -l
-
       - name: Deploy API
         uses: azure/webapps-deploy@v2
         with:
