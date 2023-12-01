@@ -75,7 +75,11 @@ Docker desktop gets installed, but requires UI last steps:
 
 1. Download the script: [local-app-setup](https://github.com/embergershared/dev-ex-app/blob/main/get-started/local-app-setup.ps1) (Suggestion: Open in a new tab)
 
-2. Execute these commands:
+![Keep setup script](../assets/keep-local-app-setup.png)
+
+2. Launch a terminal
+
+3. Execute these commands:
 
 ```powershell
 # Launch the downloaded script:
