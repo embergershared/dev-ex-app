@@ -61,13 +61,19 @@ Set-ExecutionPolicy Bypass -Force
 
 5. Finish Docker desktop install
 
-Docker desktop gets installed, but requires UI last steps.
+Docker desktop gets installed, but requires UI last steps:
 
-Launch the shortcut on the Desktop, accept the EULA, go to settings to enable `Start at login`.
+- Launch the shortcut on the Desktop,
+- `Accept` the Service Agreement,
+- `Sign up`, `Sign in` or `Continue without signing in` - up to you,
+- `Skip` about your role - up to you,
+- go to settings to enable `Start Docker Desktop when you log in`,
+- `Apply & restart`,
+- Check `Engine running` status.
 
 ### 5. Get and configure the app
 
-1. Download the script: [local-app-setup](https://github.com/embergershared/dev-ex-app/blob/main/get-started/local-app-setup.ps1)
+1. Download the script: [local-app-setup](https://github.com/embergershared/dev-ex-app/blob/main/get-started/local-app-setup.ps1) (Suggestion: Open in a new tab)
 
 2. Execute these commands:
 
