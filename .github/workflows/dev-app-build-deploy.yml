@@ -120,12 +120,13 @@ jobs:
         with:
           app-name: ${{ env.AZ_API_NAME }}
           package: api-artifact
+          # it uses ZIP Deploy
       
       - name: Deploy APP
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZ_APP_NAME }}
           package: app-artifact
-          type: static
+          type: ZIP
           clean: false
           restart: true
