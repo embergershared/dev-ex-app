@@ -42,9 +42,8 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
       readScale: 'Disabled'
       autoPauseDelay: 60
       requestedBackupStorageRedundancy: 'Local'
-      minCapacity: 0.5
+      minCapacity: json('0.5')
       isLedgerOn: false
-      availabilityZone: 'NoPreference'
     }
   }
 
