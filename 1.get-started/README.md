@@ -33,8 +33,17 @@ In both cases, you need to authenticate with your work microsoft account.
 
 Once logged-in, you can create a new DevBox by:
 
-1. Do this
-2. then that
+1. Click the `+ New dev box` button
+
+![New dev box](../assets/db-newdb-button.png)
+
+2. Add a new dev box entering a `Name` and selecting a `Dev box pool`
+
+![Add dev box](../assets/db-newdb-add.png)
+
+3. Click `Create`
+
+4. Go grab lunch, coffee, etc.
 
 > Note: The portal will also show your existing DevBox(es). In that, case, skip the rest of these instructions (they should be done already).
 
