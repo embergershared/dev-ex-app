@@ -74,7 +74,7 @@ or:
       Set-Location $HOME\Downloads
       Set-ExecutionPolicy Bypass -Force
       .\1-install-tooling.ps1
-      
+
       ```
 
 5. Finish Docker desktop install
@@ -82,6 +82,9 @@ or:
       Docker desktop gets installed, but requires UI last steps:
 
       - Launch the shortcut on the Desktop,
+
+        ![Docker desktop](../assets/docker-desktop-launch.png)
+
       - `Accept` the Service Agreement,
       - `Sign up`, `Sign in` or `Continue without signing in` - up to you,
       - `Skip` about your role - up to you,
@@ -103,6 +106,7 @@ or:
       # Launch the downloaded script:
       Set-Location $HOME\Downloads
       .\2-app-local-setup.ps1
+
       ```
 
       The script:
