@@ -1,8 +1,3 @@
-# Launch the downloaded script:
-Set-Location $HOME\Downloads
-Set-ExecutionPolicy Bypass -Force
-.\choco-install.ps1
-
 # Log will be here: C:\ProgramData\chocolatey\logs\chocolatey.log
 
 # 1. Install Chocolatey
@@ -70,6 +65,12 @@ wsl --set-default-version 2
 
 # 6. Install Ubuntu 22.04 distro in WSL
 Install-ChocoPackages -Packages @("wsl-ubuntu-2204")
+
+# 7. Display installed packages
+choco list
+
+# 8. Displaying end of script
+Write-Host "Script choco-install.ps1 ended"
 
 # choco install intellijidea-community
 # choco install onedrive
