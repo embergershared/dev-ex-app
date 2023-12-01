@@ -44,7 +44,7 @@ Once logged-in, you can create a new DevBox by:
 
 2. Choose `Keep` when asked
 
-![Keep install script](../assets/keep-choco-script.png)
+![Keep install script](../assets/keep-install-tooling.png)
 
 2. Launch a terminal **AS Administrator**
 
