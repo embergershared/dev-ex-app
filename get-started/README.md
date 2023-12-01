@@ -118,9 +118,9 @@ Here are some getting started steps:
 
       ![Start the API](../assets/vs-start-api.png)
 
-      - Browse to SwaggerUI:
+      - Browse to SwaggerUI: [ContosoUniversity.API Swagger](https://localhost:58372/swagger)
 
-      [ContosoUniversity.API Swagger](https://localhost:58372/swagger)
+      ![WebAPI Swagger UI](../assets/vs-api-swagger.png)
 
 2. Configure APP and API startup:
 
@@ -128,7 +128,7 @@ Here are some getting started steps:
 
       ![Configure Startup](../assets/vs-configure-startup.png)
 
-      - Set Startup fpr both APP and API:
+      - Set Startup for both APP and API:
 
       ![Multi project Startup](../assets/vs-multiproj-startup.png)
 
