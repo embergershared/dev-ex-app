@@ -81,21 +81,21 @@ Docker desktop gets installed, but requires UI last steps:
 
 3. Execute these commands:
 
-```powershell
-# Launch the downloaded script:
-Set-Location $HOME\Downloads
-.\local-app-setup.ps1
-```
+    ```powershell
+    # Launch the downloaded script:
+    Set-Location $HOME\Downloads
+    .\local-app-setup.ps1
+    ```
 
-The script:
+    The script:
 
-- Clones the app repo locally,
-- Logs you in Azure,
-- Generate basics `git` settings for your commits,
-- Ask you to set a local container SQL Server administrator account,
-- Create a Microsoft SQL Server 2022 container for your dev database,
-- Wire the settings in the application for it to use the local container SQL Server,
-- Launch Visual Studio on the Contoso University App solution.
+    - Clones the app repo locally,
+    - Logs you in Azure,
+    - Generate basics `git` settings for your commits,
+    - Ask you to set a local container SQL Server administrator account,
+    - Create a Microsoft SQL Server 2022 container for your dev database,
+    - Wire the settings in the application for it to use the local container SQL Server,
+    - Launch Visual Studio on the Contoso University App solution.
 
 4. Sign in to Visual Studio
 
