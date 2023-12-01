@@ -84,7 +84,6 @@ Docker desktop gets installed, but requires UI last steps:
 ```powershell
 # Launch the downloaded script:
 Set-Location $HOME\Downloads
-Set-ExecutionPolicy Bypass -Force
 .\local-app-setup.ps1
 ```
 
