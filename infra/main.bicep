@@ -16,6 +16,8 @@ param location string
 param resourceGroupName string = ''
 
 param apiServiceName string = ''
+param webServiceName string = ''
+
 param applicationInsightsDashboardName string = ''
 param applicationInsightsName string = ''
 param appServicePlanName string = ''
@@ -23,7 +25,6 @@ param keyVaultName string = ''
 param logAnalyticsName string = ''
 param sqlServerName string = ''
 param sqlDatabaseName string = ''
-param webServiceName string = ''
 
 @description('Id of the user or app to assign application roles')
 param principalId string = ''
