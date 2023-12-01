@@ -106,6 +106,43 @@ Once logged-in, you can create a new DevBox by:
 ### 6. Develop, test, create a PR
 
 Development work, with Github Copilot help.
+Here are some getting started steps:
+
+1. Populate the database with data:
+
+      - Set startup project to the API:
+
+      ![Set on API](../assets/vs-set-to-api.png)
+
+      - Start the API:
+
+      ![Start the API](../assets/vs-start-api.png)
+
+      - Browse to SwaggerUI:
+
+      [ContosoUniversity.API Swagger](https://localhost:58372/swagger)
+
+2. Configure APP and API startup:
+
+      - Go to configure Startup Projects:
+
+      ![Configure Startup](../assets/vs-configure-startup.png)
+
+      - Set Startup fpr both APP and API:
+
+      ![Multi project Startup](../assets/vs-multiproj-startup.png)
+
+      - Click `Start`:
+
+      ![Start multi-projects](../assets/vs-start-multiproj.png)
+
+      - Success looks like:
+
+      ![Success1](../assets/vs-multiproj-success1.png)
+
+      ![Success2](../assets/vs-multiproj-success2.png)
+
+      ![Success3](../assets/vs-multiproj-success3.png)
 
 ### 7. Shutdown the Dev box
 
