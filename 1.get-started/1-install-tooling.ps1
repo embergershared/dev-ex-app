@@ -1,3 +1,5 @@
+Write-Host "==>  Script 1-install-tooling.ps1 STARTED  < =="
+Write-Host
 # Log will be here: C:\ProgramData\chocolatey\logs\chocolatey.log
 
 # 1. Install Chocolatey
@@ -45,6 +47,8 @@ $install_packages = @(
   "git",
   "gh",
   "azure-cli",
+  "vscode",
+  "sysinternals",
   "microsoftazurestorageexplorer",
   "jdk8",
   "wireshark",
@@ -52,9 +56,16 @@ $install_packages = @(
   "docker-desktop",
   "postman",
   "azure-functions-core-tools --params='/x64:true'",
-  "terrafrom",
+  "terraform",
   "python3",
   "azure-data-studio",
+  "kubectx",
+  "kubens",
+  "kubernetes-cli",
+  "kubernetes-helm",
+  "krew",
+  "flux",
+  "argocd-cli",
   "visioviewer"
 )
 Install-ChocoPackages -Packages $install_packages
@@ -69,7 +80,7 @@ choco list
 
 # 7. Displaying end of script
 Write-Host
-Write-Host "==> Script choco-install.ps1 ended"
+Write-Host "==>  Script 1-install-tooling.ps1 ENDED  < =="
 
 # choco install intellijidea-community
 # choco install onedrive
