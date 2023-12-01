@@ -40,7 +40,7 @@ Once logged-in, you can create a new DevBox by:
 
 ### 4. Install tooling
 
-1. Download the script: [1-install-tooling.ps1](https://github.com/embergershared/dev-ex-app/blob/main/get-started/1-install-tooling.ps1) (Suggestion: Open in a new tab)
+1. Download the script: [1-install-tooling.ps1](https://github.com/embergershared/dev-ex-app/blob/main/1.get-started/1-install-tooling.ps1) (Suggestion: Open in a new tab)
 
 2. Choose `Keep` when asked
 
@@ -73,7 +73,7 @@ Once logged-in, you can create a new DevBox by:
 
 ### 5. Get and configure the app
 
-1. Download the script: [2-app-local-setup](https://github.com/embergershared/dev-ex-app/blob/main/get-started/2-app-local-setup.ps1) (Suggestion: Open in a new tab)
+1. Download the script: [2-app-local-setup](https://github.com/embergershared/dev-ex-app/blob/main/1.get-started/2-app-local-setup.ps1) (Suggestion: Open in a new tab)
 
 ![Keep setup script](../assets/keep-2-app-local-setup.png)
 
