@@ -37,6 +37,8 @@ Once logged-in, you can either:
 
   - `Start`, `Stop`, `Delete`, `Log in` an existing dev box(es),
 
+or:
+
   - `Create` a new Dev box:
 
       1. Click the `+ New dev box` button
