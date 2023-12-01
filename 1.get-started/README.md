@@ -116,9 +116,7 @@ or:
       - Clones the app repo locally,
       - Logs you in Azure,
       - Generate basics `git` settings for your commits,
-      - Your input is required:
-
-        - To set a local container SQL Server administrator account,
+      - Your input is required to set the `sa` account password for the docker SQL Server container:
 
         ![SQL sa password prompt](../assets/sql-container-sapwd-prompt.png)
 
