@@ -38,7 +38,7 @@ jobs:
     - uses: actions/checkout@v3
     
     - name: Setup .NET Core SDK
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v2
       with:
         dotnet-version: '6.0.x'
     
@@ -58,13 +58,13 @@ jobs:
       run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApi src/ContosoUniversity.API/ContosoUniversity.API.csproj
     
     - name: Upload APP results
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: app
         path: PublishApp
     
     - name: Upload API results
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: api
         path: PublishApi
@@ -81,13 +81,13 @@ jobs:
 
     steps:
       - name: Download APP Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: app
           path: app-artifact
       
       - name: Download API Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: api
           path: api-artifact
