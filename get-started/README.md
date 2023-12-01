@@ -46,9 +46,11 @@ Once logged-in, you can create a new DevBox by:
 
 ![Keep install script](../assets/keep-install-tooling.png)
 
-2. Launch a terminal **AS Administrator**
+3. Launch a terminal **AS Administrator**
 
-3. Execute these commands:
+![Terminal run as admin](../assets/run-as-admin.png)
+
+4. Execute these commands:
 
 ```powershell
 # Launch the downloaded script:
@@ -57,7 +59,7 @@ Set-ExecutionPolicy Bypass -Force
 .\install-tooling.ps1
 ```
 
-4. Finish Docker desktop install
+5. Finish Docker desktop install
 
 Docker desktop gets installed, but requires UI last steps.
 
