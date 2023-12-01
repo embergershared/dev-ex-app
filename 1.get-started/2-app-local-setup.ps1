@@ -1,5 +1,5 @@
 # Functions
-Function Test-MsSqlPasswordRequirements {
+Function Test-MeetsMsSqlPasswordRequirements {
   param(
       [Parameter(Mandatory=$true)]
       [System.Security.SecureString]$Password
@@ -10,37 +10,37 @@ Function Test-MsSqlPasswordRequirements {
 
   # Check if password length is at least 8 characters
   if ($PlainPassword.Length -lt 8) {
-      Write-Output "Password must be at least 8 characters long."
+      Write-Host "Password must be at least 8 characters long."
       return $false
   }
 
   # Check if password contains at least one uppercase letter
   if (-not ($PlainPassword -cmatch '[A-Z]')) {
-      Write-Output "Password must contain at least one uppercase letter."
+      Write-Host "Password must contain at least one uppercase letter."
       return $false
   }
 
   # Check if password contains at least one lowercase letter
   if (-not ($PlainPassword -cmatch '[a-z]')) {
-      Write-Output "Password must contain at least one lowercase letter."
+      Write-Host "Password must contain at least one lowercase letter."
       return $false
   }
 
   # Check if password contains at least one digit
   if (-not ($PlainPassword -cmatch '\d')) {
-      Write-Output "Password must contain at least one digit."
+      Write-Host "Password must contain at least one digit."
       return $false
   }
 
   # Check if password contains at least one special character
   if (-not ($PlainPassword -cmatch '[^a-zA-Z\d]')) {
-      Write-Output "Password must contain at least one special character."
+      Write-Host "Password must contain at least one special character."
       return $false
   }
 
   # Check if the password contains any of the disallowed characters (; for connection string)
   if ($PlainPassword -cmatch ";") {
-    Write-Output "Password must not contain: ;."
+    Write-Host "Password must not contain: ;."
     return $false
   }
 
@@ -58,6 +58,7 @@ $webApiDevSettingsFile = "src\ContosoUniversity.API\appsettings.Development.json
 $webApiDevSettingsPath = "$repoPath\$webApiDevSettingsFile"
 $solutionFilePath = "$repoPath\src\ContosoUniversity.sln"
 $visualStudioPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\devenv.exe"
+
 
 # Clone the application repo
 # Create the GitHub organization folder
@@ -82,21 +83,22 @@ git config --global user.email "$(az ad signed-in-user show --query 'userPrincip
 
 # Create a SQL Server container for development
 docker pull mcr.microsoft.com/mssql/server:2022-latest
-# $pw = Read-Host "SQL container SA account password to use (at least 8 characters long): " -AsSecureString
-$attempts = 0
-while ($attempts -lt 3) {
-  $pw = Read-Host "SQL container SA account password to use (at least 8 characters long): " -AsSecureString
-  if (Test-MsSqlPasswordRequirements -Password $pw) {
+# Request a password for the SQL Server sa account
+$attempts = 0; $maxAttempts = 3
+while ($attempts -lt $maxAttempts) {
+  $pw = Read-Host "Enter a password for the SQL container SA account" -AsSecureString
+
+  if (Test-MeetsMsSqlPasswordRequirements -Password $pw) {
     break
   }
   $attempts++
-  Write-Output "Password does not meet the requirements. Please try again."
+
+  if ($attempts -eq $maxAttempts) {
+    Write-Host "Maximum number of attempts ($maxAttempts) reached. Exiting script."
+    return
+  }
 }
 
-if ($attempts -eq 3) {
-  Write-Output "Maximum number of attempts (3) reached. Exiting script."
-  return
-}
 
 docker run `
   -e "ACCEPT_EULA=Y" `
