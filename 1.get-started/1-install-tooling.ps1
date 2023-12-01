@@ -87,13 +87,14 @@ choco list
 Write-Host
 Write-Host "==>  Script 1-install-tooling.ps1 ENDED  < =="
 
+# == Potential additional packages:
 # choco install intellijidea-community
 # choco install onedrive
 # choco install office365business
 # choco install kubernetes-helm --version=3.0.2
 # choco install nodejs-lts --version=10.16.0
 
-# Already in DevBox image:
+# == Already in DevBox image custom:
 # choco install azure-functions-core-tools-3
 # choco install visualstudio2019enterprise
 # choco install visualstudio2022enterprise

@@ -81,11 +81,18 @@ or:
 
       Docker desktop gets installed, but requires UI last steps:
 
-      - Launch the shortcut on the Desktop,
+      - **Restart** the Dev box:
+
+      ![Restart](../assets/db-restart.png)
+
+      - Launch the shortcut on the Desktop:
 
         ![Docker desktop](../assets/docker-desktop-launch.png)
 
-      - `Accept` the Service Agreement,
+      - `Accept` the Service Agreement:
+
+        ![Docker service agreement](../assets/docker-service-agreement.png)
+
       - `Sign up`, `Sign in` or `Continue without signing in` - up to you,
       - `Fill` or `Skip` about your role - up to you,
       - go to settings (gear in top right) and check enable `General` / `Start Docker Desktop when you log in`,
