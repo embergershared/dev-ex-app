@@ -74,6 +74,7 @@ or:
       Set-Location $HOME\Downloads
       Set-ExecutionPolicy Bypass -Force
       .\1-install-tooling.ps1
+      
       ```
 
 5. Finish Docker desktop install

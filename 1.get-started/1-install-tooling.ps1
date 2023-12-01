@@ -23,15 +23,19 @@ Function Uninstall-ChocoPackages {
     [string[]]$Packages
   )
 
+  $installed=$(choco list)
+
   foreach ($package in $Packages) {
-    choco uninstall $package -y
+    if($installed -match $package) {
+      choco uninstall $package -y
+    }
   }
 }
 
 # 3. Unistall packages that are in the image but defective after sysprep
 $uninstall_packages = @(
-  "docker-desktop"
-  # "notepadplusplus"
+  # "docker-desktop"
+  "notepadplusplus"
 )
 Uninstall-ChocoPackages -Packages $uninstall_packages
 
