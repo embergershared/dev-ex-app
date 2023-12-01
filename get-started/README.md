@@ -106,7 +106,8 @@ Once logged-in, you can create a new DevBox by:
 ### 6. Develop, test, create a PR
 
 Development work, with Github Copilot help.
-Here are some getting started steps:
+
+Here are some getting started suggested steps:
 
 1. Populate the database with data:
 
@@ -138,11 +139,17 @@ Here are some getting started steps:
 
       - Success looks like:
 
-      ![Success1](../assets/vs-multiproj-success1.png)
+          - Home page
 
-      ![Success2](../assets/vs-multiproj-success2.png)
+            ![Success1](../assets/vs-multiproj-success1.png)
 
-      ![Success3](../assets/vs-multiproj-success3.png)
+          - Students list
+
+            ![Success2](../assets/vs-multiproj-success2.png)
+
+          - Student details with embedded courses
+
+            ![Success3](../assets/vs-multiproj-success3.png)
 
 ### 7. Shutdown the Dev box
 
