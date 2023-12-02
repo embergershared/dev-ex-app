@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using ContosoUniversity.WebApplication;
+using ContosoUniversity.WebApplication.Models;
 
 #region Application Builder
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
   // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-  options.CheckConsentNeeded = context => true;
+  options.CheckConsentNeeded = _ => true;
   options.MinimumSameSitePolicy = SameSiteMode.None;
 });
 
@@ -38,6 +40,12 @@ else
 {
   builder.Services.AddApplicationInsightsTelemetry();
 }
+
+// Adding Health checks
+builder.Services.AddHealthChecks()
+    .AddCheck<WebAppHealthCheck>("Custom Health");
+
+builder.Services.AddHostedService<CheckWebApiHealthHostedService>();
 
 var app = builder.Build();
 #endregion
@@ -69,6 +77,12 @@ app.UseEndpoints(endpoints =>
 {
   endpoints.MapRazorPages();
 });
+
+app.UseHealthChecks("/healthz");
+
+// Initialize the WebAPI health status.
+// It will be updated by the CheckWebApiHealth service
+Config.App["WebApiIsAccessible"] = "false";
 
 app.Run();
 #endregion

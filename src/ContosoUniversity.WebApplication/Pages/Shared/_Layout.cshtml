@@ -1,5 +1,7 @@
-﻿@using Microsoft.Extensions.Configuration
-@inject IConfiguration Configuration
+﻿@* @using Microsoft.Extensions.Configuration *@
+@using ContosoUniversity.WebApplication.Models
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@* @inject IConfiguration Configuration *@
 
 <!DOCTYPE html>
 <html lang="en">
@@ -35,10 +37,13 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a id="link-home" asp-page="/Index">Home</a></li>
-                    <li><a id="link-departments" asp-page="/Departments/Index">Departments</a></li>
-                    <li><a id="link-courses" asp-page="/Courses/Index">Courses</a></li>
-                    <li><a id="link-instructors" asp-page="/Instructors/Index">Instructors</a></li>
-                    <li><a id="link-students" asp-page="/Students/Index">Students</a></li>
+                    @if (Config.App["WebApiIsAccessible"] == "true")
+                    {
+                        <li><a id="link-departments" asp-page="/Departments/Index">Departments</a></li>
+                        <li><a id="link-courses" asp-page="/Courses/Index">Courses</a></li>
+                        <li><a id="link-instructors" asp-page="/Instructors/Index">Instructors</a></li>
+                        <li><a id="link-students" asp-page="/Students/Index">Students</a></li>
+                    }
                     <li><a id="link-contact" asp-page="/Contact">Contact</a></li>
                     <li><a id="link-about" asp-page="/About">About</a></li>
                 </ul>
