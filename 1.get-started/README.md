@@ -123,15 +123,19 @@ or:
       - Clones the app repo locally,
       - Logs you in Azure,
       - Generate basics `git` settings for your commits,
-      - Your input is required to set the `sa` account password for the docker SQL Server container:
+      - Ask for a SQL Server `sa` account password (requirements are tested):
 
         ![SQL sa password prompt](../assets/sql-container-sapwd-prompt.png)
 
       - Create a Microsoft SQL Server 2022 container for your dev database,
       - Wire the settings in the application for it to use the local container SQL Server,
-      - Launch Visual Studio on the Contoso University App solution.
+      - Launch Visual Studio and open the `Contoso University` App solution.
 
 4. Sign in to Visual Studio
+
+      - Log in to your different accounts (Microsoft, Azure, Github)
+
+      > Note: `File` > `Account settings` is useful to manage them.
 
 5. Success looks like:
 
