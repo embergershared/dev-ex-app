@@ -20,7 +20,7 @@ module web '../core/host/appservice.bicep' = {
     runtimeVersion: '6.0'
     tags: union(tags, { 'azd-service-name': serviceName })
     scmDoBuildDuringDeployment: false
-    healthCheckPath: '/healthz'
+    // healthCheckPath: '/healthz'
   }
 }
 

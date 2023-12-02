@@ -2,11 +2,11 @@ name: 'Dev - App Azure Infra'
 
 on:
   # Automatic trigger
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'infra/**'
+  push:
+    branches:
+      - main
+    paths:
+      - 'infra/**'
 
   # Enable manual run from Github UI (in repo / Actions tab)
   workflow_dispatch:
