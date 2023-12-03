@@ -14,7 +14,7 @@ namespace ContosoUniversity.WebApplication
             //    HealthCheckResult.Healthy() : HealthCheckResult.Degraded());
 
             // Or just set it as healthy because it is running.
-            return Task.FromResult(HealthCheckResult.Healthy());
+            return Task.FromResult(HealthCheckResult.Healthy("The Web APP for Contoso University is healthy (up and running)."));
         }
     }
 }

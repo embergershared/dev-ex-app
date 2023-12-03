@@ -28,7 +28,7 @@ namespace ContosoUniversity.WebApplication
             var client = _httpClientFactory.CreateClient("client");
             try
             {
-                _ = client.GetStringAsync("/api/Courses").Result;
+                _ = client.GetStringAsync("/healthz").Result;
                 Config.App["WebApiIsAccessible"] = "true";
             }
             catch (Exception)

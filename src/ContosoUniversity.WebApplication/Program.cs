@@ -45,7 +45,7 @@ else
 builder.Services.AddHealthChecks()
     .AddCheck<WebAppHealthCheck>("Custom Health");
 
-builder.Services.AddHostedService<CheckWebApiHealthHostedService>();
+//builder.Services.AddHostedService<CheckWebApiHealthHostedService>();
 
 var app = builder.Build();
 #endregion
@@ -82,7 +82,7 @@ app.UseHealthChecks("/healthz");
 
 // Initialize the WebAPI health status.
 // It will be updated by the CheckWebApiHealth service
-Config.App["WebApiIsAccessible"] = "false";
+Config.App["WebApiIsAccessible"] = "true";
 
 app.Run();
 #endregion
