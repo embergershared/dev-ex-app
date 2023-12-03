@@ -1,4 +1,4 @@
-name: 'Dev - Infra - Deploy'
+name: 'DEV - Infra - Deploy'
 
 on:
   # # Automatic trigger
