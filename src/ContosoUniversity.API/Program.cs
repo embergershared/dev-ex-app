@@ -65,7 +65,8 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseDeveloperExceptionPage();
+  app.UseDeveloperExceptionPage();
+
   // Swashbuckle Swagger
   app.UseSwagger();   // https://localhost:58372/swagger/v1/swagger.json
   app.UseSwaggerUI(); // https://localhost:58372/swagger
