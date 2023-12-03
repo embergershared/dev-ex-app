@@ -90,6 +90,8 @@ Write-Host "==>  Script 1-install-tooling.ps1 ENDED  <=="
 # 8. Display Restart message
 Write-Host
 Write-Host "***  RESTART the Dev box to setup Docker Desktop  ***"
+Write-Host "***     Restart : 'Restart-Computer'  ***"
+Write-Host "***     Shutdown: 'Stop-Computer'     ***"
 
 
 # == Potential additional packages:

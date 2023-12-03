@@ -1,5 +1,12 @@
 name: 'UAT - Infra, API, APP - Deploy'
 
+# WARNING: UAT is not ASPNETCORE_ENVIRONMENT: Development
+# => There is no excution of:
+#   app.UseDeveloperExceptionPage();
+#   app.UseSwagger();   // https://localhost:58372/swagger/v1/swagger.json
+#   app.UseSwaggerUI(); // https://localhost:58372/swagger
+#   await DbInitializer.Initialize(db);
+
 on:
   # Automatic trigger
   # push:
