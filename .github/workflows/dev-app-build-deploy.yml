@@ -1,19 +1,19 @@
 name: 'Dev - App Build & Deploy'
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  #   paths-ignore:
-  #     - 'infra/**'
-  #     - '**/ContosoUniversity - Infra.yml'
-  #     - '**/README.md'
-  # pull_request:
-  #   branches: 
-  #     - main
-  #   paths-ignore:
-  #     - 'infra/**'
-# We also want to be able to run this manually from Github
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'infra/**'
+      - '**/*azure-infra.yml'
+      - '**/README.md'
+  pull_request:
+    branches: 
+      - main
+    paths-ignore:
+      - 'infra/**'
+# We also want to be able to run this workflow manually from Github
   workflow_dispatch:
 
 env:
