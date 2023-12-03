@@ -1,4 +1,4 @@
-name: 'Dev - API+APP: Build & Deploy'
+name: 'Dev - API, APP - Build & Deploy'
 
 on:
   push:
