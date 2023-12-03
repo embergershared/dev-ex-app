@@ -17,7 +17,7 @@ param resourceGroupName string = ''
 
 param apiServiceName string = ''
 param webServiceName string = ''
-param additionalAppSettings object = {}
+param isDev bool=false
 
 param applicationInsightsDashboardName string = ''
 param applicationInsightsName string = ''
@@ -66,7 +66,7 @@ module web './app/web.bicep' = {
     // appSettings: {
     //   URLAPI: api.outputs.SERVICE_API_URI
     // }
-    appSettings: union(additionalAppSettings,
+    appSettings: union( isDev ? { ASPNETCORE_ENVIRONMENT: 'Development' } : {},
       {
         URLAPI: api.outputs.SERVICE_API_URI
       }
