@@ -6,21 +6,43 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
-#region Application Builder
+#region Program.cs specific logger instance
+var logger = LoggerFactory
+    .Create(builder => builder
+        // add console as logging target
+        .AddConsole()
+        // add debug output as logging target
+        .AddDebug()
+        // set minimum level to Trace
+        .SetMinimumLevel(LogLevel.Trace))
+    .CreateLogger<Program>();
+
+logger.LogInformation("Program.cs: Logger<Program> created");
+#endregion
+
+#region   ===============   CREATING THE APP BUILDER   ===============
+logger.LogInformation("Program.cs: Invoking WebApplication.CreateBuilder(args)");
 var builder = WebApplication.CreateBuilder(args);
 
 // ReSharper disable once RedundantAssignment
 var connectionString = string.Empty;
 if (builder.Configuration["AZURE_KEY_VAULT_ENDPOINT"] != null)
 {
-  var credential = new DefaultAzureCredential();
+    logger.LogInformation("Connecting to SQL Database with AZURE_KEY_VAULT_ENDPOINT & AZURE_SQL_CONNECTION_STRING_KEY");
+
+    // Get SQL Connection string from Key vault. Wired to be used on Azure App service.
+    var credential = new DefaultAzureCredential();
   builder.Configuration.AddAzureKeyVault(new Uri(builder.Configuration["AZURE_KEY_VAULT_ENDPOINT"]), credential);
   connectionString = builder.Configuration[builder.Configuration["AZURE_SQL_CONNECTION_STRING_KEY"]];
 }
 else
 {
-  connectionString = builder.Configuration.GetConnectionString("ContosoUniversityAPIContext");
+    logger.LogInformation("Connecting to SQL Database with ContosoUniversityAPIContext");
+
+    // If the settings we expect from the App service are not here, use a ConnectionString.
+    connectionString = builder.Configuration.GetConnectionString("ContosoUniversityAPIContext");
 }
 
 builder.Services.AddDbContext<ContosoUniversityAPIContext>(options =>
@@ -36,14 +58,14 @@ builder.Services.AddHealthChecks();
 
 // Swashbuckle Swagger
 builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
 #endregion
 
-#region Application Middlewares and Run
+#region   ===============   BUILDING THEN RUN THE APP  ===============
+var app = builder.Build();
+
 if (app.Environment.IsDevelopment())
 {
-  app.UseDeveloperExceptionPage();
+    app.UseDeveloperExceptionPage();
   // Swashbuckle Swagger
   app.UseSwagger();   // https://localhost:58372/swagger/v1/swagger.json
   app.UseSwaggerUI(); // https://localhost:58372/swagger
