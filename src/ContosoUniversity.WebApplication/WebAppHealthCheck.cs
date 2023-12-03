@@ -9,8 +9,12 @@ namespace ContosoUniversity.WebApplication
     {
         public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult(bool.Parse(Config.App["WebApiIsAccessible"]) ? 
-                HealthCheckResult.Healthy() : HealthCheckResult.Degraded());
+            // One option is to set the app as degraded if the WebApi is not accessible.
+            //return Task.FromResult(bool.Parse(Config.App["WebApiIsAccessible"]) ? 
+            //    HealthCheckResult.Healthy() : HealthCheckResult.Degraded());
+
+            // Or just set it as healthy because it is running.
+            return Task.FromResult(HealthCheckResult.Healthy());
         }
     }
 }
