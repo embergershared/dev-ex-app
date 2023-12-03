@@ -71,7 +71,6 @@ jobs:
   
   release:
     needs: build
-
     name: 'Deploy APP & API'
     environment: uat
     runs-on:
