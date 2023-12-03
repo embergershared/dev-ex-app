@@ -85,7 +85,12 @@ choco list
 
 # 7. Displaying end of script
 Write-Host
-Write-Host "==>  Script 1-install-tooling.ps1 ENDED  < =="
+Write-Host "==>  Script 1-install-tooling.ps1 ENDED  <=="
+
+# 8. Display Restart message
+Write-Host
+Write-Host "***  RESTART the Dev box to setup Docker Desktop  ***"
+
 
 # == Potential additional packages:
 # choco install intellijidea-community
@@ -95,7 +100,6 @@ Write-Host "==>  Script 1-install-tooling.ps1 ENDED  < =="
 # choco install nodejs-lts --version=10.16.0
 
 # == Already in DevBox image custom:
-# choco install azure-functions-core-tools-3
 # choco install visualstudio2019enterprise
 # choco install visualstudio2022enterprise
 # choco install wsl-ubuntu-2004 --params "/InstallRoot:true"

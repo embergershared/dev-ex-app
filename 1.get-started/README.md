@@ -57,6 +57,8 @@ or:
 
 ### 4. Install tooling
 
+#### 1. Install packages
+
 1. Download the script: [1-install-tooling.ps1](https://github.com/embergershared/dev-ex-app/blob/main/1.get-started/1-install-tooling.ps1) (Suggestion: Open in a new tab)
 
 2. Choose `Keep` when asked
@@ -77,13 +79,15 @@ or:
 
       ```
 
-5. Finish Docker desktop install
+5. Restart the Dev box
 
-      Docker desktop gets installed, but requires UI last steps:
+      Docker desktop gets installed, but it requires a restart to perform UI last steps:
 
       - **Restart** the Dev box:
 
       ![Restart](../assets/db-restart.png)
+
+#### 2. Finish Docker desktop install
 
       > Note: you need to restart for `Docker Desktop` to launch.
 
