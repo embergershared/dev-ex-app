@@ -1,4 +1,4 @@
-name: 'Dev - App Azure Infra'
+name: 'Dev - API+APP Infra'
 
 on:
   # # Automatic trigger
