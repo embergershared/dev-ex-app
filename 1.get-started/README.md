@@ -92,21 +92,21 @@ or:
 
 #### 2. Finish Docker desktop install
 
-    > Note: you need to restart for `Docker Desktop` to launch.
+  > Note: you need to restart for `Docker Desktop` to launch.
 
-    - Launch the shortcut on the Desktop:
+  - Launch the shortcut on the Desktop:
 
-      ![Docker desktop](../assets/docker-desktop-launch.png)
+    ![Docker desktop](../assets/docker-desktop-launch.png)
 
-    - `Accept` the Service Agreement:
+  - `Accept` the Service Agreement:
 
-      ![Docker service agreement](../assets/docker-service-agreement.png)
+    ![Docker service agreement](../assets/docker-service-agreement.png)
 
-    - `Sign up`, `Sign in` or `Continue without signing in` - up to you,
-    - `Fill` or `Skip` about your role - up to you,
-    - go to settings (gear in top right) and check enable `General` / `Start Docker Desktop when you log in`,
-    - `Apply & restart`,
-    - Check `Engine running` status.
+  - `Sign up`, `Sign in` or `Continue without signing in` - up to you,
+  - `Fill` or `Skip` about your role - up to you,
+  - go to settings (gear in top right) and check enable `General` / `Start Docker Desktop when you log in`,
+  - `Apply & restart`,
+  - Check `Engine running` status.
 
 ### 5. Get and configure the app
 
