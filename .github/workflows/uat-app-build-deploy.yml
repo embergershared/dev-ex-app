@@ -1,4 +1,4 @@
-name: 'UAT - App Build & Deploy'
+name: 'UAT - APP & API Build & Deploy'
 
 on:
   # push:

@@ -1,4 +1,4 @@
-name: 'UAT - App Azure Infra'
+name: 'UAT - Azure Infra Deploy/Update'
 
 on:
   # Automatic trigger
