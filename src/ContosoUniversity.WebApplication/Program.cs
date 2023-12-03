@@ -45,6 +45,7 @@ else
 builder.Services.AddHealthChecks()
     .AddCheck<WebAppHealthCheck>("Custom Health");
 
+//// Adding a check of the WebAPI health, to display dependent pages/links/actions or not
 //builder.Services.AddHostedService<CheckWebApiHealthHostedService>();
 
 var app = builder.Build();
