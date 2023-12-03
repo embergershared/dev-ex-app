@@ -79,6 +79,10 @@ or:
 
       ```
 
+      > Note: During the installation, the Ubuntu WSL setup window will appear:
+
+      > ![WSL Ubuntu](../assets/wsl-ubu-setup.png)
+
 5. Restart the Dev box
 
       Docker desktop gets installed, but it requires a restart to perform UI last steps:
