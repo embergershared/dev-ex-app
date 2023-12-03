@@ -1,12 +1,12 @@
 name: 'Dev - App Azure Infra'
 
 on:
-  # Automatic trigger
-  push:
-    branches:
-      - main
-    paths:
-      - 'infra/**'
+  # # Automatic trigger
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'infra/**'
 
   # Enable manual trigger
   workflow_dispatch:
