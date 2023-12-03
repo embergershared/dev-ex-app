@@ -17,6 +17,7 @@ param resourceGroupName string = ''
 
 param apiServiceName string = ''
 param webServiceName string = ''
+param additionalAppSettings object = {}
 
 param applicationInsightsDashboardName string = ''
 param applicationInsightsName string = ''
@@ -62,9 +63,14 @@ module web './app/web.bicep' = {
     tags: tags
     applicationInsightsName: monitoring.outputs.applicationInsightsName
     appServicePlanId: appServicePlan.outputs.id
-    appSettings: {
-      URLAPI: api.outputs.SERVICE_API_URI
-    }
+    // appSettings: {
+    //   URLAPI: api.outputs.SERVICE_API_URI
+    // }
+    appSettings: union(additionalAppSettings,
+      {
+        URLAPI: api.outputs.SERVICE_API_URI
+      }
+    )
   }
 }
 

@@ -81,7 +81,7 @@ app.UseEndpoints(endpoints =>
 app.UseHealthChecks("/healthz");
 
 // Initialize the WebAPI health status.
-// It will be updated by the CheckWebApiHealth service
+// It will be updated by the CheckWebApiHealthHostedService (that checks every 5 seconds)
 Config.App["WebApiIsAccessible"] = "true";
 
 app.Run();
