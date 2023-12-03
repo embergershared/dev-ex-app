@@ -17,7 +17,7 @@ param resourceGroupName string = ''
 
 param apiServiceName string = ''
 param webServiceName string = ''
-param isDev bool=false
+param isDev bool = false
 
 param applicationInsightsDashboardName string = ''
 param applicationInsightsName string = ''
@@ -85,9 +85,14 @@ module api './app/api.bicep' = {
     applicationInsightsName: monitoring.outputs.applicationInsightsName
     appServicePlanId: appServicePlan.outputs.id
     keyVaultName: keyVault.outputs.name
-    appSettings: {
-      AZURE_SQL_CONNECTION_STRING_KEY: sqlServer.outputs.connectionStringKey
-    }
+    // appSettings: {
+    //   AZURE_SQL_CONNECTION_STRING_KEY: sqlServer.outputs.connectionStringKey
+    // }
+    appSettings: union( isDev ? { ASPNETCORE_ENVIRONMENT: 'Development' } : {},
+      {
+        AZURE_SQL_CONNECTION_STRING_KEY: sqlServer.outputs.connectionStringKey
+      }
+    )
   }
 }
 
