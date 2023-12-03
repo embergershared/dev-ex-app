@@ -8,7 +8,7 @@ on:
     paths:
       - 'infra/**'
 
-  # Enable manual run from Github UI (in repo / Actions tab)
+  # Enable manual trigger
   workflow_dispatch:
 
 # Required to use OIDC enabled SPN with Azure
