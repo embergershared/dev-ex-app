@@ -6,13 +6,15 @@ As a new developer in the Contoso University app team, you are given access to a
 
 The process to get started is:
 
-1. Access the DevBox environment
-2. Log in with your account
-3. Create a DevBox machine (can take up to 45 minutes)
-4. Install development tooling
-5. Get and configure the Contoso University app on your DevBox
-6. Develop, debug, etc.,
-7. Turn the DevBox off.
+1. [Access the DevBox environment,](#1-devbox-access)
+2. [Log in with your account,](#2-log-in-with-your-work-account)
+3. [Create a DevBox machine (can take up to 45 minutes),](#3-create-a-devbox)
+4. Install development tooling:
+    1. [Install tooling,](#1-install-packages)
+    2. [Finish Docker desktop setup](#2-finish-docker-desktop-install)
+5. [Get and configure the Contoso University app on your DevBox,](#5-get-and-configure-the-app)
+6. [Develop, debug, etc.,](#6-develop-test-create-a-pr)
+7. [Turn the DevBox off.](#7-shutdown-the-dev-box)
 
 ## Steps
 
