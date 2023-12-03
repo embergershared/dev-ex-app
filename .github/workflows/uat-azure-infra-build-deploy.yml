@@ -1,4 +1,4 @@
-name: 'UAT - Update: Infra > API > APP'
+name: 'UAT - Deploy: Infra > API > APP'
 
 on:
   # Automatic trigger
