@@ -32,7 +32,7 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
       name: 'GP_S_Gen5'
       tier: 'GeneralPurpose'
       family: 'Gen5'
-      capacity: 1
+      capacity: 2
     }
     properties: {
       collation: 'SQL_Latin1_General_CP1_CI_AS'
