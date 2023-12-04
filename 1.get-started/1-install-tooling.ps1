@@ -14,7 +14,10 @@ Function Install-ChocoPackages {
   )
 
   foreach ($package in $Packages) {
-    choco install $package -y
+    $command = "choco install $package -y"
+    Write-Host
+    Write-Host "Install-ChocoPackages => Executing: $command"
+    Invoke-Expression $command
   }
 }
 Function Uninstall-ChocoPackages {
@@ -27,10 +30,16 @@ Function Uninstall-ChocoPackages {
 
   foreach ($package in $Packages) {
     if($installed -match $package) {
-      choco uninstall $package -y
+      $command = "choco uninstall $package -y"
+      Write-Host
+      Write-Host "Uninstall-ChocoPackages => Executing: $command"
+      Invoke-Expression $command
     }
   }
 }
+
+Install-ChocoPackages -Packages "googlechrome --ignore-checksums"
+
 
 # 3. Unistall packages that are in the image but defective after sysprep
 $uninstall_packages = @(
