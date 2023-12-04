@@ -19,6 +19,9 @@ on:
 
   # We also want to be able to run this workflow manually from Github
   workflow_dispatch:
+  
+  # Enabling this workflow to be reusable
+  workflow_call:
 
 env:
   CONFIGURATION: release
