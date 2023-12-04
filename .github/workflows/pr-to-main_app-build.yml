@@ -1,0 +1,106 @@
+name: 'DEV - API, APP - Build+Deploy'
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'infra/**'
+
+      # paths-ignore:
+    #   - 'infra/**'
+    #   - '**/*azure-infra.yml'
+    #   - '**/README.md'
+  # pull_request:
+  #   branches: 
+  #     - main
+  #   paths-ignore:
+  #     - 'infra/**'
+
+  # We also want to be able to run this workflow manually from Github
+  workflow_dispatch:
+
+env:
+  CONFIGURATION: release
+  AZ_APP_NAME: ${{ vars.AZURE_ENVIRONMENT_NAME }}-app
+  AZ_API_NAME: ${{ vars.AZURE_ENVIRONMENT_NAME }}-api
+
+# To use OIDC enabled SPN with Azure
+permissions:
+  id-token: write
+
+jobs:
+  build:
+    name: 'Build'
+    environment: dev
+    runs-on:
+      # We use a GH organization Self-hosted runner wired in the Private VNET
+      group: embergershared
+      labels: 912772
+  
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup .NET Core SDK
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '6.0.x'
+    
+    - name: Restore
+      run: dotnet restore src/ContosoUniversity.sln
+    
+    - name: Build
+      run: dotnet build src/ContosoUniversity.sln --configuration ${{ env.CONFIGURATION }} --no-restore
+    
+    - name: Test
+      run: dotnet test src/ContosoUniversity.Test/ContosoUniversity.Test.csproj --verbosity normal --logger trx --results-directory TestResults
+      
+    - name: Publish APP
+      run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApp src/ContosoUniversity.WebApplication/ContosoUniversity.WebApplication.csproj
+
+    - name: Publish API
+      run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApi src/ContosoUniversity.API/ContosoUniversity.API.csproj
+    
+    - name: Upload APP results
+      uses: actions/upload-artifact@v3
+      with:
+        name: app
+        path: PublishApp
+    
+    - name: Upload API results
+      uses: actions/upload-artifact@v3
+      with:
+        name: api
+        path: PublishApi
+
+  infra:
+    name: 'Validate Infra with bicep'
+    environment: dev
+    runs-on:
+      # We use a GH organization Self-hosted runner wired in the Private VNET
+      group: embergershared
+      labels: 912772
+
+    steps:
+    - uses: actions/checkout@v3
+
+    # Using OIDC enabled SPN with Azure
+    - name: Azure Login
+      uses: Azure/login@v1
+      with:
+        tenant-id: ${{ vars.AZURE_TENANT_ID }}
+        subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+        client-id: ${{ vars.AZURE_GHA_CLIENT_ID }}
+
+    - name: Deploy bicep Template
+      uses: Azure/arm-deploy@v1
+      with:
+        scope: subscription
+        subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+        region: ${{ env.AZ_LOCATION }}
+        template: infra/main.bicep
+        deploymentMode: Validate
+        deploymentName: 'gh-actions'
+        parameters: environmentName=${{ env.AZ_ENVIRONMENT_NAME }} location=${{ env.AZ_LOCATION }} resourceGroupName="rg-use2-912772-s1-${{ env.AZ_ENVIRONMENT_NAME }}-01" sqlAdminPassword=${{ env.AZ_SQL_SERVER_PASSWORD }} appUserPassword=${{ env.AZ_APP_PASSWORD }} sqlDatabaseName="ContosoUniversity" apiServiceName=${{ env.AZ_API_NAME }} webServiceName=${{ env.AZ_APP_NAME }} isDev="true"
+        failOnStdErr: false

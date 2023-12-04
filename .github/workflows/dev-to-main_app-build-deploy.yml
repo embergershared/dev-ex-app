@@ -4,15 +4,18 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - 'infra/**'
-      - '**/*azure-infra.yml'
-      - '**/README.md'
-  pull_request:
-    branches: 
-      - main
-    paths-ignore:
-      - 'infra/**'
+    paths:
+      - 'src/**'
+  
+    # paths-ignore:
+    #   - 'infra/**'
+    #   - '**/*azure-infra.yml'
+    #   - '**/README.md'
+  # pull_request:
+  #   branches: 
+  #     - main
+  #   paths-ignore:
+  #     - 'infra/**'
 # We also want to be able to run this workflow manually from Github
   workflow_dispatch:
 
@@ -27,7 +30,7 @@ permissions:
 
 jobs:
   build:
-    name: 'Build APP & API'
+    name: 'Build'
     environment: dev
     runs-on:
       # We use a GH organization Self-hosted runner wired in the Private VNET
@@ -72,7 +75,7 @@ jobs:
   release:
     needs: build
 
-    name: 'Deploy APP & API'
+    name: 'Deploy'
     environment: dev
     runs-on:
       # We use a GH organization Self-hosted runner wired in the Private VNET
