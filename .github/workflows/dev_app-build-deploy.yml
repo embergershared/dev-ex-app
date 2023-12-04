@@ -1,4 +1,4 @@
-name: 'DEV - API, APP - Build+Deploy'
+name: 'DEV - Solution - Build+Deploy'
 
 on:
   # push:
