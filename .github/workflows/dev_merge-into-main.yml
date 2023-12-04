@@ -1,4 +1,4 @@
-name: 'DEV - Commit to main - Deploy'
+name: 'DEV - Merge into main - Deploy'
 
 on:
   # Automatic trigger
