@@ -96,7 +96,7 @@ or:
 
   > Note: you need to restart for `Docker Desktop` to launch.
 
-- Launch the shortcut on the Desktop:
+- Launch the shortcut on the Desktop (if not showing up by itself):
 
   ![Docker desktop](../assets/docker-desktop-launch.png)
 
