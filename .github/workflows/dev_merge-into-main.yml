@@ -28,14 +28,13 @@ env:
 jobs:
   infra:
     name: 'Deploy Infra with bicep'
-    environment: dev
-    runs-on:
-      # We use a GH organization Self-hosted runner wired in the Private VNET
-      group: embergershared
-      labels: 912772
+    # environment: dev
+    # runs-on:
+    #   # We use a GH organization Self-hosted runner wired in the Private VNET
+    #   group: embergershared
+    #   labels: 912772
 
-    steps:
-    - uses: embergershared/dev-ex-app/.github/workflows/dev_azure-infra.yml@main
+    uses: embergershared/dev-ex-app/.github/workflows/dev_azure-infra.yml@main
 
     # steps:
     # - uses: actions/checkout@v3
