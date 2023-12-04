@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using ContosoUniversity.API.Data;
 using ContosoUniversity.API.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+using Microsoft.Extensions.Logging;
 
 namespace ContosoUniversity.API.Controllers
 {
@@ -11,10 +13,13 @@ namespace ContosoUniversity.API.Controllers
     [ApiController]
     public class DepartmentsController : ControllerBase
     {
+        private readonly ILogger<DepartmentsController> _logger;
         private readonly ContosoUniversityAPIContext _context;
 
-        public DepartmentsController(ContosoUniversityAPIContext context)
+        public DepartmentsController(ContosoUniversityAPIContext context,
+            ILogger<DepartmentsController> logger)
         {
+            _logger = logger;
             _context = context;
         }
 
@@ -26,25 +31,34 @@ namespace ContosoUniversity.API.Controllers
                                     .Include(i => i.Instructor);
 
             //Transform to DTO
-            var result = new DTO.DepartamentInstructorResult()
+            try
             {
-                Departments = departaments.Select(c => new DTO.Department()
+                var result = new DTO.DepartamentInstructorResult()
                 {
-                    ID = c.ID,
-                    Name = c.Name,
-                    Budget = c.Budget,
-                    StartDate = c.StartDate,
-                    Instructor = new DTO.Instructor()
+                    Departments = departaments.Select(c => new DTO.Department()
                     {
-                        ID = c.Instructor.ID,
-                        LastName = c.Instructor.LastName,
-                        FirstName = c.Instructor.FirstName,
-                        HireDate = c.Instructor.HireDate
-                    }
-                }).ToList()
-            };
+                        ID = c.ID,
+                        Name = c.Name,
+                        Budget = c.Budget,
+                        StartDate = c.StartDate,
+                        Instructor = new DTO.Instructor()
+                        {
+                            ID = c.Instructor.ID,
+                            LastName = c.Instructor.LastName,
+                            FirstName = c.Instructor.FirstName,
+                            HireDate = c.Instructor.HireDate
+                        }
+                    }).ToList()
+                };
 
-            return Ok(result);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception here
+                _logger.LogError(ex, "Error getting departments");
+                return StatusCode(503, "Service Unavailable");
+            }
         }
 
         // GET: api/Departments/5
