@@ -1,4 +1,4 @@
-name: 'DEV - PR to main > Apply Controls'
+name: 'DEV - PR to main > Apply controls'
 
 on:
   pull_request:
