@@ -50,6 +50,8 @@ builder.Services.AddDbContext<ContosoUniversityAPIContext>(options =>
   options.UseSqlServer(connectionString, sqlOptions => sqlOptions.EnableRetryOnFailure());
 });
 
+builder.Services.AddHealthChecks().AddDbContextCheck<ContosoUniversityAPIContext>();
+
 builder.Services.AddControllers();
 
 builder.Services.AddApplicationInsightsTelemetry(builder.Configuration);
