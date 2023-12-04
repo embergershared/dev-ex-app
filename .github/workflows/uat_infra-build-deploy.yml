@@ -41,7 +41,8 @@ jobs:
       labels: 912772
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
     # Using OIDC enabled SPN with Azure
     - name: Azure Login
@@ -73,7 +74,8 @@ jobs:
       labels: 912772
   
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
     
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v2
