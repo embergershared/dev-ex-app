@@ -78,7 +78,7 @@ or:
       Set-Location $HOME\Downloads
       Set-ExecutionPolicy Bypass -Force
       .\1-install-tooling.ps1
-
+      Restart-Computer
       ```
 
       > Note: During the installation, the Ubuntu WSL setup window will appear:
