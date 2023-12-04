@@ -13,36 +13,6 @@ on:
   
   # Enabling this workflow to be reusable
   workflow_call:
-    # inputs:
-    #   AZURE_ENVIRONMENT_NAME:
-    #     description: 'Azure Environment Name'
-    #     required: true
-    #     type: string
-    #   AZURE_LOCATION:
-    #     description: 'Azure Location'
-    #     required: true
-    #     default: 'eastus2'
-    #     type: string
-    #   AZURE_SUBSCRIPTION_ID:
-    #     description: 'Azure Subscription Id'
-    #     required: true
-    #     type: string
-    #   AZURE_TENANT_ID:
-    #     description: 'Azure Tenant Id'
-    #     required: true
-    #     type: string
-    #   AZURE_GHA_CLIENT_ID:
-    #     description: 'Azure GHA Client Id'
-    #     required: true
-    #     type: string
-    #   AZURE_SQL_PASSWORD:
-    #     description: 'Azure SQL Password'
-    #     required: true
-    #     type: string
-    #   AZURE_APP_PASSWORD:
-    #     description: 'Azure App Password'
-    #     required: true
-    #     type: string
 
 # Required to use OIDC enabled SPN with Azure
 permissions:
@@ -83,7 +53,7 @@ jobs:
         subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}
         region: ${{ env.AZ_LOCATION }}
         template: infra/main.bicep
-        deploymentMode: Incremental
+        # deploymentMode: Incremental # Type not supported for subscription scope
         deploymentName: 'gh-actions'
         parameters: environmentName=${{ env.AZ_ENVIRONMENT_NAME }} location=${{ env.AZ_LOCATION }} resourceGroupName="rg-use2-912772-s1-${{ env.AZ_ENVIRONMENT_NAME }}-01" sqlAdminPassword=${{ env.AZ_SQL_SERVER_PASSWORD }} appUserPassword=${{ env.AZ_APP_PASSWORD }} sqlDatabaseName="ContosoUniversity" apiServiceName=${{ env.AZ_API_NAME }} webServiceName=${{ env.AZ_APP_NAME }} isDev="true"
         failOnStdErr: false

@@ -27,7 +27,7 @@ env:
 
 jobs:
   infra:
-    name: 'Deploy Infra with bicep'
+    name: 'Azure Infra'
     # environment: dev
     # runs-on:
     #   # We use a GH organization Self-hosted runner wired in the Private VNET
@@ -35,6 +35,11 @@ jobs:
     #   labels: 912772
 
     uses: embergershared/dev-ex-app/.github/workflows/dev_azure-infra.yml@main
+
+  apps:
+    needs: infra
+    name: 'API + APP'
+    uses: embergershared/dev-ex-app/.github/workflows/dev_app-build-deploy.yml@main
 
     # steps:
     # - uses: actions/checkout@v3
