@@ -1,4 +1,4 @@
-name: 'DEV - API, APP - Build+Deploy'
+name: 'DEV - PR to main check'
 
 on:
   pull_request:
@@ -75,7 +75,7 @@ jobs:
         path: PublishApi
 
   infra:
-    name: 'Validate Infra with bicep'
+    name: 'Bicep validation'
     environment: dev
     runs-on:
       # We use a GH organization Self-hosted runner wired in the Private VNET
