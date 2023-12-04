@@ -37,6 +37,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      name: 'Checkout repo'
 
     # Using OIDC enabled SPN with Azure
     - name: Azure Login
