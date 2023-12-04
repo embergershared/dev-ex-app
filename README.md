@@ -8,9 +8,13 @@
 
 - The Contoso University sample application was added with the following changes & improvements:
 
-  - GitHub Actions using OIDC to authenticate and interact with Azure,
-  - GitHub Actions Workflow used to publish to Application Service (WebApp and WebAPI) with Basic Authentication OFF,
-  - Fixed some deployments caveats in the bicep,
+  - GitHub Actions using OIDC ([OpenID Connect](https://www.microsoft.com/en-us/security/business/security-101/what-is-openid-connect-oidc)) to authenticate and interact with Azure,
+  - GitHub Actions Workflows are used to publish to Application Service (WebApp and WebAPI) with Basic Authentication OFF,
+  - GitHub Actions are:
+    - Running on [self-hosted runners](https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners), so they can access "private-internal" only resources,
+    - Using [GitHub environments](https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment),
+    - Triggered by different events: `pull requests`, `merge to branches` and `manually`,
+  - Fixed some deployments caveats in the bicep and the application code itself,
   - Created a fully automated and coherent deployment system with the infrastructure, the code and the application on the infrastructure,
   - A set of scripts ([located here](./1.get-started/README.md)) to setup a Dev box **very fast** for a new developer to work on the application,
   - An Azure `Dev Center` which enables:
