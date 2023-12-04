@@ -13,6 +13,12 @@ on:
   
   # Enabling this workflow to be reusable
   workflow_call:
+    inputs:
+      GH_ENVIRONMENT_NAME:
+        description: 'GitHub Environment name'
+        type: string
+        required: true
+        default: 'dev'
 
 # Required to use OIDC enabled SPN with Azure
 permissions:
@@ -29,7 +35,7 @@ env:
 jobs:
   infra:
     name: 'Deploy bicep'
-    environment: dev
+    environment: ${{ inputs.GH_ENVIRONMENT_NAME }}
     runs-on:
       # We use a GH organization Self-hosted runner wired in the Private VNET
       group: embergershared
