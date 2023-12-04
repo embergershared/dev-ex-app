@@ -35,7 +35,7 @@ jobs:
       labels: 912772
 
     steps:
-    - uses: embergershared/dev-ex-app/actions/workflows/dev_azure-infra.yml.yml@main
+    - uses: embergershared/dev-ex-app/.github/workflows/dev_azure-infra.yml@main
 
     # steps:
     # - uses: actions/checkout@v3
