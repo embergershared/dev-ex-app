@@ -57,11 +57,10 @@ else
 }
 
 // Adding Health checks
-builder.Services.AddHealthChecks()
-    .AddCheck<WebAppHealthCheck>("Custom Health");
+builder.Services.AddHealthChecks().AddCheck<WebAppHealthCheck>("Custom Health");
 
-//// Adding a check of the WebAPI health, to display dependent pages/links/actions or not
-//builder.Services.AddHostedService<CheckWebApiHealthHostedService>();
+// Adding a check of the WebAPI health, to display dependent pages/links/actions or not
+builder.Services.AddHostedService<CheckWebApiHealthHostedService>();
 
 #endregion
 
@@ -99,7 +98,7 @@ app.UseHealthChecks("/healthz");
 
 // Initialize the WebAPI health status.
 // It will be updated by the CheckWebApiHealthHostedService (that checks every 5 seconds)
-Config.App["WebApiIsAccessible"] = "true";
+Config.App["WebApiIsAccessible"] = "false";
 
 app.Run();
 #endregion
