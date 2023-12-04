@@ -80,6 +80,7 @@ jobs:
 
   infra:
     name: 'Bicep validation'
+    needs: build
     environment: dev
     runs-on:
       # We use a GH organization Self-hosted runner wired in the Private VNET
