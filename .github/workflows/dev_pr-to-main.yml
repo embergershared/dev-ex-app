@@ -8,16 +8,6 @@ on:
       - 'src/**'
       - 'infra/**'
 
-      # paths-ignore:
-    #   - 'infra/**'
-    #   - '**/*azure-infra.yml'
-    #   - '**/README.md'
-  # pull_request:
-  #   branches: 
-  #     - main
-  #   paths-ignore:
-  #     - 'infra/**'
-
   # We also want to be able to run this workflow manually from Github
   workflow_dispatch:
 
@@ -36,7 +26,7 @@ permissions:
 
 jobs:
   build:
-    name: 'Build solution'
+    name: 'Validate solution'
     environment: dev
     runs-on:
       # We use a GH organization Self-hosted runner wired in the Private VNET
@@ -59,27 +49,9 @@ jobs:
     
     - name: Test
       run: dotnet test src/ContosoUniversity.Test/ContosoUniversity.Test.csproj --verbosity normal --logger trx --results-directory TestResults
-      
-    # - name: Publish APP
-    #   run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApp src/ContosoUniversity.WebApplication/ContosoUniversity.WebApplication.csproj
-
-    # - name: Publish API
-    #   run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApi src/ContosoUniversity.API/ContosoUniversity.API.csproj
-    
-    # - name: Upload APP results
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: app
-    #     path: PublishApp
-    
-    # - name: Upload API results
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: api
-    #     path: PublishApi
 
   infra:
-    name: 'Bicep validation'
+    name: 'Validate Bicep Template'
     needs: build
     environment: dev
     runs-on:
