@@ -16,14 +16,14 @@ on:
 permissions:
   id-token: write
 
-env:
-  CONFIGURATION: release
-  AZ_ENVIRONMENT_NAME: ${{ vars.AZURE_ENVIRONMENT_NAME }}
-  AZ_LOCATION: ${{ vars.AZURE_LOCATION }}
-  AZ_APP_NAME: ${{ vars.AZURE_ENVIRONMENT_NAME }}-app
-  AZ_API_NAME: ${{ vars.AZURE_ENVIRONMENT_NAME }}-api
-  AZ_SQL_SERVER_PASSWORD: ${{ secrets.AZURE_SQL_PASSWORD }}
-  AZ_APP_PASSWORD: ${{secrets.AZURE_APP_PASSWORD}}
+# env:
+#   CONFIGURATION: release
+#   AZ_ENVIRONMENT_NAME: ${{ vars.AZURE_ENVIRONMENT_NAME }}
+#   AZ_LOCATION: ${{ vars.AZURE_LOCATION }}
+#   AZ_APP_NAME: ${{ vars.AZURE_ENVIRONMENT_NAME }}-app
+#   AZ_API_NAME: ${{ vars.AZURE_ENVIRONMENT_NAME }}-api
+#   AZ_SQL_SERVER_PASSWORD: ${{ secrets.AZURE_SQL_PASSWORD }}
+#   AZ_APP_PASSWORD: ${{secrets.AZURE_APP_PASSWORD}}
 
 jobs:
   infra:
@@ -38,7 +38,7 @@ jobs:
 
   apps:
     needs: infra
-    name: 'API + APP'
+    name: 'Solution'
     uses: embergershared/dev-ex-app/.github/workflows/dev_app-build-deploy.yml@main
 
     # steps:

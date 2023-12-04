@@ -24,11 +24,11 @@ env:
   AZ_APP_NAME: ${{ vars.AZURE_ENVIRONMENT_NAME }}-app
   AZ_API_NAME: ${{ vars.AZURE_ENVIRONMENT_NAME }}-api
   AZ_SQL_SERVER_PASSWORD: ${{ secrets.AZURE_SQL_PASSWORD }}
-  AZ_APP_PASSWORD: ${{secrets.AZURE_APP_PASSWORD}}
+  AZ_APP_PASSWORD: ${{ secrets.AZURE_APP_PASSWORD }}
 
 jobs:
   infra:
-    name: 'Deploy Infra with bicep'
+    name: 'Deploy bicep'
     environment: dev
     runs-on:
       # We use a GH organization Self-hosted runner wired in the Private VNET
@@ -36,10 +36,10 @@ jobs:
       labels: 912772
 
     steps:
-    - uses: actions/checkout@v3
-      name: 'Checkout repo'
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-    # Using OIDC enabled SPN with Azure
+      # Using OIDC enabled SPN with Azure
     - name: Azure Login
       uses: Azure/login@v1
       with:
