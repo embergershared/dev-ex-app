@@ -1,13 +1,6 @@
 name: 'DEV - Infra - Deploy'
 
 on:
-  # # Automatic trigger
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'infra/**'
-
   # Enable manual trigger
   workflow_dispatch:
   
@@ -58,13 +51,3 @@ jobs:
         deploymentName: 'gh-actions'
         parameters: environmentName=${{ env.AZ_ENVIRONMENT_NAME }} location=${{ env.AZ_LOCATION }} resourceGroupName="rg-use2-912772-s1-${{ env.AZ_ENVIRONMENT_NAME }}-01" sqlAdminPassword=${{ env.AZ_SQL_SERVER_PASSWORD }} appUserPassword=${{ env.AZ_APP_PASSWORD }} sqlDatabaseName="ContosoUniversity" apiServiceName=${{ env.AZ_API_NAME }} webServiceName=${{ env.AZ_APP_NAME }} isDev="true"
         failOnStdErr: false
-
-    # - name: az cli version
-    #   run: az version
-
-    # - name: az account infos
-    #   run: |
-    #     az account show
-    #     echo "Subsc Name: $(az account show --query "name" -o tsv)"
-    #     echo "Subsc   Id: $(az account show --query "id" -o tsv)"
-    #     echo "SPN Name  : $(az account show --query "user.name" -o tsv)"
