@@ -10,6 +10,39 @@ on:
 
   # Enable manual trigger
   workflow_dispatch:
+  
+  # Enabling this workflow to be reusable
+  workflow_call:
+    # inputs:
+    #   AZURE_ENVIRONMENT_NAME:
+    #     description: 'Azure Environment Name'
+    #     required: true
+    #     type: string
+    #   AZURE_LOCATION:
+    #     description: 'Azure Location'
+    #     required: true
+    #     default: 'eastus2'
+    #     type: string
+    #   AZURE_SUBSCRIPTION_ID:
+    #     description: 'Azure Subscription Id'
+    #     required: true
+    #     type: string
+    #   AZURE_TENANT_ID:
+    #     description: 'Azure Tenant Id'
+    #     required: true
+    #     type: string
+    #   AZURE_GHA_CLIENT_ID:
+    #     description: 'Azure GHA Client Id'
+    #     required: true
+    #     type: string
+    #   AZURE_SQL_PASSWORD:
+    #     description: 'Azure SQL Password'
+    #     required: true
+    #     type: string
+    #   AZURE_APP_PASSWORD:
+    #     description: 'Azure App Password'
+    #     required: true
+    #     type: string
 
 # Required to use OIDC enabled SPN with Azure
 permissions:
