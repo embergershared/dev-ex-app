@@ -1,21 +1,30 @@
-# DevEx Day Contoso University app
+# Dev Ex App Contoso University app
 
 ## Introduction
 
-`devexday-contoso-university` is a specific application and repository that started from:
+`dev-ex-app` is a specific application and repository that started from the Contoso University sample app:
 
-- [Contoso University sample application](https://github.com/Azure-Samples/app-templates-dotnet-azuresql-appservice)
+- The Contoso University sample application demonstrates how to use Entity Framework Core in an ASP.NET Core Razor Pages web app. This app can be deployed to Microsoft's Azure cloud platform that allows you to build, deploy, and scale web apps.
 
-    Contoso University sample application demonstrates how to use Entity Framework Core in an ASP.NET Core Razor Pages web app. This app can be deployed to Microsoft's Azure cloud platform that allows you to build, deploy, and scale web apps.
-
-- Added with the following changes & improvements:
+- The Contoso University sample application was added with the following changes & improvements:
 
   - GitHub Actions using OIDC to authenticate and interact with Azure,
   - GitHub Actions Workflow used to publish to Application Service (WebApp and WebAPI) with Basic Authentication OFF,
+  - Fixed some deployments caveats in the bicep,
+  - Created a fully automated and coherent deployment system with the infrastructure, the code and the application on the infrastructure,
+  - A set of scripts ([located here](./1.get-started/README.md)) to setup a Dev box **very fast** for a new developer to work on the application,
+  - An Azure `Dev Center` which enables:
+    - [Dev boxes](https://learn.microsoft.com/en-us/azure/dev-box/overview-what-is-microsoft-dev-box)
+    - [Dev environments](https://learn.microsoft.com/en-us/azure/deployment-environments/)
 
-Notes:
+> Notes:
+> The code comes with `CodeUITest` and `Test` projects that were **neither used nor tested** for the DevEx day. They are provided "AS-IS".
 
-  - The code comes with `CodeUITest` and `Test` projects that were neither `used` nor `tested` for the DevEx day. They are provided "AS-IS".
+## GitHub repositories references
+
+- [Deployment environments](https://github.com/Azure/deployment-environments)
+
+- [Contoso University sample application](https://github.com/Azure-Samples/app-templates-dotnet-azuresql-appservice)
 
 ## Tech stack
 
@@ -228,7 +237,9 @@ az group delete --name $resourceGroup
 ## Next steps
 
 Now, you had an hands on introduction to .NET web applications and deployment on Azure, use the following articles for enterprise app patterns and landing zones
+
 1. [How to apply the reliable web app pattern for .NET](https://review.learn.microsoft.com/en-us/azure/architecture/reference-architectures/reliable-web-app/dotnet/pattern-overview?branch=pr-en-us-9528)
+
 2. [Azure App Service Landing Zone Accelerator](https://github.com/Azure/appservice-landing-zone-accelerator) has deployment architecture guidance for hardening and scaling Azure App Service deployments.
 
 ## Contributing
@@ -251,7 +262,3 @@ This project may contain trademarks or logos for projects, products, or services
 [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
 Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
 Any use of third-party trademarks or logos are subject to those third-party's policies.
-
-## References
-
-- Deployment environments: [Github Deployment environments](https://github.com/Azure/deployment-environments)
