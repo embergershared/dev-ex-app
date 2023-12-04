@@ -38,23 +38,24 @@ Function Uninstall-ChocoPackages {
   }
 }
 
-Install-ChocoPackages -Packages "googlechrome --ignore-checksums"
-
-
-# 3. Unistall packages that are in the image but defective after sysprep
-$uninstall_packages = @(
-  # "docker-desktop"
-  "notepadplusplus"
-)
-Uninstall-ChocoPackages -Packages $uninstall_packages
+# # 3. Unistall packages that are in the image but defective after sysprep
+# $uninstall_packages = @(
+#   # "docker-desktop"
+#   "notepadplusplus"
+# )
+# Uninstall-ChocoPackages -Packages $uninstall_packages
 
 # 4. Install packages
+
+# We start with Google chrome as it errors out if installed after other packages
+Install-ChocoPackages -Packages "googlechrome --ignore-checksums"
+
+# Then install the rest of the packages
 $install_packages = @(
   "wireshark",
   "thunderbird",
   "postman",
   "adobereader",
-  "googlechrome --ignore-checksums",
   "firefox",
   "notepadplusplus",
   "zoomit",
