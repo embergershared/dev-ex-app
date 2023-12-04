@@ -1,4 +1,4 @@
-name: 'DEV - PR to main - Control'
+name: 'DEV - PR to main > Control'
 
 on:
   pull_request:
