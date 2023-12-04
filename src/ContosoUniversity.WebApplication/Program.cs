@@ -5,8 +5,23 @@ using Microsoft.Extensions.Hosting;
 using System;
 using ContosoUniversity.WebApplication;
 using ContosoUniversity.WebApplication.Models;
+using Microsoft.Extensions.Logging;
 
-#region Application Builder
+#region Program.cs specific logger instance
+var logger = LoggerFactory
+    .Create(builder => builder
+        // add console as logging target
+        .AddConsole()
+        // add debug output as logging target
+        .AddDebug()
+        // set minimum level to Trace
+        .SetMinimumLevel(LogLevel.Trace))
+    .CreateLogger<Program>();
+
+logger.LogInformation("Program.cs: Logger<Program> created");
+#endregion
+
+#region   ===============   CREATING THE APP BUILDER   ===============
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<CookiePolicyOptions>(options =>
@@ -48,10 +63,11 @@ builder.Services.AddHealthChecks()
 //// Adding a check of the WebAPI health, to display dependent pages/links/actions or not
 //builder.Services.AddHostedService<CheckWebApiHealthHostedService>();
 
-var app = builder.Build();
 #endregion
 
-#region Application Middlewares and Run
+#region   ===============   BUILDING THEN RUN THE APP  ===============
+var app = builder.Build();
+
 if (app.Environment.IsDevelopment())
 {
   app.UseDeveloperExceptionPage();
