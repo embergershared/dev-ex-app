@@ -1,4 +1,4 @@
-name: 'DEV - PR to main check'
+name: 'DEV - PR to main Control'
 
 on:
   pull_request:
@@ -56,23 +56,23 @@ jobs:
     - name: Test
       run: dotnet test src/ContosoUniversity.Test/ContosoUniversity.Test.csproj --verbosity normal --logger trx --results-directory TestResults
       
-    - name: Publish APP
-      run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApp src/ContosoUniversity.WebApplication/ContosoUniversity.WebApplication.csproj
+    # - name: Publish APP
+    #   run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApp src/ContosoUniversity.WebApplication/ContosoUniversity.WebApplication.csproj
 
-    - name: Publish API
-      run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApi src/ContosoUniversity.API/ContosoUniversity.API.csproj
+    # - name: Publish API
+    #   run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApi src/ContosoUniversity.API/ContosoUniversity.API.csproj
     
-    - name: Upload APP results
-      uses: actions/upload-artifact@v3
-      with:
-        name: app
-        path: PublishApp
+    # - name: Upload APP results
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: app
+    #     path: PublishApp
     
-    - name: Upload API results
-      uses: actions/upload-artifact@v3
-      with:
-        name: api
-        path: PublishApi
+    # - name: Upload API results
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: api
+    #     path: PublishApi
 
   infra:
     name: 'Bicep validation'
