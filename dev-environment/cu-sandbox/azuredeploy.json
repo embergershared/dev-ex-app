@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "17911514011096443474"
+      "templateHash": "13643704586718141052"
     }
   },
   "parameters": {
@@ -29,6 +29,22 @@
       "metadata": {
         "description": "Tags to apply to environment resources"
       }
+    },
+    "scmDoBuildDuringDeployment": {
+      "type": "bool",
+      "defaultValue": false
+    },
+    "appSettings": {
+      "type": "object",
+      "defaultValue": {}
+    },
+    "kind": {
+      "type": "string",
+      "defaultValue": "app,linux"
+    },
+    "enableOryxBuild": {
+      "type": "bool",
+      "defaultValue": "[contains(parameters('kind'), 'linux')]"
     }
   },
   "variables": {
@@ -39,9 +55,32 @@
     "sqlServerName": "[format('sql-{0}', variables('resourceName'))]",
     "keyVaultName": "[format('kv-{0}', take(replace(variables('resourceName'), '-', ''), 21))]",
     "sqlAdmin": "sqladmin",
-    "sqlAdminPassword": "[format('{0}Up!P1', uniqueString(variables('keyVaultName')))]"
+    "sqlAdminPassword": "[format('{0}Up!P1', uniqueString(variables('keyVaultName')))]",
+    "appUser": "appUser",
+    "appUserPassword": "[format('{0}iT$23', uniqueString(variables('sqlAdminPassword')))]"
   },
   "resources": [
+    {
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2022-03-01",
+      "name": "[format('{0}/{1}', variables('webAppName'), 'appsettings')]",
+      "properties": "[union(parameters('appSettings'), createObject('SCM_DO_BUILD_DURING_DEPLOYMENT', string(parameters('scmDoBuildDuringDeployment')), 'ENABLE_ORYX_BUILD', string(parameters('enableOryxBuild'))), if(not(empty(parameters('name'))), createObject('APPLICATIONINSIGHTS_CONNECTION_STRING', reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02').ConnectionString), createObject()), if(not(empty(variables('keyVaultName'))), createObject('AZURE_KEY_VAULT_ENDPOINT', reference(resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName')), '2022-07-01').vaultUri), createObject()), createObject('ASPNETCORE_ENVIRONMENT', 'Development', 'URLAPI', format('https://{0}', reference(resourceId('Microsoft.Web/sites', variables('webApiName')), '2022-03-01').defaultHostName)))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Insights/components', parameters('name'))]",
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+        "[resourceId('Microsoft.Web/sites', variables('webApiName'))]",
+        "[resourceId('Microsoft.Web/sites', variables('webAppName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2022-03-01",
+      "name": "[format('{0}/{1}', variables('webApiName'), 'appsettings')]",
+      "properties": "[union(parameters('appSettings'), createObject('ASPNETCORE_ENVIRONMENT', 'Development', 'AZURE_SQL_CONNECTION_STRING_KEY', 'AZURE-SQL-CONNECTION-STRING'))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('webApiName'))]"
+      ]
+    },
     {
       "type": "Microsoft.Sql/servers/databases",
       "apiVersion": "2022-05-01-preview",
@@ -140,6 +179,19 @@
       ]
     },
     {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2022-07-01",
+      "name": "[format('{0}/{1}', variables('keyVaultName'), 'AZURE-SQL-CONNECTION-STRING')]",
+      "properties": {
+        "value": "[format('{0}; Password={1}', format('Server={0}; Database={1}; User={2}', reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName')), '2022-05-01-preview').fullyQualifiedDomainName, 'ContosoUniversity', variables('sqlAdmin')), variables('sqlAdminPassword'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), 'ContosoUniversity')]",
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+      ]
+    },
+    {
       "type": "Microsoft.Sql/servers",
       "apiVersion": "2022-05-01-preview",
       "name": "[variables('sqlServerName')]",
@@ -152,6 +204,37 @@
         "administratorLogin": "[variables('sqlAdmin')]",
         "administratorLoginPassword": "[variables('sqlAdminPassword')]"
       }
+    },
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2021-12-01-preview",
+      "name": "[parameters('name')]",
+      "location": "[parameters('location')]",
+      "tags": "[parameters('tags')]",
+      "properties": {
+        "retentionInDays": 30,
+        "features": {
+          "searchVersion": 1
+        },
+        "sku": {
+          "name": "PerGB2018"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2020-02-02",
+      "name": "[parameters('name')]",
+      "location": "[parameters('location')]",
+      "tags": "[parameters('tags')]",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web",
+        "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('name'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('name'))]"
+      ]
     }
   ]
 }
