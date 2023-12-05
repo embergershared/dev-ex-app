@@ -1,0 +1,2455 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vulnerabilityAssessments_Default_storageContainerPath": {
+            "type": "SecureString"
+        },
+        "sites_devexdays_app_dev_api_name": {
+            "defaultValue": "devexdays-app-dev-api",
+            "type": "String"
+        },
+        "sites_devexdays_app_dev_app_name": {
+            "defaultValue": "devexdays-app-dev-app",
+            "type": "String"
+        },
+        "servers_sql_devexdays_app_dev_01_name": {
+            "defaultValue": "sql-devexdays-app-dev-01",
+            "type": "String"
+        },
+        "vaults_kv_devexdays_app_dev_01_name": {
+            "defaultValue": "kv-devexdays-app-dev-01",
+            "type": "String"
+        },
+        "components_appi_devexdays_app_dev_01_name": {
+            "defaultValue": "appi-devexdays-app-dev-01",
+            "type": "String"
+        },
+        "storageAccounts_ozm5dsx2hn6oeazscripts_name": {
+            "defaultValue": "ozm5dsx2hn6oeazscripts",
+            "type": "String"
+        },
+        "serverfarms_appsvcplan_devexdays_app_dev_01_name": {
+            "defaultValue": "appsvcplan-devexdays-app-dev-01",
+            "type": "String"
+        },
+        "workspaces_log_devexdays_app_dev_01_externalid": {
+            "defaultValue": "/subscriptions/a73ced30-c712-4405-8828-67a833b1e39a/resourceGroups/rg-use2-912772-s1-devexdays-app-dev-01/providers/Microsoft.OperationalInsights/workspaces/log-devexdays-app-dev-01",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "microsoft.insights/components",
+            "apiVersion": "2020-02-02",
+            "name": "[parameters('components_appi_devexdays_app_dev_01_name')]",
+            "location": "eastus2",
+            "tags": {
+                "azd-env-name": "devexdays-app-dev"
+            },
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "RetentionInDays": 90,
+                "WorkspaceResourceId": "[parameters('workspaces_log_devexdays_app_dev_01_externalid')]",
+                "IngestionMode": "LogAnalytics",
+                "publicNetworkAccessForIngestion": "Enabled",
+                "publicNetworkAccessForQuery": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2023-07-01",
+            "name": "[parameters('vaults_kv_devexdays_app_dev_01_name')]",
+            "location": "eastus2",
+            "tags": {
+                "azd-env-name": "devexdays-app-dev"
+            },
+            "properties": {
+                "sku": {
+                    "family": "A",
+                    "name": "standard"
+                },
+                "tenantId": "bed3f66f-00c5-402e-8f75-44abca53e730",
+                "accessPolicies": [
+                    {
+                        "tenantId": "bed3f66f-00c5-402e-8f75-44abca53e730",
+                        "objectId": "34fa11b0-4e80-4395-9f9a-f8bfda24a326",
+                        "permissions": {
+                            "secrets": [
+                                "get",
+                                "list"
+                            ]
+                        }
+                    }
+                ],
+                "enabledForDeployment": false,
+                "enableSoftDelete": true,
+                "vaultUri": "[concat('https://', parameters('vaults_kv_devexdays_app_dev_01_name'), '.vault.azure.net/')]",
+                "provisioningState": "Succeeded",
+                "publicNetworkAccess": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[parameters('servers_sql_devexdays_app_dev_01_name')]",
+            "location": "eastus2",
+            "tags": {
+                "azd-env-name": "devexdays-app-dev"
+            },
+            "kind": "v12.0",
+            "properties": {
+                "administratorLogin": "sqlAdmin",
+                "version": "12.0",
+                "minimalTlsVersion": "1.2",
+                "publicNetworkAccess": "Enabled",
+                "administrators": {
+                    "administratorType": "ActiveDirectory",
+                    "principalType": "Group",
+                    "login": "eb@mngenvmcap912772.onmicrosoft.com",
+                    "sid": "de7b2db4-4f1e-473b-aace-b557a31bddfa",
+                    "tenantId": "bed3f66f-00c5-402e-8f75-44abca53e730"
+                },
+                "restrictOutboundNetworkAccess": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2023-01-01",
+            "name": "[parameters('storageAccounts_ozm5dsx2hn6oeazscripts_name')]",
+            "location": "eastus2",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2",
+            "properties": {
+                "minimumTlsVersion": "TLS1_2",
+                "allowBlobPublicAccess": false,
+                "networkAcls": {
+                    "resourceAccessRules": [
+                        {
+                            "tenantId": "bed3f66f-00c5-402e-8f75-44abca53e730",
+                            "resourceId": "/subscriptions/a73ced30-c712-4405-8828-67a833b1e39a/providers/Microsoft.Security/datascanners/storageDataScanner"
+                        }
+                    ],
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "accessTier": "Hot"
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('serverfarms_appsvcplan_devexdays_app_dev_01_name')]",
+            "location": "East US 2",
+            "tags": {
+                "azd-env-name": "devexdays-app-dev"
+            },
+            "sku": {
+                "name": "B2",
+                "tier": "Basic",
+                "size": "B2",
+                "family": "B",
+                "capacity": 1
+            },
+            "kind": "linux",
+            "properties": {
+                "perSiteScaling": false,
+                "elasticScaleEnabled": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0,
+                "zoneRedundant": false
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_appi_devexdays_app_dev_01_name'), '/degradationindependencyduration')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_appi_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "degradationindependencyduration",
+                    "DisplayName": "Degradation in dependency duration",
+                    "Description": "Smart Detection rules notify you of performance anomaly issues.",
+                    "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": false,
+                    "SupportsEmailNotifications": true
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_appi_devexdays_app_dev_01_name'), '/degradationinserverresponsetime')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_appi_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "degradationinserverresponsetime",
+                    "DisplayName": "Degradation in server response time",
+                    "Description": "Smart Detection rules notify you of performance anomaly issues.",
+                    "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": false,
+                    "SupportsEmailNotifications": true
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_appi_devexdays_app_dev_01_name'), '/digestMailConfiguration')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_appi_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "digestMailConfiguration",
+                    "DisplayName": "Digest Mail Configuration",
+                    "Description": "This rule describes the digest mail preferences",
+                    "HelpUrl": "www.homail.com",
+                    "IsHidden": true,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": false,
+                    "SupportsEmailNotifications": true
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_appi_devexdays_app_dev_01_name'), '/extension_billingdatavolumedailyspikeextension')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_appi_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "extension_billingdatavolumedailyspikeextension",
+                    "DisplayName": "Abnormal rise in daily data volume (preview)",
+                    "Description": "This detection rule automatically analyzes the billing data generated by your application, and can warn you about an unusual increase in your application's billing costs",
+                    "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/tree/master/SmartDetection/billing-data-volume-daily-spike.md",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": true,
+                    "SupportsEmailNotifications": false
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_appi_devexdays_app_dev_01_name'), '/extension_canaryextension')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_appi_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "extension_canaryextension",
+                    "DisplayName": "Canary extension",
+                    "Description": "Canary extension",
+                    "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/blob/master/SmartDetection/",
+                    "IsHidden": true,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": true,
+                    "SupportsEmailNotifications": false
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_appi_devexdays_app_dev_01_name'), '/extension_exceptionchangeextension')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_appi_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "extension_exceptionchangeextension",
+                    "DisplayName": "Abnormal rise in exception volume (preview)",
+                    "Description": "This detection rule automatically analyzes the exceptions thrown in your application, and can warn you about unusual patterns in your exception telemetry.",
+                    "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/blob/master/SmartDetection/abnormal-rise-in-exception-volume.md",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": true,
+                    "SupportsEmailNotifications": false
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_appi_devexdays_app_dev_01_name'), '/extension_memoryleakextension')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_appi_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "extension_memoryleakextension",
+                    "DisplayName": "Potential memory leak detected (preview)",
+                    "Description": "This detection rule automatically analyzes the memory consumption of each process in your application, and can warn you about potential memory leaks or increased memory consumption.",
+                    "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/tree/master/SmartDetection/memory-leak.md",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": true,
+                    "SupportsEmailNotifications": false
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_appi_devexdays_app_dev_01_name'), '/extension_securityextensionspackage')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_appi_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "extension_securityextensionspackage",
+                    "DisplayName": "Potential security issue detected (preview)",
+                    "Description": "This detection rule automatically analyzes the telemetry generated by your application and detects potential security issues.",
+                    "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/blob/master/SmartDetection/application-security-detection-pack.md",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": true,
+                    "SupportsEmailNotifications": false
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_appi_devexdays_app_dev_01_name'), '/extension_traceseveritydetector')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_appi_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "extension_traceseveritydetector",
+                    "DisplayName": "Degradation in trace severity ratio (preview)",
+                    "Description": "This detection rule automatically analyzes the trace logs emitted from your application, and can warn you about unusual patterns in the severity of your trace telemetry.",
+                    "HelpUrl": "https://github.com/Microsoft/ApplicationInsights-Home/blob/master/SmartDetection/degradation-in-trace-severity-ratio.md",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": true,
+                    "SupportsEmailNotifications": false
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_appi_devexdays_app_dev_01_name'), '/longdependencyduration')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_appi_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "longdependencyduration",
+                    "DisplayName": "Long dependency duration",
+                    "Description": "Smart Detection rules notify you of performance anomaly issues.",
+                    "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": false,
+                    "SupportsEmailNotifications": true
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_appi_devexdays_app_dev_01_name'), '/migrationToAlertRulesCompleted')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_appi_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "migrationToAlertRulesCompleted",
+                    "DisplayName": "Migration To Alert Rules Completed",
+                    "Description": "A configuration that controls the migration state of Smart Detection to Smart Alerts",
+                    "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
+                    "IsHidden": true,
+                    "IsEnabledByDefault": false,
+                    "IsInPreview": true,
+                    "SupportsEmailNotifications": false
+                },
+                "enabled": false,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_appi_devexdays_app_dev_01_name'), '/slowpageloadtime')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_appi_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "slowpageloadtime",
+                    "DisplayName": "Slow page load time",
+                    "Description": "Smart Detection rules notify you of performance anomaly issues.",
+                    "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": false,
+                    "SupportsEmailNotifications": true
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "microsoft.insights/components/ProactiveDetectionConfigs",
+            "apiVersion": "2018-05-01-preview",
+            "name": "[concat(parameters('components_appi_devexdays_app_dev_01_name'), '/slowserverresponsetime')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('microsoft.insights/components', parameters('components_appi_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "ruleDefinitions": {
+                    "Name": "slowserverresponsetime",
+                    "DisplayName": "Slow server response time",
+                    "Description": "Smart Detection rules notify you of performance anomaly issues.",
+                    "HelpUrl": "https://docs.microsoft.com/en-us/azure/application-insights/app-insights-proactive-performance-diagnostics",
+                    "IsHidden": false,
+                    "IsEnabledByDefault": true,
+                    "IsInPreview": false,
+                    "SupportsEmailNotifications": true
+                },
+                "enabled": true,
+                "sendEmailsToSubscriptionOwners": true,
+                "customEmails": []
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2023-07-01",
+            "name": "[concat(parameters('vaults_kv_devexdays_app_dev_01_name'), '/appUserPassword')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_kv_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "attributes": {
+                    "enabled": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2023-07-01",
+            "name": "[concat(parameters('vaults_kv_devexdays_app_dev_01_name'), '/AZURE-SQL-CONNECTION-STRING')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_kv_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "attributes": {
+                    "enabled": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2023-07-01",
+            "name": "[concat(parameters('vaults_kv_devexdays_app_dev_01_name'), '/sqlAdminPassword')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_kv_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "attributes": {
+                    "enabled": true
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/administrators",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/ActiveDirectory')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "administratorType": "ActiveDirectory",
+                "login": "eb@mngenvmcap912772.onmicrosoft.com",
+                "sid": "de7b2db4-4f1e-473b-aace-b557a31bddfa",
+                "tenantId": "bed3f66f-00c5-402e-8f75-44abca53e730"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/advancedThreatProtectionSettings",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "state": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/advisors",
+            "apiVersion": "2014-04-01",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/CreateIndex')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "autoExecuteValue": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/advisors",
+            "apiVersion": "2014-04-01",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/DbParameterization')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "autoExecuteValue": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/advisors",
+            "apiVersion": "2014-04-01",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/DefragmentIndex')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "autoExecuteValue": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/advisors",
+            "apiVersion": "2014-04-01",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/DropIndex')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "autoExecuteValue": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/advisors",
+            "apiVersion": "2014-04-01",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/ForceLastGoodPlan')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "autoExecuteValue": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/auditingPolicies",
+            "apiVersion": "2014-04-01",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/Default')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "auditingState": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/auditingSettings",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "retentionDays": 0,
+                "auditActionsAndGroups": [],
+                "isStorageSecondaryKeyInUse": false,
+                "isAzureMonitorTargetEnabled": false,
+                "isManagedIdentityInUse": false,
+                "state": "Disabled",
+                "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/azureADOnlyAuthentications",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "azureADOnlyAuthentication": false
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/connectionPolicies",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/default')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "connectionType": "Default"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/ContosoUniversity')]",
+            "location": "eastus2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "sku": {
+                "name": "GP_S_Gen5",
+                "tier": "GeneralPurpose",
+                "family": "Gen5",
+                "capacity": 2
+            },
+            "kind": "v12.0,user,vcore,serverless",
+            "properties": {
+                "collation": "SQL_Latin1_General_CP1_CI_AS",
+                "maxSizeBytes": 34359738368,
+                "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+                "zoneRedundant": false,
+                "readScale": "Disabled",
+                "autoPauseDelay": 60,
+                "requestedBackupStorageRedundancy": "Local",
+                "minCapacity": 0.5,
+                "maintenanceConfigurationId": "/subscriptions/a73ced30-c712-4405-8828-67a833b1e39a/providers/Microsoft.Maintenance/publicMaintenanceConfigurations/SQL_Default",
+                "isLedgerOn": false,
+                "availabilityZone": "NoPreference"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/advancedThreatProtectionSettings",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/master/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/auditingPolicies",
+            "apiVersion": "2014-04-01",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/master/Default')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "auditingState": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/auditingSettings",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/master/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "retentionDays": 0,
+                "isAzureMonitorTargetEnabled": false,
+                "state": "Disabled",
+                "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/extendedAuditingSettings",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/master/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "retentionDays": 0,
+                "isAzureMonitorTargetEnabled": false,
+                "state": "Disabled",
+                "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/geoBackupPolicies",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/master/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/ledgerDigestUploads",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/master/Current')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/securityAlertPolicies",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/master/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled",
+                "disabledAlerts": [
+                    ""
+                ],
+                "emailAddresses": [
+                    ""
+                ],
+                "emailAccountAdmins": false,
+                "retentionDays": 0
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/transparentDataEncryption",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/master/Current')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/vulnerabilityAssessments",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/master/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "recurringScans": {
+                    "isEnabled": false,
+                    "emailSubscriptionAdmins": true,
+                    "emails": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/devOpsAuditingSettings",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "isAzureMonitorTargetEnabled": false,
+                "isManagedIdentityInUse": false,
+                "state": "Disabled",
+                "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/encryptionProtector",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/current')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "kind": "servicemanaged",
+            "properties": {
+                "serverKeyName": "ServiceManaged",
+                "serverKeyType": "ServiceManaged",
+                "autoRotationEnabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/extendedAuditingSettings",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "retentionDays": 0,
+                "auditActionsAndGroups": [],
+                "isStorageSecondaryKeyInUse": false,
+                "isAzureMonitorTargetEnabled": false,
+                "isManagedIdentityInUse": false,
+                "state": "Disabled",
+                "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/firewallRules",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/Azure Services')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Sql/servers/keys",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/ServiceManaged')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "kind": "servicemanaged",
+            "properties": {
+                "serverKeyType": "ServiceManaged"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/securityAlertPolicies",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "state": "Enabled",
+                "disabledAlerts": [
+                    ""
+                ],
+                "emailAddresses": [
+                    ""
+                ],
+                "emailAccountAdmins": false,
+                "retentionDays": 0
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/sqlVulnerabilityAssessments",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "state": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/vulnerabilityAssessments",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "recurringScans": {
+                    "isEnabled": false,
+                    "emailSubscriptionAdmins": true
+                },
+                "storageContainerPath": "[parameters('vulnerabilityAssessments_Default_storageContainerPath')]"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('storageAccounts_ozm5dsx2hn6oeazscripts_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_ozm5dsx2hn6oeazscripts_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "allowPermanentDelete": false,
+                    "enabled": false
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('storageAccounts_ozm5dsx2hn6oeazscripts_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_ozm5dsx2hn6oeazscripts_name'))]"
+            ],
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "protocolSettings": {
+                    "smb": {}
+                },
+                "cors": {
+                    "corsRules": []
+                },
+                "shareDeleteRetentionPolicy": {
+                    "enabled": true,
+                    "days": 7
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/queueServices",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('storageAccounts_ozm5dsx2hn6oeazscripts_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_ozm5dsx2hn6oeazscripts_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/tableServices",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('storageAccounts_ozm5dsx2hn6oeazscripts_name'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_ozm5dsx2hn6oeazscripts_name'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('sites_devexdays_app_dev_api_name')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_appsvcplan_devexdays_app_dev_01_name'))]"
+            ],
+            "tags": {
+                "azd-env-name": "devexdays-app-dev",
+                "azd-service-name": "api"
+            },
+            "kind": "app,linux",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_appsvcplan_devexdays_app_dev_01_name'))]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "vnetRouteAllEnabled": false,
+                "vnetImagePullEnabled": false,
+                "vnetContentShareEnabled": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "linuxFxVersion": "dotnetcore|6.0",
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": true,
+                    "http20Enabled": false,
+                    "functionAppScaleLimit": 0,
+                    "minimumElasticInstanceCount": 0
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "customDomainVerificationId": "254DA6FD439C39AF33F5326A3C61D1B862F2875931BCD87C3707BB1A4D7AC358",
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": true,
+                "redundancyMode": "None",
+                "storageAccountRequired": false,
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2022-09-01",
+            "name": "[parameters('sites_devexdays_app_dev_app_name')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_appsvcplan_devexdays_app_dev_01_name'))]"
+            ],
+            "tags": {
+                "azd-env-name": "devexdays-app-dev",
+                "azd-service-name": "web"
+            },
+            "kind": "app,linux",
+            "properties": {
+                "enabled": true,
+                "hostNameSslStates": [
+                    {
+                        "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Standard"
+                    },
+                    {
+                        "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '.scm.azurewebsites.net')]",
+                        "sslState": "Disabled",
+                        "hostType": "Repository"
+                    }
+                ],
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_appsvcplan_devexdays_app_dev_01_name'))]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "vnetRouteAllEnabled": false,
+                "vnetImagePullEnabled": false,
+                "vnetContentShareEnabled": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "linuxFxVersion": "dotnetcore|6.0",
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": true,
+                    "http20Enabled": false,
+                    "functionAppScaleLimit": 0,
+                    "minimumElasticInstanceCount": 0
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "customDomainVerificationId": "254DA6FD439C39AF33F5326A3C61D1B862F2875931BCD87C3707BB1A4D7AC358",
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": true,
+                "redundancyMode": "None",
+                "storageAccountRequired": false,
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/ftp')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ],
+            "tags": {
+                "azd-env-name": "devexdays-app-dev",
+                "azd-service-name": "api"
+            },
+            "properties": {
+                "allow": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/ftp')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ],
+            "tags": {
+                "azd-env-name": "devexdays-app-dev",
+                "azd-service-name": "web"
+            },
+            "properties": {
+                "allow": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/scm')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ],
+            "tags": {
+                "azd-env-name": "devexdays-app-dev",
+                "azd-service-name": "api"
+            },
+            "properties": {
+                "allow": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/scm')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ],
+            "tags": {
+                "azd-env-name": "devexdays-app-dev",
+                "azd-service-name": "web"
+            },
+            "properties": {
+                "allow": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/web')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ],
+            "tags": {
+                "azd-env-name": "devexdays-app-dev",
+                "azd-service-name": "api"
+            },
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "linuxFxVersion": "dotnetcore|6.0",
+                "requestTracingEnabled": true,
+                "requestTracingExpirationTime": "9999-12-31T23:59:00Z",
+                "remoteDebuggingEnabled": false,
+                "httpLoggingEnabled": true,
+                "acrUseManagedIdentityCreds": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": true,
+                "publishingUsername": "$devexdays-app-dev-api",
+                "scmType": "None",
+                "use32BitWorkerProcess": false,
+                "webSocketsEnabled": false,
+                "alwaysOn": true,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": true
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "vnetRouteAllEnabled": false,
+                "vnetPrivatePortsCount": 0,
+                "cors": {
+                    "allowedOrigins": [
+                        "*"
+                    ],
+                    "supportCredentials": false
+                },
+                "localMySqlEnabled": false,
+                "managedServiceIdentityId": 10306,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": false,
+                "minTlsVersion": "1.2",
+                "scmMinTlsVersion": "1.2",
+                "ftpsState": "FtpsOnly",
+                "preWarmedInstanceCount": 0,
+                "elasticWebAppScaleLimit": 0,
+                "healthCheckPath": "/healthz",
+                "functionsRuntimeScaleMonitoringEnabled": false,
+                "minimumElasticInstanceCount": 0,
+                "azureStorageAccounts": {}
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/web')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ],
+            "tags": {
+                "azd-env-name": "devexdays-app-dev",
+                "azd-service-name": "web"
+            },
+            "properties": {
+                "numberOfWorkers": 1,
+                "defaultDocuments": [
+                    "Default.htm",
+                    "Default.html",
+                    "Default.asp",
+                    "index.htm",
+                    "index.html",
+                    "iisstart.htm",
+                    "default.aspx",
+                    "index.php",
+                    "hostingstart.html"
+                ],
+                "netFrameworkVersion": "v4.0",
+                "linuxFxVersion": "dotnetcore|6.0",
+                "requestTracingEnabled": true,
+                "requestTracingExpirationTime": "9999-12-31T23:59:00Z",
+                "remoteDebuggingEnabled": false,
+                "httpLoggingEnabled": true,
+                "acrUseManagedIdentityCreds": false,
+                "logsDirectorySizeLimit": 35,
+                "detailedErrorLoggingEnabled": true,
+                "publishingUsername": "$devexdays-app-dev-app",
+                "scmType": "None",
+                "use32BitWorkerProcess": false,
+                "webSocketsEnabled": false,
+                "alwaysOn": true,
+                "managedPipelineMode": "Integrated",
+                "virtualApplications": [
+                    {
+                        "virtualPath": "/",
+                        "physicalPath": "site\\wwwroot",
+                        "preloadEnabled": true
+                    }
+                ],
+                "loadBalancing": "LeastRequests",
+                "experiments": {
+                    "rampUpRules": []
+                },
+                "autoHealEnabled": false,
+                "vnetRouteAllEnabled": false,
+                "vnetPrivatePortsCount": 0,
+                "cors": {
+                    "allowedOrigins": [
+                        "https://portal.azure.com",
+                        "https://ms.portal.azure.com"
+                    ],
+                    "supportCredentials": false
+                },
+                "localMySqlEnabled": false,
+                "ipSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictions": [
+                    {
+                        "ipAddress": "Any",
+                        "action": "Allow",
+                        "priority": 2147483647,
+                        "name": "Allow all",
+                        "description": "Allow all access"
+                    }
+                ],
+                "scmIpSecurityRestrictionsUseMain": false,
+                "http20Enabled": false,
+                "minTlsVersion": "1.2",
+                "scmMinTlsVersion": "1.2",
+                "ftpsState": "FtpsOnly",
+                "preWarmedInstanceCount": 0,
+                "elasticWebAppScaleLimit": 0,
+                "healthCheckPath": "/healthz",
+                "functionsRuntimeScaleMonitoringEnabled": false,
+                "minimumElasticInstanceCount": 0,
+                "azureStorageAccounts": {}
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/0095daa4-2cd5-4325-81e7-f2ced2d57f9c')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"9acced32af376a4a988d628a8b65e4b04a28b267\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"\"}",
+                "start_time": "2023-12-05T00:03:37.535651Z",
+                "end_time": "2023-12-05T00:03:45.020831Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/03c8b505-0070-46cd-865e-8079841f9555')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"eab6c9e0e7a605e783fab5a3413cb436a8246f02\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"Update azuredeploy.json\"}",
+                "start_time": "2023-12-04T16:56:27.7012801Z",
+                "end_time": "2023-12-04T16:56:39.039905Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2c4cb415-7ea1-4e14-936e-c72d63d9ad59')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"090278acf58787d7840134485577fbaacbc7e45d\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"\"}",
+                "start_time": "2023-12-04T23:33:23.117423Z",
+                "end_time": "2023-12-04T23:33:31.0051854Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/32e15cf7-4509-4aae-9495-1b24e5f2e094')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"ff582317abc56748167eb4c4bd4c85a7c4911ef0\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"Update main.bicep\"}",
+                "start_time": "2023-12-04T16:58:55.5051016Z",
+                "end_time": "2023-12-04T16:59:02.5301474Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/3d010674-fc72-489e-83ce-df368b7cad51')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"74803b0f4c1c9226f16284c2e6906f603ecce08b\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"added manifest\"}",
+                "start_time": "2023-12-04T17:03:32.7994996Z",
+                "end_time": "2023-12-04T17:03:39.5332353Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/3db78936-8af1-4f7d-a179-090885ca6d6e')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"eab6c9e0e7a605e783fab5a3413cb436a8246f02\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"Update azuredeploy.json\"}",
+                "start_time": "2023-12-04T16:56:01.899985Z",
+                "end_time": "2023-12-04T16:56:09.0299654Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/7a70957f-1d07-422b-b5cc-24f8af46472b')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"090278acf58787d7840134485577fbaacbc7e45d\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"\"}",
+                "start_time": "2023-12-04T23:32:59.5046076Z",
+                "end_time": "2023-12-04T23:33:07.1070012Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/7d0ca7df-a4af-4905-8e88-ad3d4eb4fe9a')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"ff582317abc56748167eb4c4bd4c85a7c4911ef0\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"Update main.bicep\"}",
+                "start_time": "2023-12-04T16:59:17.1437329Z",
+                "end_time": "2023-12-04T16:59:28.8665139Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/7eb3f4de-528b-4eb3-b6d9-5e49b834dc8e')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"c111c441afccfa70708d42ed23e7d232aa08230a\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"\"}",
+                "start_time": "2023-12-04T19:43:34.5845287Z",
+                "end_time": "2023-12-04T19:43:41.7895373Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/8adcad0a-76bb-4271-a834-67142fa45a99')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"d82f1928f921616bce744f7e4f66a1e3e39af871\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"\"}",
+                "start_time": "2023-12-04T23:48:45.5356831Z",
+                "end_time": "2023-12-04T23:48:52.4121852Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/90cd27b5-fa78-4222-a34c-0c3c8a22e80c')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"74803b0f4c1c9226f16284c2e6906f603ecce08b\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"added manifest\"}",
+                "start_time": "2023-12-04T17:03:57.7545429Z",
+                "end_time": "2023-12-04T17:04:07.3487837Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/955368bd-bf31-43da-8bde-e1f4d56659d8')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"d82f1928f921616bce744f7e4f66a1e3e39af871\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"\"}",
+                "start_time": "2023-12-04T23:46:54.6294598Z",
+                "end_time": "2023-12-04T23:47:02.0997739Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/a9ebf9cd-af6a-43db-b73d-7e33cf8bc87f')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"b94cf6df46d7087f4cb993b6702d8f895b06d50f\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"Added development environment\"}",
+                "start_time": "2023-12-04T17:45:31.1610867Z",
+                "end_time": "2023-12-04T17:45:37.9590562Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/b21fa788-a50f-461c-88e6-23515afc881b')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"c111c441afccfa70708d42ed23e7d232aa08230a\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"\"}",
+                "start_time": "2023-12-04T19:43:57.7149778Z",
+                "end_time": "2023-12-04T19:44:10.6929801Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/b588d7af-1c2d-415a-8e68-c2a5f81876fb')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"b14a55b1c99e42b0bc6e6b9f184220ba7aedac3d\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"Merge pull request #13 from embergershared/8-api-add-a-health-probe-at-healthz\\n\\nSolved Issue #8: API: add a health probe at /healthz\"}",
+                "start_time": "2023-12-04T20:38:55.2356594Z",
+                "end_time": "2023-12-04T20:39:02.7248007Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/c04dcc1f-bb9d-46eb-b1cb-088abf0d9d07')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"b94cf6df46d7087f4cb993b6702d8f895b06d50f\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"Added development environment\"}",
+                "start_time": "2023-12-04T17:45:56.5499732Z",
+                "end_time": "2023-12-04T17:46:08.1719069Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/d5be654e-b67d-4b2f-89e7-901a719f3b63')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"b14a55b1c99e42b0bc6e6b9f184220ba7aedac3d\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"Merge pull request #13 from embergershared/8-api-add-a-health-probe-at-healthz\\n\\nSolved Issue #8: API: add a health probe at /healthz\"}",
+                "start_time": "2023-12-04T20:39:20.6326335Z",
+                "end_time": "2023-12-04T20:39:37.8443226Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/e4d7c20d-0c0b-4ddc-89db-5f6b4b23d2bb')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"4e6fd331d28c8bf65c05a436a2f0448fcb43d125\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"\"}",
+                "start_time": "2023-12-05T00:15:11.6959815Z",
+                "end_time": "2023-12-05T00:15:18.6545642Z",
+                "active": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/e574e733-b8bf-4223-aa2b-a937ba5ffc45')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"4e6fd331d28c8bf65c05a436a2f0448fcb43d125\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"\"}",
+                "start_time": "2023-12-05T00:13:19.2919306Z",
+                "end_time": "2023-12-05T00:13:26.3773529Z",
+                "active": true
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/deployments",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/f36500b9-085e-47c1-933c-b1d6e86e45ab')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ],
+            "properties": {
+                "status": 4,
+                "author_email": "N/A",
+                "author": "N/A",
+                "deployer": "GITHUB_ZIP_DEPLOY",
+                "message": "{\"type\":\"deployment\",\"sha\":\"9acced32af376a4a988d628a8b65e4b04a28b267\",\"repoName\":\"embergershared/dev-ex-app\",\"actor\":\"gopher194\",\"slotName\":\"production\",\"commitMessage\":\"\"}",
+                "start_time": "2023-12-05T00:05:28.0319287Z",
+                "end_time": "2023-12-05T00:05:35.2152156Z",
+                "active": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/', parameters('sites_devexdays_app_dev_api_name'), '.azurewebsites.net')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ],
+            "properties": {
+                "siteName": "devexdays-app-dev-api",
+                "hostNameType": "Verified"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/hostNameBindings",
+            "apiVersion": "2022-09-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/', parameters('sites_devexdays_app_dev_app_name'), '.azurewebsites.net')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ],
+            "properties": {
+                "siteName": "devexdays-app-dev-app",
+                "hostNameType": "Verified"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-03T19_39_45_0562874')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-03T19_39_45_0562874')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-03T20_39_45_1158876')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-03T20_39_45_1158876')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-03T21_39_45_1550366')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-03T21_39_45_1550366')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-03T22_39_45_2000907')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-03T22_39_45_2000907')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-03T23_39_45_3262472')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-03T23_39_45_3262472')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T00_39_45_3562799')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T00_39_45_3562799')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T01_39_45_3794815')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T01_39_45_3794815')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T02_39_45_4216643')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T02_39_45_4216643')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T03_39_45_4879663')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T03_39_45_4879663')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T04_39_45_5301335')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T04_39_45_5301335')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T05_39_45_5814541')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T05_39_45_5814541')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T06_39_45_6487318')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T06_39_45_6487318')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T07_39_45_6649742')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T07_39_45_6649742')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T08_39_45_7160281')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T08_39_45_7160281')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T09_39_45_7428449')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T09_39_45_7428449')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T10_39_45_7813041')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T10_39_45_7813041')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T11_39_45_8280165')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T11_39_45_8280165')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T12_39_45_8708012')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T12_39_45_8708012')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T13_39_45_8993495')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T13_39_45_8993495')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T14_39_45_9311582')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T14_39_45_9311582')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T15_39_45_9722388')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T15_39_45_9722388')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T16_39_46_0133082')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T16_39_46_0133082')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T17_39_46_0941070')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T17_39_46_0941070')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T18_39_46_0961933')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T18_39_46_0961933')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T19_39_46_1306539')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T19_39_46_1306539')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T20_39_46_1804376')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T20_39_46_1804376')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T21_39_46_2098271')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T21_39_46_2098271')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T22_39_46_3383803')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T22_39_46_3383803')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-04T23_39_46_4006950')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-04T23_39_46_4006950')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-05T00_39_46_3401834')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-05T00_39_46_3401834')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-05T01_39_46_3811729')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-05T01_39_46_3811729')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_api_name'), '/2023-12-05T02_39_46_4152309')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_api_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Web/sites/snapshots",
+            "apiVersion": "2015-08-01",
+            "name": "[concat(parameters('sites_devexdays_app_dev_app_name'), '/2023-12-05T02_39_46_4152309')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('sites_devexdays_app_dev_app_name'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/advancedThreatProtectionSettings",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/ContosoUniversity/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_sql_devexdays_app_dev_01_name'), 'ContosoUniversity')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/auditingPolicies",
+            "apiVersion": "2014-04-01",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/ContosoUniversity/Default')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_sql_devexdays_app_dev_01_name'), 'ContosoUniversity')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "auditingState": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/auditingSettings",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/ContosoUniversity/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_sql_devexdays_app_dev_01_name'), 'ContosoUniversity')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "retentionDays": 0,
+                "isAzureMonitorTargetEnabled": false,
+                "state": "Disabled",
+                "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/backupLongTermRetentionPolicies",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/ContosoUniversity/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_sql_devexdays_app_dev_01_name'), 'ContosoUniversity')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "makeBackupsImmutable": false,
+                "weeklyRetention": "PT0S",
+                "monthlyRetention": "PT0S",
+                "yearlyRetention": "PT0S",
+                "weekOfYear": 0
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/backupShortTermRetentionPolicies",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/ContosoUniversity/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_sql_devexdays_app_dev_01_name'), 'ContosoUniversity')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "retentionDays": 7,
+                "diffBackupIntervalInHours": 12
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/extendedAuditingSettings",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/ContosoUniversity/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_sql_devexdays_app_dev_01_name'), 'ContosoUniversity')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "retentionDays": 0,
+                "isAzureMonitorTargetEnabled": false,
+                "state": "Disabled",
+                "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/geoBackupPolicies",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/ContosoUniversity/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_sql_devexdays_app_dev_01_name'), 'ContosoUniversity')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/ledgerDigestUploads",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/ContosoUniversity/Current')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_sql_devexdays_app_dev_01_name'), 'ContosoUniversity')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/securityAlertPolicies",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/ContosoUniversity/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_sql_devexdays_app_dev_01_name'), 'ContosoUniversity')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "state": "Disabled",
+                "disabledAlerts": [
+                    ""
+                ],
+                "emailAddresses": [
+                    ""
+                ],
+                "emailAccountAdmins": false,
+                "retentionDays": 0
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/transparentDataEncryption",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/ContosoUniversity/Current')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_sql_devexdays_app_dev_01_name'), 'ContosoUniversity')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "state": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Sql/servers/databases/vulnerabilityAssessments",
+            "apiVersion": "2023-02-01-preview",
+            "name": "[concat(parameters('servers_sql_devexdays_app_dev_01_name'), '/ContosoUniversity/Default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', parameters('servers_sql_devexdays_app_dev_01_name'), 'ContosoUniversity')]",
+                "[resourceId('Microsoft.Sql/servers', parameters('servers_sql_devexdays_app_dev_01_name'))]"
+            ],
+            "properties": {
+                "recurringScans": {
+                    "isEnabled": false,
+                    "emailSubscriptionAdmins": true,
+                    "emails": []
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+            "apiVersion": "2023-01-01",
+            "name": "[concat(parameters('storageAccounts_ozm5dsx2hn6oeazscripts_name'), '/default/ndrkzzonnw6hgazscripts')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storageAccounts_ozm5dsx2hn6oeazscripts_name'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_ozm5dsx2hn6oeazscripts_name'))]"
+            ],
+            "properties": {
+                "accessTier": "TransactionOptimized",
+                "shareQuota": 2,
+                "enabledProtocols": "SMB"
+            }
+        }
+    ]
+}
