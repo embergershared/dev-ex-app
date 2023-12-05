@@ -12,18 +12,14 @@ param location string = resourceGroup().location
 param tags object = {}
 param scmDoBuildDuringDeployment bool = false
 param appSettings object = {}
-param kind string = 'app,linux'
-param enableOryxBuild bool = contains(kind, 'linux')
-param runtimeName string = 'dotnetcore'
-param runtimeVersion string = '6.0'
-param runtimeNameAndVersion string = '${runtimeName}|${runtimeVersion}'
-param linuxFxVersion string = runtimeNameAndVersion
-
+param enableOryxBuild bool = true
 
 // Variables
 var resourceName = !empty(name) ? replace(name, ' ', '-') : 'a${uniqueString(resourceGroup().id)}'
 
 var hostingPlanName = 'appsvcplan-${resourceName}'
+var kind = 'app,linux'
+var linuxFxVersion = 'dotnetcore|6.0'
 var webAppName = 'app-${resourceName}'
 var webApiName = 'api-${resourceName}'
 var sqlServerName = 'sql-${resourceName}'
@@ -39,10 +35,10 @@ var appInsightsName = 'appi-${resourceName}'
 resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: hostingPlanName
   location: location
-  kind: kind
+  kind: 'linux'
   sku: {
-    tier: 'Standard'
-    name: 'S1'
+    tier: 'Basic'
+    name: 'B2'
   }
   tags: tags
 }
@@ -54,7 +50,7 @@ resource webApp 'Microsoft.Web/sites@2022-03-01' = {
   properties: {
     serverFarmId: hostingPlan.id
     siteConfig: {
-      linuxFxVersion: linuxFxVersion
+      linuxFxVersion: 'dotnetcore|6.0'
       alwaysOn: true
       ftpsState: 'FtpsOnly'
       minTlsVersion: '1.2'
@@ -93,6 +89,15 @@ resource webAppScm 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2022-
     allow: true
   }
 }
+resource webAppFtp 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2022-09-01' = {
+  name: 'ftp'
+  kind: 'string'
+  parent: webApp
+  properties: {
+    allow: true
+  }
+}
+
 
 resource webApi 'Microsoft.Web/sites@2022-03-01' = {
   name: webApiName
@@ -128,6 +133,14 @@ resource webApi 'Microsoft.Web/sites@2022-03-01' = {
 }
 resource webApiScm 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2022-09-01' = {
   name: 'scm'
+  kind: 'string'
+  parent: webApi
+  properties: {
+    allow: true
+  }
+}
+resource webApiFtp 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2022-09-01' = {
+  name: 'ftp'
   kind: 'string'
   parent: webApi
   properties: {

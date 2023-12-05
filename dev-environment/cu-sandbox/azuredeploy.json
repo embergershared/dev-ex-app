@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "15559330253088094798"
+      "templateHash": "1644401968084263892"
     }
   },
   "parameters": {
@@ -38,34 +38,16 @@
       "type": "object",
       "defaultValue": {}
     },
-    "kind": {
-      "type": "string",
-      "defaultValue": "app,linux"
-    },
     "enableOryxBuild": {
       "type": "bool",
-      "defaultValue": "[contains(parameters('kind'), 'linux')]"
-    },
-    "runtimeName": {
-      "type": "string",
-      "defaultValue": "dotnetcore"
-    },
-    "runtimeVersion": {
-      "type": "string",
-      "defaultValue": "6.0"
-    },
-    "runtimeNameAndVersion": {
-      "type": "string",
-      "defaultValue": "[format('{0}|{1}', parameters('runtimeName'), parameters('runtimeVersion'))]"
-    },
-    "linuxFxVersion": {
-      "type": "string",
-      "defaultValue": "[parameters('runtimeNameAndVersion')]"
+      "defaultValue": true
     }
   },
   "variables": {
     "resourceName": "[if(not(empty(parameters('name'))), replace(parameters('name'), ' ', '-'), format('a{0}', uniqueString(resourceGroup().id)))]",
     "hostingPlanName": "[format('appsvcplan-{0}', variables('resourceName'))]",
+    "kind": "app,linux",
+    "linuxFxVersion": "dotnetcore|6.0",
     "webAppName": "[format('app-{0}', variables('resourceName'))]",
     "webApiName": "[format('api-{0}', variables('resourceName'))]",
     "sqlServerName": "[format('sql-{0}', variables('resourceName'))]",
@@ -128,10 +110,10 @@
       "apiVersion": "2022-03-01",
       "name": "[variables('hostingPlanName')]",
       "location": "[parameters('location')]",
-      "kind": "[parameters('kind')]",
+      "kind": "linux",
       "sku": {
-        "tier": "Standard",
-        "name": "S1"
+        "tier": "Basic",
+        "name": "B2"
       },
       "tags": "[parameters('tags')]"
     },
@@ -140,11 +122,11 @@
       "apiVersion": "2022-03-01",
       "name": "[variables('webAppName')]",
       "location": "[parameters('location')]",
-      "kind": "[parameters('kind')]",
+      "kind": "[variables('kind')]",
       "properties": {
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
         "siteConfig": {
-          "linuxFxVersion": "[parameters('linuxFxVersion')]",
+          "linuxFxVersion": "dotnetcore|6.0",
           "alwaysOn": true,
           "ftpsState": "FtpsOnly",
           "minTlsVersion": "1.2",
@@ -175,15 +157,27 @@
       ]
     },
     {
+      "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+      "apiVersion": "2022-09-01",
+      "name": "[format('{0}/{1}', variables('webAppName'), 'ftp')]",
+      "kind": "string",
+      "properties": {
+        "allow": true
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('webAppName'))]"
+      ]
+    },
+    {
       "type": "Microsoft.Web/sites",
       "apiVersion": "2022-03-01",
       "name": "[variables('webApiName')]",
       "location": "[parameters('location')]",
-      "kind": "[parameters('kind')]",
+      "kind": "[variables('kind')]",
       "properties": {
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
         "siteConfig": {
-          "linuxFxVersion": "[parameters('linuxFxVersion')]",
+          "linuxFxVersion": "[variables('linuxFxVersion')]",
           "alwaysOn": true,
           "ftpsState": "FtpsOnly",
           "minTlsVersion": "1.2",
@@ -205,6 +199,18 @@
       "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
       "apiVersion": "2022-09-01",
       "name": "[format('{0}/{1}', variables('webApiName'), 'scm')]",
+      "kind": "string",
+      "properties": {
+        "allow": true
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('webApiName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+      "apiVersion": "2022-09-01",
+      "name": "[format('{0}/{1}', variables('webApiName'), 'ftp')]",
       "kind": "string",
       "properties": {
         "allow": true
