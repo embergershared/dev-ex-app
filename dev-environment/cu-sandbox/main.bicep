@@ -14,6 +14,10 @@ param scmDoBuildDuringDeployment bool = false
 param appSettings object = {}
 param kind string = 'app,linux'
 param enableOryxBuild bool = contains(kind, 'linux')
+param runtimeName string = 'dotnetcore'
+param runtimeVersion string = '6.0'
+param runtimeNameAndVersion string = '${runtimeName}|${runtimeVersion}'
+param linuxFxVersion string = runtimeNameAndVersion
 
 
 // Variables
@@ -50,9 +54,18 @@ resource webApp 'Microsoft.Web/sites@2022-03-01' = {
   properties: {
     serverFarmId: hostingPlan.id
     siteConfig: {
+      linuxFxVersion: linuxFxVersion
+      alwaysOn: true
+      ftpsState: 'FtpsOnly'
+      minTlsVersion: '1.2'
+      use32BitWorkerProcess: false
       healthCheckPath: '/healthz'
     }
+    clientAffinityEnabled: false
+    httpsOnly: true
   }
+
+  identity: { type: 'SystemAssigned' }
 
   resource configAppSettings 'config' = {
     name: 'appsettings'
@@ -88,9 +101,18 @@ resource webApi 'Microsoft.Web/sites@2022-03-01' = {
   properties: {
     serverFarmId: hostingPlan.id
     siteConfig: {
+      linuxFxVersion: linuxFxVersion
+      alwaysOn: true
+      ftpsState: 'FtpsOnly'
+      minTlsVersion: '1.2'
+      use32BitWorkerProcess: false
       healthCheckPath: '/healthz'
     }
+    clientAffinityEnabled: false
+    httpsOnly: true
   }
+
+  identity: { type: 'SystemAssigned' }
 
   resource configAppSettings 'config' = {
     name: 'appsettings'

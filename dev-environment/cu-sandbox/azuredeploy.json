@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "4886907319320470314"
+      "templateHash": "15559330253088094798"
     }
   },
   "parameters": {
@@ -45,6 +45,22 @@
     "enableOryxBuild": {
       "type": "bool",
       "defaultValue": "[contains(parameters('kind'), 'linux')]"
+    },
+    "runtimeName": {
+      "type": "string",
+      "defaultValue": "dotnetcore"
+    },
+    "runtimeVersion": {
+      "type": "string",
+      "defaultValue": "6.0"
+    },
+    "runtimeNameAndVersion": {
+      "type": "string",
+      "defaultValue": "[format('{0}|{1}', parameters('runtimeName'), parameters('runtimeVersion'))]"
+    },
+    "linuxFxVersion": {
+      "type": "string",
+      "defaultValue": "[parameters('runtimeNameAndVersion')]"
     }
   },
   "variables": {
@@ -128,8 +144,18 @@
       "properties": {
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
         "siteConfig": {
+          "linuxFxVersion": "[parameters('linuxFxVersion')]",
+          "alwaysOn": true,
+          "ftpsState": "FtpsOnly",
+          "minTlsVersion": "1.2",
+          "use32BitWorkerProcess": false,
           "healthCheckPath": "/healthz"
-        }
+        },
+        "clientAffinityEnabled": false,
+        "httpsOnly": true
+      },
+      "identity": {
+        "type": "SystemAssigned"
       },
       "tags": "[parameters('tags')]",
       "dependsOn": [
@@ -157,8 +183,18 @@
       "properties": {
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
         "siteConfig": {
+          "linuxFxVersion": "[parameters('linuxFxVersion')]",
+          "alwaysOn": true,
+          "ftpsState": "FtpsOnly",
+          "minTlsVersion": "1.2",
+          "use32BitWorkerProcess": false,
           "healthCheckPath": "/healthz"
-        }
+        },
+        "clientAffinityEnabled": false,
+        "httpsOnly": true
+      },
+      "identity": {
+        "type": "SystemAssigned"
       },
       "tags": "[parameters('tags')]",
       "dependsOn": [
