@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "8199601092000417753"
+      "templateHash": "17414789759387278184"
     }
   },
   "parameters": {
@@ -33,13 +33,13 @@
   },
   "variables": {
     "resourceName": "[if(not(empty(parameters('name'))), replace(parameters('name'), ' ', '-'), format('a{0}', uniqueString(resourceGroup().id)))]",
-    "hostingPlanName": "[format('{0}-appsvcplan', variables('resourceName'))]",
-    "webAppName": "[format('{0}-app', variables('resourceName'))]",
-    "webApiName": "[format('{0}-api', variables('resourceName'))]",
-    "sqlServerName": "[format('{0}-sql', variables('resourceName'))]",
-    "keyVaultName": "[format('{0}-kv', variables('resourceName'))]",
+    "hostingPlanName": "[format('appsvcplan-{0}', variables('resourceName'))]",
+    "webAppName": "[format('web-{0}', variables('resourceName'))]",
+    "webApiName": "[format('api-{0}', variables('resourceName'))]",
+    "sqlServerName": "[format('sql-{0}', variables('resourceName'))]",
+    "keyVaultName": "[format('kv-{0}', take(replace(variables('resourceName'), '-', ''), 21))]",
     "sqlAdmin": "sqladmin",
-    "sqlAdminPassword": "[format('{0}UPP1!', uniqueString(variables('keyVaultName')))]"
+    "sqlAdminPassword": "[format('{0}Up!P1', uniqueString(variables('keyVaultName')))]"
   },
   "resources": [
     {
