@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "17791181211208002957"
+      "templateHash": "4886907319320470314"
     }
   },
   "parameters": {
@@ -112,6 +112,7 @@
       "apiVersion": "2022-03-01",
       "name": "[variables('hostingPlanName')]",
       "location": "[parameters('location')]",
+      "kind": "[parameters('kind')]",
       "sku": {
         "tier": "Standard",
         "name": "S1"
@@ -123,8 +124,12 @@
       "apiVersion": "2022-03-01",
       "name": "[variables('webAppName')]",
       "location": "[parameters('location')]",
+      "kind": "[parameters('kind')]",
       "properties": {
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+        "siteConfig": {
+          "healthCheckPath": "/healthz"
+        }
       },
       "tags": "[parameters('tags')]",
       "dependsOn": [
@@ -132,16 +137,44 @@
       ]
     },
     {
+      "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+      "apiVersion": "2022-09-01",
+      "name": "[format('{0}/{1}', variables('webAppName'), 'scm')]",
+      "kind": "string",
+      "properties": {
+        "allow": true
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('webAppName'))]"
+      ]
+    },
+    {
       "type": "Microsoft.Web/sites",
       "apiVersion": "2022-03-01",
       "name": "[variables('webApiName')]",
       "location": "[parameters('location')]",
+      "kind": "[parameters('kind')]",
       "properties": {
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]",
+        "siteConfig": {
+          "healthCheckPath": "/healthz"
+        }
       },
       "tags": "[parameters('tags')]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
+      "apiVersion": "2022-09-01",
+      "name": "[format('{0}/{1}', variables('webApiName'), 'scm')]",
+      "kind": "string",
+      "properties": {
+        "allow": true
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('webApiName'))]"
       ]
     },
     {

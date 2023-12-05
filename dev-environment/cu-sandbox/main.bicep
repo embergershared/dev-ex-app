@@ -26,15 +26,16 @@ var sqlServerName = 'sql-${resourceName}'
 var keyVaultName = 'kv-${take(replace(resourceName, '-', ''), 21)}'
 var sqlAdmin = 'sqladmin'
 var sqlAdminPassword = '${uniqueString(keyVaultName)}Up!P1'
-// var appUser = 'appUser'
-// var appUserPassword = '${uniqueString(sqlAdminPassword)}iT$23'
 var lawName = 'law-${resourceName}'
 var appInsightsName = 'appi-${resourceName}'
+// var appUser = 'appUser'
+// var appUserPassword = '${uniqueString(sqlAdminPassword)}iT$23'
 
-
+// Resources
 resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: hostingPlanName
   location: location
+  kind: kind
   sku: {
     tier: 'Standard'
     name: 'S1'
@@ -45,8 +46,12 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
 resource webApp 'Microsoft.Web/sites@2022-03-01' = {
   name: webAppName
   location: location
+  kind: kind
   properties: {
     serverFarmId: hostingPlan.id
+    siteConfig: {
+      healthCheckPath: '/healthz'
+    }
   }
 
   resource configAppSettings 'config' = {
@@ -67,12 +72,24 @@ resource webApp 'Microsoft.Web/sites@2022-03-01' = {
 
   tags: tags
 }
+resource webAppScm 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2022-09-01' = {
+  name: 'scm'
+  kind: 'string'
+  parent: webApp
+  properties: {
+    allow: true
+  }
+}
 
 resource webApi 'Microsoft.Web/sites@2022-03-01' = {
   name: webApiName
   location: location
+  kind: kind
   properties: {
     serverFarmId: hostingPlan.id
+    siteConfig: {
+      healthCheckPath: '/healthz'
+    }
   }
 
   resource configAppSettings 'config' = {
@@ -86,6 +103,14 @@ resource webApi 'Microsoft.Web/sites@2022-03-01' = {
   }
 
   tags: tags
+}
+resource webApiScm 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2022-09-01' = {
+  name: 'scm'
+  kind: 'string'
+  parent: webApi
+  properties: {
+    allow: true
+  }
 }
 
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
