@@ -1,11 +1,11 @@
 name: Bicep -> ARM
 
 on:
-  push:
-    branches: [main]
-    paths:
-      # only run if bicep files changed
-      - 'dev-environment/cu-sandbox/*.bicep'
+  # push:
+  #   branches: [main]
+  #   paths:
+  #     # only run if bicep files changed
+  #     - 'dev-environment/cu-sandbox/main.bicep'
   # We also want to be able to run this workflow manually from Github
   workflow_dispatch:
 
@@ -28,7 +28,6 @@ jobs:
 
       - name: Build Bicep => ARM
         run: |
-          # subprocess.run([az, 'bicep', 'build', '--file', environment / 'main.bicep', '--outfile', environment / 'azuredeploy.json'])
           az bicep build --file dev-environment/cu-sandbox/main.bicep --outfile dev-environment/cu-sandbox/azuredeploy.json
 
       - name: Commit changes
