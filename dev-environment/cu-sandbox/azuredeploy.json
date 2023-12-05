@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "3969506092311950484"
+      "templateHash": "8653887181679565530"
     }
   },
   "parameters": {
@@ -64,10 +64,9 @@
       "type": "Microsoft.Web/sites/config",
       "apiVersion": "2022-03-01",
       "name": "[format('{0}/{1}', variables('webAppName'), 'appsettings')]",
-      "properties": "[union(parameters('appSettings'), createObject('SCM_DO_BUILD_DURING_DEPLOYMENT', string(parameters('scmDoBuildDuringDeployment')), 'ENABLE_ORYX_BUILD', string(parameters('enableOryxBuild'))), if(not(empty(variables('appInsightsName'))), createObject('APPLICATIONINSIGHTS_CONNECTION_STRING', reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2020-02-02').ConnectionString), createObject()), if(not(empty(variables('keyVaultName'))), createObject('AZURE_KEY_VAULT_ENDPOINT', reference(resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName')), '2022-07-01').vaultUri), createObject()), createObject('ASPNETCORE_ENVIRONMENT', 'Development', 'URLAPI', format('https://{0}', reference(resourceId('Microsoft.Web/sites', variables('webApiName')), '2022-03-01').defaultHostName)))]",
+      "properties": "[union(parameters('appSettings'), createObject('APPLICATIONINSIGHTS_CONNECTION_STRING', reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2020-02-02').ConnectionString, 'ASPNETCORE_ENVIRONMENT', 'Development', 'ENABLE_ORYX_BUILD', string(parameters('enableOryxBuild')), 'SCM_DO_BUILD_DURING_DEPLOYMENT', string(parameters('scmDoBuildDuringDeployment')), 'URLAPI', format('https://{0}', reference(resourceId('Microsoft.Web/sites', variables('webApiName')), '2022-03-01').defaultHostName), 'WEBSITE_HTTPLOGGING_RETENTION_DAYS', 1))]",
       "dependsOn": [
         "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]",
-        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
         "[resourceId('Microsoft.Web/sites', variables('webApiName'))]",
         "[resourceId('Microsoft.Web/sites', variables('webAppName'))]"
       ]
@@ -76,8 +75,10 @@
       "type": "Microsoft.Web/sites/config",
       "apiVersion": "2022-03-01",
       "name": "[format('{0}/{1}', variables('webApiName'), 'appsettings')]",
-      "properties": "[union(parameters('appSettings'), createObject('ASPNETCORE_ENVIRONMENT', 'Development', 'AZURE_SQL_CONNECTION_STRING_KEY', variables('connectionStringFullKvSecretName')))]",
+      "properties": "[union(parameters('appSettings'), createObject('APPLICATIONINSIGHTS_CONNECTION_STRING', reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2020-02-02').ConnectionString, 'ASPNETCORE_ENVIRONMENT', 'Development', 'AZURE_KEY_VAULT_ENDPOINT', reference(resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName')), '2022-07-01').vaultUri, 'AZURE_SQL_CONNECTION_STRING_KEY', variables('connectionStringFullKvSecretName'), 'ENABLE_ORYX_BUILD', string(parameters('enableOryxBuild')), 'SCM_DO_BUILD_DURING_DEPLOYMENT', string(parameters('scmDoBuildDuringDeployment')), 'WEBSITE_HTTPLOGGING_RETENTION_DAYS', 1))]",
       "dependsOn": [
+        "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]",
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
         "[resourceId('Microsoft.Web/sites', variables('webApiName'))]"
       ]
     },

@@ -94,14 +94,13 @@ resource webApp 'Microsoft.Web/sites@2022-03-01' = {
     name: 'appsettings'
     properties: union(appSettings,
       {
-        SCM_DO_BUILD_DURING_DEPLOYMENT: string(scmDoBuildDuringDeployment)
-        ENABLE_ORYX_BUILD: string(enableOryxBuild)
-      },
-      !empty(applicationInsights.name) ? { APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString } : {},
-      !empty(keyVaultName) ? { AZURE_KEY_VAULT_ENDPOINT: keyVault.properties.vaultUri } : {},
-      {
+        APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
         ASPNETCORE_ENVIRONMENT: 'Development'
+        // AZURE_KEY_VAULT_ENDPOINT: keyVault.properties.vaultUri
+        ENABLE_ORYX_BUILD: string(enableOryxBuild)
+        SCM_DO_BUILD_DURING_DEPLOYMENT: string(scmDoBuildDuringDeployment)
         URLAPI: 'https://${webApi.properties.defaultHostName}'
+        WEBSITE_HTTPLOGGING_RETENTION_DAYS: 1
       }
     )
   }
@@ -149,8 +148,13 @@ resource webApi 'Microsoft.Web/sites@2022-03-01' = {
     name: 'appsettings'
     properties: union(appSettings,
       {
+        APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
         ASPNETCORE_ENVIRONMENT: 'Development'
+        AZURE_KEY_VAULT_ENDPOINT: keyVault.properties.vaultUri
         AZURE_SQL_CONNECTION_STRING_KEY: connectionStringFullKvSecretName
+        ENABLE_ORYX_BUILD: string(enableOryxBuild)
+        SCM_DO_BUILD_DURING_DEPLOYMENT: string(scmDoBuildDuringDeployment)
+        WEBSITE_HTTPLOGGING_RETENTION_DAYS: 1
       }
     )
   }
