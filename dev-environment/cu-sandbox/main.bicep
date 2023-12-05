@@ -215,7 +215,7 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   scope: keyVault
   properties: {
     principalId: webApi.identity.principalId
-    //roleDefinitionId: 'Key Vault Secrets User'
+    // Role we want to assign: 'Key Vault Secrets User'
     // Azure built-in role IDs (see: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles)
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6')
   }
