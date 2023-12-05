@@ -9,7 +9,7 @@ import subprocess
 
 from pathlib import Path
 
-repository_root = Path(__file__).resolve().parent.parent
+repository_root = Path(__file__).resolve().parent.parent.parent
 environments_path = repository_root / 'dev-environment'
 print(f'Environments path: {environments_path}')
 
