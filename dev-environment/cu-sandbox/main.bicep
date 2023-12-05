@@ -1,9 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-// Dev environment deployment:
-// Execute to update the ARM template created from this bicep file:
+// Dev environment deployment update:
+// - Execute to update the ARM template created from this bicep file:
 // az bicep build --file main.bicep --outfile azuredeploy.json
+// - Commit changes to main
+// - Sync catalog (https://portal.azure.com/#@mngenvmcap912772.onmicrosoft.com/resource/subscriptions/a73ced30-c712-4405-8828-67a833b1e39a/resourceGroups/rg-use2-912772-s1-devexdays-demos-01/providers/Microsoft.DevCenter/devcenters/dc-org-alpha-eastus2-01/template_repository)
+
 
 // ===============   Parameters   ===============
 @description('Name of the Web App')
@@ -35,7 +38,7 @@ var sqlAdminPassword = '${uniqueString(keyVaultName)}Up!P1'
 var appUser = 'appUser'
 var appUserPassword = 'iT$23${uniqueString(sqlAdminPassword)}'
 var databaseName = 'ContosoUniversity'
-var connectionString = 'Server=${sqlServer.properties.fullyQualifiedDomainName}; Database=${sqlServer::database.name}; User=${sqlAdmin}'
+var connectionString = 'Server=${sqlServer.properties.fullyQualifiedDomainName}; Database=${sqlServer::database.name}; User=${appUser}'
 
 // ===============   Resources   ===============
 //  / App Service Plan
