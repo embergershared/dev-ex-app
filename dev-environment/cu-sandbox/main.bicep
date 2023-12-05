@@ -191,13 +191,13 @@ resource telemetrydeployment 'Microsoft.Resources/deployments@2021-04-01' = if (
 */
 
 // Data outputs
-output AZURE_SQL_CONNECTION_STRING_KEY string = sqlServer.outputs.connectionStringKey
+// output AZURE_SQL_CONNECTION_STRING_KEY string = sqlServer.outputs.connectionStringKey
 
 // App outputs
-output APPLICATIONINSIGHTS_CONNECTION_STRING string = monitoring.outputs.applicationInsightsConnectionString
-output AZURE_KEY_VAULT_ENDPOINT string = keyVault.outputs.endpoint
-output AZURE_KEY_VAULT_NAME string = keyVault.outputs.name
+// output APPLICATIONINSIGHTS_CONNECTION_STRING string = monitoring.outputs.applicationInsightsConnectionString
+// output AZURE_KEY_VAULT_ENDPOINT string = keyVault.outputs.endpoint
+// output AZURE_KEY_VAULT_NAME string = keyVault.outputs.name
 output AZURE_LOCATION string = location
 output AZURE_TENANT_ID string = tenant().tenantId
-output AZURE_LOAD_TEST_NAME string = loadtest.name
-output AZURE_LOAD_TEST_HOST string = web.outputs.SERVICE_WEB_HOSTNAME
+// output AZURE_LOAD_TEST_NAME string = loadtest.name
+// output AZURE_LOAD_TEST_HOST string = web.outputs.SERVICE_WEB_HOSTNAME
