@@ -35,6 +35,7 @@ jobs:
     #   labels: 912772
 
     uses: embergershared/dev-ex-app/.github/workflows/dev_azure-infra.yml@main
+    secrets: inherit
 
   apps:
     needs: infra
