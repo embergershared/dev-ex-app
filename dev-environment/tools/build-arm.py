@@ -9,8 +9,8 @@ import subprocess
 
 from pathlib import Path
 
-repository_root = Path(__file__).resolve().parent.parent.parent
-environments_path = repository_root / 'dev-environment'
+repository_root = Path(__file__).resolve().parent.parent
+environments_path = repository_root / 'cu-sandbox'
 print(f'Environments path: {environments_path}')
 
 environments = []
