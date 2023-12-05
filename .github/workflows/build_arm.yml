@@ -11,7 +11,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on:
+      # We use a GH organization Self-hosted runner wired in the Private VNET
+      group: embergershared
+      labels: 912772
 
     permissions:
       contents: write
