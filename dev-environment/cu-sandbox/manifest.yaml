@@ -7,5 +7,11 @@ runner: ARM
 templatePath: azuredeploy.json
 parameters:
   - id: prefix
-    name: prefix
+    name: Resources Prefix
+    type: string
+  - id: resourceGroupLocation
+    name: Resource Group Location
+    type: string
+  - id: resourceGroupName
+    name: Resource Group Name
     type: string
