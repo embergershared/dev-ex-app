@@ -20,6 +20,19 @@ Function Install-ChocoPackages {
     Invoke-Expression $command
   }
 }
+Function Upgrade-ChocoPackages {
+  param (
+    [Parameter(Mandatory=$true)]
+    [string[]]$Packages
+  )
+
+  foreach ($package in $Packages) {
+    $command = "choco upgrade $package -y"
+    Write-Host
+    Write-Host "Upgrade-ChocoPackages => Executing: $command"
+    Invoke-Expression $command
+  }
+}
 Function Uninstall-ChocoPackages {
   param (
     [Parameter(Mandatory=$true)]
@@ -47,7 +60,7 @@ Function Uninstall-ChocoPackages {
 
 # 4. Install packages
 
-# We start with Google chrome as it errors out if installed after other packages
+# We start with Google chrome as it errors out if installed with other packages
 Install-ChocoPackages -Packages "googlechrome --ignore-checksums"
 
 # Then install the rest of the packages
@@ -84,6 +97,11 @@ $install_packages = @(
   "visioviewer"
 )
 Install-ChocoPackages -Packages $install_packages
+
+$upgrade_packages = @(
+  "visualstudio2022enterprise"
+)
+Upgrade-ChocoPackages -Packages $upgrade_packages
 
 # 5. Install Ubuntu 22.04 distro in WSL
 wsl --set-default-version 2
