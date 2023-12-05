@@ -20,12 +20,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Build Bicep -> ARM
-        run: python ./dev-environment/tools/build-arm.py
+      # - name: Build Bicep -> ARM
+      #   run: python ./dev-environment/tools/build-arm.py
+
+      - name: Build Bicep => ARM
+        run: |
+          # subprocess.run([az, 'bicep', 'build', '--file', environment / 'main.bicep', '--outfile', environment / 'azuredeploy.json'])
+          az bicep build --file dev-environment/cu-sandbox/main.bicep --outfile dev-environment/cu-sandbox/azuredeploy.json
 
       - name: Commit changes
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git commit -am "Rebuild ARM templates"
+          git commit -am "Rebuilt cu-sandbox ARM templates"
           git push
