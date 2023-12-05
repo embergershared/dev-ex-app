@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://github.com/Azure/deployment-environments/releases/download/2022-11-11-preview/manifest.schema.json
-name: Sandbox
+name: Contoso University developer sandbox
 version: 1.0.0
-summary: Empty sandbox environment
-description: Deploys an empty sandbox environment
+summary: Sandbox environment for a Contoso University developer
+description: Deploys an empty sandbox environment for a Contoso University developer
 runner: ARM
 templatePath: azuredeploy.json
