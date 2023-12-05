@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Build Bicep -> ARM
-        run: python ./tools/build-arm.py
+        run: python ./dev-environment/tools/build-arm.py
 
       - name: Commit changes
         run: |
