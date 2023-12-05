@@ -35,10 +35,12 @@ var lawName = 'law-${resourceName}'
 var appInsightsName = 'appi-${resourceName}'
 var sqlAdmin = 'sqladmin'
 var sqlAdminPassword = '${uniqueString(keyVaultName)}Up!P1'
-var appUser = 'appUser'
-var appUserPassword = 'iT$23${uniqueString(sqlAdminPassword)}'
+// var appUser = 'appUser'
+// var appUserPassword = 'iT$23${uniqueString(sqlAdminPassword)}'
 var databaseName = 'ContosoUniversity'
-var connectionString = 'Server=${sqlServer.properties.fullyQualifiedDomainName}; Database=${sqlServer::database.name}; User=${appUser}'
+var connectionStringBase = 'Server=${sqlServer.properties.fullyQualifiedDomainName}; Database=${sqlServer::database.name}; User=${sqlAdmin}'
+var connectionStringFull = '${connectionStringBase}; Password=${sqlAdminPassword}'
+var connectionStringFullKvSecretName = 'AZURE-SQL-CONNECTION-STRING'
 
 // ===============   Resources   ===============
 //  / App Service Plan
@@ -148,7 +150,7 @@ resource webApi 'Microsoft.Web/sites@2022-03-01' = {
     properties: union(appSettings,
       {
         ASPNETCORE_ENVIRONMENT: 'Development'
-        AZURE_SQL_CONNECTION_STRING_KEY: 'AZURE-SQL-CONNECTION-STRING'
+        AZURE_SQL_CONNECTION_STRING_KEY: connectionStringFullKvSecretName
       }
     )
   }
@@ -199,9 +201,9 @@ resource keyVaultSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
 }
 resource sqlAzureConnectionStringSercret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   parent: keyVault
-  name: 'AZURE-SQL-CONNECTION-STRING'
+  name: connectionStringFullKvSecretName
   properties: {
-    value: '${connectionString}; Password=${sqlAdminPassword}'
+    value: connectionStringFull
   }
 }
 
@@ -240,6 +242,7 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
     }
   }
 }
+/*
 resource sqlDeploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
   name: '${name}-deployment-script'
   location: location
@@ -293,6 +296,7 @@ SCRIPT_END
     '''
   }
 }
+*/
 
 //  / Log Analytics Workspace
 resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' = {
