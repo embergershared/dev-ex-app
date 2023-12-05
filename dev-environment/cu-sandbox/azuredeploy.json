@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "7940095540757011304"
+      "templateHash": "8904863998215499911"
     }
   },
   "parameters": {
@@ -52,10 +52,13 @@
     "webApiName": "[format('api-{0}', variables('resourceName'))]",
     "sqlServerName": "[format('sql-{0}', variables('resourceName'))]",
     "keyVaultName": "[format('kv-{0}', take(replace(variables('resourceName'), '-', ''), 21))]",
+    "lawName": "[format('law-{0}', variables('resourceName'))]",
+    "appInsightsName": "[format('appi-{0}', variables('resourceName'))]",
     "sqlAdmin": "sqladmin",
     "sqlAdminPassword": "[format('{0}Up!P1', uniqueString(variables('keyVaultName')))]",
-    "lawName": "[format('law-{0}', variables('resourceName'))]",
-    "appInsightsName": "[format('appi-{0}', variables('resourceName'))]"
+    "appUser": "appUser",
+    "appUserPassword": "[format('iT$23{0}', uniqueString(variables('sqlAdminPassword')))]",
+    "databaseName": "ContosoUniversity"
   },
   "resources": [
     {
@@ -82,7 +85,7 @@
     {
       "type": "Microsoft.Sql/servers/databases",
       "apiVersion": "2022-05-01-preview",
-      "name": "[format('{0}/{1}', variables('sqlServerName'), 'ContosoUniversity')]",
+      "name": "[format('{0}/{1}', variables('sqlServerName'), variables('databaseName'))]",
       "location": "[parameters('location')]",
       "sku": {
         "name": "GP_S_Gen5",
@@ -272,10 +275,10 @@
       "apiVersion": "2022-07-01",
       "name": "[format('{0}/{1}', variables('keyVaultName'), 'AZURE-SQL-CONNECTION-STRING')]",
       "properties": {
-        "value": "[format('{0}; Password={1}', format('Server={0}; Database={1}; User={2}', reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName')), '2022-05-01-preview').fullyQualifiedDomainName, 'ContosoUniversity', variables('sqlAdmin')), variables('sqlAdminPassword'))]"
+        "value": "[format('{0}; Password={1}', format('Server={0}; Database={1}; User={2}', reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName')), '2022-05-01-preview').fullyQualifiedDomainName, variables('databaseName'), variables('sqlAdmin')), variables('sqlAdminPassword'))]"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), 'ContosoUniversity')]",
+        "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName'))]",
         "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
         "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
       ]
@@ -293,6 +296,49 @@
         "administratorLogin": "[variables('sqlAdmin')]",
         "administratorLoginPassword": "[variables('sqlAdminPassword')]"
       }
+    },
+    {
+      "type": "Microsoft.Resources/deploymentScripts",
+      "apiVersion": "2020-10-01",
+      "name": "[format('{0}-deployment-script', parameters('name'))]",
+      "location": "[parameters('location')]",
+      "kind": "AzureCLI",
+      "properties": {
+        "azCliVersion": "2.37.0",
+        "retentionInterval": "PT1H",
+        "timeout": "PT5M",
+        "cleanupPreference": "OnSuccess",
+        "environmentVariables": [
+          {
+            "name": "APPUSERNAME",
+            "value": "[variables('appUser')]"
+          },
+          {
+            "name": "APPUSERPASSWORD",
+            "secureValue": "[variables('appUserPassword')]"
+          },
+          {
+            "name": "DBNAME",
+            "value": "[variables('databaseName')]"
+          },
+          {
+            "name": "DBSERVER",
+            "value": "[reference(resourceId('Microsoft.Sql/servers', variables('sqlServerName')), '2022-05-01-preview').fullyQualifiedDomainName]"
+          },
+          {
+            "name": "SQLCMDPASSWORD",
+            "secureValue": "[variables('sqlAdminPassword')]"
+          },
+          {
+            "name": "SQLADMIN",
+            "value": "[variables('sqlAdmin')]"
+          }
+        ],
+        "scriptContent": "wget https://github.com/microsoft/go-sqlcmd/releases/download/v0.8.1/sqlcmd-v0.8.1-linux-x64.tar.bz2\r\ntar x -f sqlcmd-v0.8.1-linux-x64.tar.bz2 -C .\r\n\r\ncat <<SCRIPT_END > ./initDb.sql\r\ndrop user ${APPUSERNAME}\r\ngo\r\ncreate user ${APPUSERNAME} with password = '${APPUSERPASSWORD}'\r\ngo\r\nalter role db_owner add member ${APPUSERNAME}\r\ngo\r\nSCRIPT_END\r\n\r\n./sqlcmd -S ${DBSERVER} -d ${DBNAME} -U ${SQLADMIN} -i ./initDb.sql\r\n    "
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+      ]
     },
     {
       "type": "Microsoft.OperationalInsights/workspaces",

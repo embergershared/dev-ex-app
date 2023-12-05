@@ -1,7 +1,11 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-// Parameters
+// Dev environment deployment:
+// Execute to update the ARM template created from this bicep file:
+// az bicep build --file main.bicep --outfile azuredeploy.json
+
+// ===============   Parameters   ===============
 @description('Name of the Web App')
 param name string = ''
 
@@ -14,7 +18,7 @@ param scmDoBuildDuringDeployment bool = false
 param appSettings object = {}
 param enableOryxBuild bool = true
 
-// Variables
+// ===============   Variables   ===============
 var resourceName = !empty(name) ? replace(name, ' ', '-') : 'a${uniqueString(resourceGroup().id)}'
 
 var hostingPlanName = 'appsvcplan-${resourceName}'
@@ -24,14 +28,17 @@ var webAppName = 'app-${resourceName}'
 var webApiName = 'api-${resourceName}'
 var sqlServerName = 'sql-${resourceName}'
 var keyVaultName = 'kv-${take(replace(resourceName, '-', ''), 21)}'
-var sqlAdmin = 'sqladmin'
-var sqlAdminPassword = '${uniqueString(keyVaultName)}Up!P1'
 var lawName = 'law-${resourceName}'
 var appInsightsName = 'appi-${resourceName}'
-// var appUser = 'appUser'
-// var appUserPassword = '${uniqueString(sqlAdminPassword)}iT$23'
+var sqlAdmin = 'sqladmin'
+var sqlAdminPassword = '${uniqueString(keyVaultName)}Up!P1'
+var appUser = 'appUser'
+var appUserPassword = 'iT$23${uniqueString(sqlAdminPassword)}'
+var databaseName = 'ContosoUniversity'
+var connectionString = 'Server=${sqlServer.properties.fullyQualifiedDomainName}; Database=${sqlServer::database.name}; User=${sqlAdmin}'
 
-// Resources
+// ===============   Resources   ===============
+//  / App Service Plan
 resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: hostingPlanName
   location: location
@@ -57,7 +64,7 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   }
   tags: tags
 }
-
+//  / App Service Web APP
 resource webApp 'Microsoft.Web/sites@2022-03-01' = {
   name: webAppName
   location: location
@@ -112,8 +119,7 @@ resource webAppFtp 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2022-
     allow: true
   }
 }
-
-
+//  / App Service Web API
 resource webApi 'Microsoft.Web/sites@2022-03-01' = {
   name: webApiName
   location: location
@@ -163,6 +169,7 @@ resource webApiFtp 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2022-
   }
 }
 
+//  / Key vault and secrets
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
   name: keyVaultName
   location: location
@@ -174,7 +181,6 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
     enableRbacAuthorization: true
   }
 }
-
 resource keyVaultSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   name: 'SqlAdminPassword'
   tags: tags
@@ -188,9 +194,6 @@ resource keyVaultSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
     value: sqlAdminPassword
   }
 }
-
-var connectionString = 'Server=${sqlServer.properties.fullyQualifiedDomainName}; Database=${sqlServer::database.name}; User=${sqlAdmin}'
-
 resource sqlAzureConnectionStringSercret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   parent: keyVault
   name: 'AZURE-SQL-CONNECTION-STRING'
@@ -199,6 +202,7 @@ resource sqlAzureConnectionStringSercret 'Microsoft.KeyVault/vaults/secrets@2022
   }
 }
 
+//  / Azure SQL Server and Database
 resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
   name: sqlServerName
   location: location
@@ -212,7 +216,7 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
   }
 
   resource database 'databases' = {
-    name: 'ContosoUniversity'
+    name: databaseName
     location: location
     sku: {
       name: 'GP_S_Gen5'
@@ -233,7 +237,61 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
     }
   }
 }
+resource sqlDeploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
+  name: '${name}-deployment-script'
+  location: location
+  kind: 'AzureCLI'
+  properties: {
+    azCliVersion: '2.37.0'
+    retentionInterval: 'PT1H' // Retain the script resource for 1 hour after it ends running
+    timeout: 'PT5M' // Five minutes
+    cleanupPreference: 'OnSuccess'
+    environmentVariables: [
+      {
+        name: 'APPUSERNAME'
+        value: appUser
+      }
+      {
+        name: 'APPUSERPASSWORD'
+        secureValue: appUserPassword
+      }
+      {
+        name: 'DBNAME'
+        value: databaseName
+      }
+      {
+        name: 'DBSERVER'
+        value: sqlServer.properties.fullyQualifiedDomainName
+      }
+      {
+        name: 'SQLCMDPASSWORD'
+        secureValue: sqlAdminPassword
+      }
+      {
+        name: 'SQLADMIN'
+        value: sqlAdmin
+      }
+    ]
 
+    scriptContent: '''
+wget https://github.com/microsoft/go-sqlcmd/releases/download/v0.8.1/sqlcmd-v0.8.1-linux-x64.tar.bz2
+tar x -f sqlcmd-v0.8.1-linux-x64.tar.bz2 -C .
+
+cat <<SCRIPT_END > ./initDb.sql
+drop user ${APPUSERNAME}
+go
+create user ${APPUSERNAME} with password = '${APPUSERPASSWORD}'
+go
+alter role db_owner add member ${APPUSERNAME}
+go
+SCRIPT_END
+
+./sqlcmd -S ${DBSERVER} -d ${DBNAME} -U ${SQLADMIN} -i ./initDb.sql
+    '''
+  }
+}
+
+//  / Log Analytics Workspace
 resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' = {
   name: lawName
   location: location
@@ -249,6 +307,7 @@ resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2021-12-01-previ
   })
 }
 
+//  / Application Insights
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   name: appInsightsName
   location: location
