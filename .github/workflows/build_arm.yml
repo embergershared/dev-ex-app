@@ -17,7 +17,8 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Build Bicep -> ARM
         run: python ./dev-environment/tools/build-arm.py
