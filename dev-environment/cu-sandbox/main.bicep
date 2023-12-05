@@ -12,13 +12,13 @@ var resourceName = !empty(name) ? replace(name, ' ', '-') : 'a${uniqueString(res
 @description('Tags to apply to environment resources')
 param tags object = {}
 
-var hostingPlanName = '${resourceName}-appsvcplan'
-var webAppName = '${resourceName}-app'
-var webApiName = '${resourceName}-api'
-var sqlServerName = '${resourceName}-sql'
-var keyVaultName = '${resourceName}-kv'
+var hostingPlanName = 'appsvcplan-${resourceName}'
+var webAppName = 'web-${resourceName}'
+var webApiName = 'api-${resourceName}'
+var sqlServerName = 'sql-${resourceName}'
+var keyVaultName = 'kv-${take(replace(resourceName, '-', ''), 21)}'
 var sqlAdmin = 'sqladmin'
-var sqlAdminPassword = '${uniqueString(keyVaultName)}UPP1!'
+var sqlAdminPassword = '${uniqueString(keyVaultName)}Up!P1'
 
 resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   name: hostingPlanName
