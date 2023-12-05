@@ -211,11 +211,13 @@ resource sqlAzureConnectionStringSecret 'Microsoft.KeyVault/vaults/secrets@2022-
   }
 }
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(keyVault.id)
+  name: 'api-msi-to-kv-role-assignment'
   scope: keyVault
   properties: {
     principalId: webApi.identity.principalId
-    roleDefinitionId: 'Key Vault Secrets User'
+    //roleDefinitionId: 'Key Vault Secrets User'
+    // Azure built-in role IDs (see: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles)
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6')
   }
 }
 

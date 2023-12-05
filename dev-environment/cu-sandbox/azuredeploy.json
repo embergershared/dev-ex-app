@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "519335402254516833"
+      "templateHash": "1828310072695200794"
     }
   },
   "parameters": {
@@ -299,10 +299,10 @@
       "type": "Microsoft.Authorization/roleAssignments",
       "apiVersion": "2022-04-01",
       "scope": "[format('Microsoft.KeyVault/vaults/{0}', variables('keyVaultName'))]",
-      "name": "[guid(resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName')))]",
+      "name": "api-msi-to-kv-role-assignment",
       "properties": {
         "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('webApiName')), '2022-03-01', 'full').identity.principalId]",
-        "roleDefinitionId": "Key Vault Secrets User"
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4633458b-17de-408a-b874-0445c86b69e6')]"
       },
       "dependsOn": [
         "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
