@@ -37,8 +37,23 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   location: location
   kind: 'linux'
   sku: {
+    name: 'B1'
     tier: 'Basic'
-    name: 'B2'
+    size: 'B1'
+    family: 'B'
+    capacity: 1
+  }
+  properties: {
+    perSiteScaling: false
+    elasticScaleEnabled: false
+    maximumElasticWorkerCount: 1
+    isSpot: false
+    reserved: true
+    isXenon: false
+    hyperV: false
+    targetWorkerCount: 0
+    targetWorkerSizeId: 0
+    zoneRedundant: false
   }
   tags: tags
 }

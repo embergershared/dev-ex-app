@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "1644401968084263892"
+      "templateHash": "7940095540757011304"
     }
   },
   "parameters": {
@@ -112,8 +112,23 @@
       "location": "[parameters('location')]",
       "kind": "linux",
       "sku": {
+        "name": "B1",
         "tier": "Basic",
-        "name": "B2"
+        "size": "B1",
+        "family": "B",
+        "capacity": 1
+      },
+      "properties": {
+        "perSiteScaling": false,
+        "elasticScaleEnabled": false,
+        "maximumElasticWorkerCount": 1,
+        "isSpot": false,
+        "reserved": true,
+        "isXenon": false,
+        "hyperV": false,
+        "targetWorkerCount": 0,
+        "targetWorkerSizeId": 0,
+        "zoneRedundant": false
       },
       "tags": "[parameters('tags')]"
     },
