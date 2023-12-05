@@ -211,7 +211,7 @@ resource sqlAzureConnectionStringSecret 'Microsoft.KeyVault/vaults/secrets@2022-
   }
 }
 resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: 'api-msi-to-kv-role-assignment'
+  name: guid(keyVault.id)
   scope: keyVault
   properties: {
     principalId: webApi.identity.principalId
