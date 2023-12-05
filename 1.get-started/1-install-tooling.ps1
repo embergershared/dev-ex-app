@@ -14,7 +14,10 @@ Function Install-ChocoPackages {
   )
 
   foreach ($package in $Packages) {
-    choco install $package -y
+    $command = "choco install $package -y"
+    Write-Host
+    Write-Host "Install-ChocoPackages => Executing: $command"
+    Invoke-Expression $command
   }
 }
 Function Uninstall-ChocoPackages {
@@ -27,25 +30,32 @@ Function Uninstall-ChocoPackages {
 
   foreach ($package in $Packages) {
     if($installed -match $package) {
-      choco uninstall $package -y
+      $command = "choco uninstall $package -y"
+      Write-Host
+      Write-Host "Uninstall-ChocoPackages => Executing: $command"
+      Invoke-Expression $command
     }
   }
 }
 
-# 3. Unistall packages that are in the image but defective after sysprep
-$uninstall_packages = @(
-  # "docker-desktop"
-  "notepadplusplus"
-)
-Uninstall-ChocoPackages -Packages $uninstall_packages
+# # 3. Unistall packages that are in the image but defective after sysprep
+# $uninstall_packages = @(
+#   # "docker-desktop"
+#   "notepadplusplus"
+# )
+# Uninstall-ChocoPackages -Packages $uninstall_packages
 
 # 4. Install packages
+
+# We start with Google chrome as it errors out if installed after other packages
+Install-ChocoPackages -Packages "googlechrome --ignore-checksums"
+
+# Then install the rest of the packages
 $install_packages = @(
   "wireshark",
   "thunderbird",
   "postman",
   "adobereader",
-  "googlechrome --ignore-checksums",
   "firefox",
   "notepadplusplus",
   "zoomit",
