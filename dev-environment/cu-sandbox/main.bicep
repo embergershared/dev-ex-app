@@ -178,7 +178,7 @@ resource webApiFtp 'Microsoft.Web/sites/basicPublishingCredentialsPolicies@2022-
   }
 }
 
-//  / Key vault and secrets
+//  / Key vault, secrets and RBAC roles assignments
 resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
   name: keyVaultName
   location: location
@@ -203,11 +203,19 @@ resource keyVaultSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
     value: sqlAdminPassword
   }
 }
-resource sqlAzureConnectionStringSercret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+resource sqlAzureConnectionStringSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   parent: keyVault
   name: connectionStringFullKvSecretName
   properties: {
     value: connectionStringFull
+  }
+}
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(keyVault.id)
+  scope: keyVault
+  properties: {
+    principalId: webApi.identity.principalId
+    roleDefinitionId: 'Key Vault Secrets User'
   }
 }
 
@@ -245,8 +253,20 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
       isLedgerOn: false
     }
   }
+
+  resource firewall 'firewallRules' = {
+    name: 'Wide_public_access'
+    properties: {
+      // Allow all clients
+      // Note: range [0.0.0.0-0.0.0.0] means "allow all Azure-hosted clients only".
+      // This is not sufficient, because we also want to allow direct access from developer machine, for debugging purposes.
+      startIpAddress: '0.0.0.1'
+      endIpAddress: '255.255.255.254'
+    }
+  }
 }
 /*
+// Commented as the script bugs with Dev center environment deployment (but not with the Github Actions workflow that deploys /infra/main.bicep)
 resource sqlDeploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
   name: '${name}-deployment-script'
   location: location

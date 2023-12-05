@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "8653887181679565530"
+      "templateHash": "519335402254516833"
     }
   },
   "parameters": {
@@ -103,6 +103,18 @@
         "requestedBackupStorageRedundancy": "Local",
         "minCapacity": "[json('0.5')]",
         "isLedgerOn": false
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Sql/servers/firewallRules",
+      "apiVersion": "2022-05-01-preview",
+      "name": "[format('{0}/{1}', variables('sqlServerName'), 'Wide_public_access')]",
+      "properties": {
+        "startIpAddress": "0.0.0.1",
+        "endIpAddress": "255.255.255.254"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
@@ -281,6 +293,20 @@
         "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), variables('databaseName'))]",
         "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
         "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "scope": "[format('Microsoft.KeyVault/vaults/{0}', variables('keyVaultName'))]",
+      "name": "[guid(resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName')))]",
+      "properties": {
+        "principalId": "[reference(resourceId('Microsoft.Web/sites', variables('webApiName')), '2022-03-01', 'full').identity.principalId]",
+        "roleDefinitionId": "Key Vault Secrets User"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
+        "[resourceId('Microsoft.Web/sites', variables('webApiName'))]"
       ]
     },
     {
