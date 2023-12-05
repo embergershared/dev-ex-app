@@ -5,3 +5,7 @@ summary: Sandbox environment for a Contoso University developer
 description: Deploys an empty sandbox environment for a Contoso University developer
 runner: ARM
 templatePath: azuredeploy.json
+parameters:
+  - id: prefix
+    name: prefix
+    type: string
