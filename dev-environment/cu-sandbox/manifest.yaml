@@ -2,13 +2,12 @@
 name: ContosoUniversity-Sandbox
 version: 1.0.0
 summary: Sandbox environment for a Contoso University developer
-description: Deploys an empty sandbox environment for a Contoso University developer
+description: Sandbox environment with the Contoso University app.
 runner: ARM
 templatePath: azuredeploy.json
 
 parameters:
   - id: name
-    name: Name
-    description: 'Name of the Web App.'
+    name: 'Base name for the resources in the RG:'
     type: string
     required: true
