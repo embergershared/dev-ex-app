@@ -34,7 +34,7 @@ permissions:
 
 jobs:
   build:
-    name: 'Build Solution'
+    name: 'Build'
     environment: dev
     runs-on:
       # We use a GH organization Self-hosted runner wired in the Private VNET
