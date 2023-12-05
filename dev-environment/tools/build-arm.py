@@ -19,6 +19,7 @@ print('Building ARM templates from bicep files...')
 for dirpath, dirnames, files in os.walk(environments_path):
     # os.walk includes the root directory (i.e. repo/Environments) so we need to skip it
     if not environments_path.samefile(dirpath) and Path(dirpath).parent.samefile(environments_path):
+        print(f'  Adding: {dirpath} to environments list')
         environments.append(Path(dirpath))
         # image_names.append(Path(dirpath).name)
 
