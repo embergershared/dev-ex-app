@@ -6,10 +6,10 @@ description: Deploys an empty sandbox environment for a Contoso University devel
 runner: ARM
 templatePath: azuredeploy.json
 parameters:
-  - id: resourceGroupLocation
-    name: Resource Group Location
-    type: string
   - id: resourceGroupName
     name: Resource Group Name
     type: string
-    allowed: [ "eastus2" ]
+  - id: resourceGroupLocation
+    name: Resource Group Location
+    type: string
+    allowed: [ "eastus2", "canadacentral" ]
