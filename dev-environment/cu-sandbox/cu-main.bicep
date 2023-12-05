@@ -46,18 +46,18 @@ var tags = { 'azd-env-name': environmentName }
 // // 'Telemetry is by default enabled. The software may collect information about you and your use of the software and send it to Microsoft. Microsoft may use this information to provide services and improve our products and services.
 // var enableTelemetry = false
 
-// Organize resources in a resource group
-resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
-  name: !empty(resourceGroupName) ? resourceGroupName : '${abbrs.resourcesResourceGroups}${environmentName}'
-  location: location
-  tags: tags
-}
+// // Organize resources in a resource group
+// resource rg 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+//   name: !empty(resourceGroupName) ? resourceGroupName : '${abbrs.resourcesResourceGroups}${environmentName}'
+//   location: location
+//   tags: tags
+// }
 
-/*
+
 // The application frontend
 module web '../../infra/app/web.bicep' = {
   name: 'web'
-  scope: rg
+  scope: resourceGroup()
   params: {
     name: !empty(webServiceName) ? webServiceName : '${abbrs.webSitesAppService}web-${resourceToken}'
     location: location
@@ -161,6 +161,7 @@ module monitoring '../../infra/core/monitor/monitoring.bicep' = {
   }
 }
 
+/*
 module loadtest '../../infra/app/loadtest.bicep' = {
   name: 'loadtest'
   scope: rg

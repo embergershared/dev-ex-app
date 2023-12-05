@@ -1,9 +1,35 @@
-targetScope='subscription'
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
-param resourceGroupName string
-param resourceGroupLocation string
+@description('Name of the Web App')
+param name string = ''
 
-resource newRG 'Microsoft.Resources/resourceGroups@2022-09-01' = {
-  name: resourceGroupName
-  location: resourceGroupLocation
+@description('Location to deploy the environment resources')
+param location string = resourceGroup().location
+
+var resourceName = !empty(name) ? replace(name, ' ', '-') : 'a${uniqueString(resourceGroup().id)}'
+
+@description('Tags to apply to environment resources')
+param tags object = {}
+
+var hostingPlanName = '${resourceName}-hp'
+var webAppName = '${resourceName}-web'
+
+resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
+  name: hostingPlanName
+  location: location
+  sku: {
+    tier: 'Standard'
+    name: 'S1'
+  }
+  tags: tags
+}
+
+resource webApp 'Microsoft.Web/sites@2022-03-01' = {
+  name: webAppName
+  location: location
+  properties: {
+    serverFarmId: hostingPlan.id
+  }
+  tags: tags
 }

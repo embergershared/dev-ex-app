@@ -5,11 +5,10 @@ summary: Sandbox environment for a Contoso University developer
 description: Deploys an empty sandbox environment for a Contoso University developer
 runner: ARM
 templatePath: azuredeploy.json
+
 parameters:
-  - id: resourceGroupName
-    name: Resource Group Name
+  - id: name
+    name: Name
+    description: 'Name of the Web App.'
     type: string
-  - id: resourceGroupLocation
-    name: Resource Group Location
-    type: string
-    allowed: [ "eastus2", "canadacentral" ]
+    required: true
