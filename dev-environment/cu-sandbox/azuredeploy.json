@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "1341553097838459826"
+      "templateHash": "8199601092000417753"
     }
   },
   "parameters": {
@@ -33,10 +33,41 @@
   },
   "variables": {
     "resourceName": "[if(not(empty(parameters('name'))), replace(parameters('name'), ' ', '-'), format('a{0}', uniqueString(resourceGroup().id)))]",
-    "hostingPlanName": "[format('{0}-hp', variables('resourceName'))]",
-    "webAppName": "[format('{0}-web', variables('resourceName'))]"
+    "hostingPlanName": "[format('{0}-appsvcplan', variables('resourceName'))]",
+    "webAppName": "[format('{0}-app', variables('resourceName'))]",
+    "webApiName": "[format('{0}-api', variables('resourceName'))]",
+    "sqlServerName": "[format('{0}-sql', variables('resourceName'))]",
+    "keyVaultName": "[format('{0}-kv', variables('resourceName'))]",
+    "sqlAdmin": "sqladmin",
+    "sqlAdminPassword": "[format('{0}UPP1!', uniqueString(variables('keyVaultName')))]"
   },
   "resources": [
+    {
+      "type": "Microsoft.Sql/servers/databases",
+      "apiVersion": "2022-05-01-preview",
+      "name": "[format('{0}/{1}', variables('sqlServerName'), 'ContosoUniversity')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "GP_S_Gen5",
+        "tier": "GeneralPurpose",
+        "family": "Gen5",
+        "capacity": 2
+      },
+      "properties": {
+        "collation": "SQL_Latin1_General_CP1_CI_AS",
+        "maxSizeBytes": 34359738368,
+        "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+        "zoneRedundant": false,
+        "readScale": "Disabled",
+        "autoPauseDelay": 60,
+        "requestedBackupStorageRedundancy": "Local",
+        "minCapacity": "[json('0.5')]",
+        "isLedgerOn": false
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sqlServerName'))]"
+      ]
+    },
     {
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2022-03-01",
@@ -60,6 +91,65 @@
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
       ]
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2022-03-01",
+      "name": "[variables('webApiName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
+      },
+      "tags": "[parameters('tags')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('hostingPlanName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2022-07-01",
+      "name": "[variables('keyVaultName')]",
+      "location": "[parameters('location')]",
+      "tags": "[parameters('tags')]",
+      "properties": {
+        "tenantId": "[subscription().tenantId]",
+        "sku": {
+          "family": "A",
+          "name": "standard"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults/secrets",
+      "apiVersion": "2022-07-01",
+      "name": "[format('{0}/{1}', variables('keyVaultName'), 'SqlAdminPassword')]",
+      "tags": "[parameters('tags')]",
+      "properties": {
+        "attributes": {
+          "enabled": true,
+          "exp": 0,
+          "nbf": 0
+        },
+        "contentType": "string",
+        "value": "[variables('sqlAdminPassword')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Sql/servers",
+      "apiVersion": "2022-05-01-preview",
+      "name": "[variables('sqlServerName')]",
+      "location": "[parameters('location')]",
+      "tags": "[parameters('tags')]",
+      "properties": {
+        "version": "12.0",
+        "minimalTlsVersion": "1.2",
+        "publicNetworkAccess": "Enabled",
+        "administratorLogin": "[variables('sqlAdmin')]",
+        "administratorLoginPassword": "[variables('sqlAdminPassword')]"
+      }
     }
   ]
 }
