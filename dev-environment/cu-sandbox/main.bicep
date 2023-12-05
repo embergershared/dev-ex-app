@@ -20,14 +20,16 @@ param enableOryxBuild bool = contains(kind, 'linux')
 var resourceName = !empty(name) ? replace(name, ' ', '-') : 'a${uniqueString(resourceGroup().id)}'
 
 var hostingPlanName = 'appsvcplan-${resourceName}'
-var webAppName = 'web-${resourceName}'
+var webAppName = 'app-${resourceName}'
 var webApiName = 'api-${resourceName}'
 var sqlServerName = 'sql-${resourceName}'
 var keyVaultName = 'kv-${take(replace(resourceName, '-', ''), 21)}'
 var sqlAdmin = 'sqladmin'
 var sqlAdminPassword = '${uniqueString(keyVaultName)}Up!P1'
-var appUser = 'appUser'
-var appUserPassword = '${uniqueString(sqlAdminPassword)}iT$23'
+// var appUser = 'appUser'
+// var appUserPassword = '${uniqueString(sqlAdminPassword)}iT$23'
+var lawName = 'law-${resourceName}'
+var appInsightsName = 'appi-${resourceName}'
 
 
 resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
@@ -108,7 +110,6 @@ resource keyVaultSecret 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
       exp: 0
       nbf: 0
     }
-    contentType: 'string'
     value: sqlAdminPassword
   }
 }
@@ -159,7 +160,7 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
 }
 
 resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2021-12-01-preview' = {
-  name: name
+  name: lawName
   location: location
   tags: tags
   properties: any({
@@ -174,7 +175,7 @@ resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2021-12-01-previ
 }
 
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
-  name: name
+  name: appInsightsName
   location: location
   tags: tags
   kind: 'web'

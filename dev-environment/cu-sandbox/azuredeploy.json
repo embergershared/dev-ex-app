@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "13643704586718141052"
+      "templateHash": "17791181211208002957"
     }
   },
   "parameters": {
@@ -50,23 +50,23 @@
   "variables": {
     "resourceName": "[if(not(empty(parameters('name'))), replace(parameters('name'), ' ', '-'), format('a{0}', uniqueString(resourceGroup().id)))]",
     "hostingPlanName": "[format('appsvcplan-{0}', variables('resourceName'))]",
-    "webAppName": "[format('web-{0}', variables('resourceName'))]",
+    "webAppName": "[format('app-{0}', variables('resourceName'))]",
     "webApiName": "[format('api-{0}', variables('resourceName'))]",
     "sqlServerName": "[format('sql-{0}', variables('resourceName'))]",
     "keyVaultName": "[format('kv-{0}', take(replace(variables('resourceName'), '-', ''), 21))]",
     "sqlAdmin": "sqladmin",
     "sqlAdminPassword": "[format('{0}Up!P1', uniqueString(variables('keyVaultName')))]",
-    "appUser": "appUser",
-    "appUserPassword": "[format('{0}iT$23', uniqueString(variables('sqlAdminPassword')))]"
+    "lawName": "[format('law-{0}', variables('resourceName'))]",
+    "appInsightsName": "[format('appi-{0}', variables('resourceName'))]"
   },
   "resources": [
     {
       "type": "Microsoft.Web/sites/config",
       "apiVersion": "2022-03-01",
       "name": "[format('{0}/{1}', variables('webAppName'), 'appsettings')]",
-      "properties": "[union(parameters('appSettings'), createObject('SCM_DO_BUILD_DURING_DEPLOYMENT', string(parameters('scmDoBuildDuringDeployment')), 'ENABLE_ORYX_BUILD', string(parameters('enableOryxBuild'))), if(not(empty(parameters('name'))), createObject('APPLICATIONINSIGHTS_CONNECTION_STRING', reference(resourceId('Microsoft.Insights/components', parameters('name')), '2020-02-02').ConnectionString), createObject()), if(not(empty(variables('keyVaultName'))), createObject('AZURE_KEY_VAULT_ENDPOINT', reference(resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName')), '2022-07-01').vaultUri), createObject()), createObject('ASPNETCORE_ENVIRONMENT', 'Development', 'URLAPI', format('https://{0}', reference(resourceId('Microsoft.Web/sites', variables('webApiName')), '2022-03-01').defaultHostName)))]",
+      "properties": "[union(parameters('appSettings'), createObject('SCM_DO_BUILD_DURING_DEPLOYMENT', string(parameters('scmDoBuildDuringDeployment')), 'ENABLE_ORYX_BUILD', string(parameters('enableOryxBuild'))), if(not(empty(variables('appInsightsName'))), createObject('APPLICATIONINSIGHTS_CONNECTION_STRING', reference(resourceId('Microsoft.Insights/components', variables('appInsightsName')), '2020-02-02').ConnectionString), createObject()), if(not(empty(variables('keyVaultName'))), createObject('AZURE_KEY_VAULT_ENDPOINT', reference(resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName')), '2022-07-01').vaultUri), createObject()), createObject('ASPNETCORE_ENVIRONMENT', 'Development', 'URLAPI', format('https://{0}', reference(resourceId('Microsoft.Web/sites', variables('webApiName')), '2022-03-01').defaultHostName)))]",
       "dependsOn": [
-        "[resourceId('Microsoft.Insights/components', parameters('name'))]",
+        "[resourceId('Microsoft.Insights/components', variables('appInsightsName'))]",
         "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
         "[resourceId('Microsoft.Web/sites', variables('webApiName'))]",
         "[resourceId('Microsoft.Web/sites', variables('webAppName'))]"
@@ -171,7 +171,6 @@
           "exp": 0,
           "nbf": 0
         },
-        "contentType": "string",
         "value": "[variables('sqlAdminPassword')]"
       },
       "dependsOn": [
@@ -208,7 +207,7 @@
     {
       "type": "Microsoft.OperationalInsights/workspaces",
       "apiVersion": "2021-12-01-preview",
-      "name": "[parameters('name')]",
+      "name": "[variables('lawName')]",
       "location": "[parameters('location')]",
       "tags": "[parameters('tags')]",
       "properties": {
@@ -224,16 +223,16 @@
     {
       "type": "Microsoft.Insights/components",
       "apiVersion": "2020-02-02",
-      "name": "[parameters('name')]",
+      "name": "[variables('appInsightsName')]",
       "location": "[parameters('location')]",
       "tags": "[parameters('tags')]",
       "kind": "web",
       "properties": {
         "Application_Type": "web",
-        "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('name'))]"
+        "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', variables('lawName'))]"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('name'))]"
+        "[resourceId('Microsoft.OperationalInsights/workspaces', variables('lawName'))]"
       ]
     }
   ]
