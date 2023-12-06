@@ -21,6 +21,9 @@ jobs:
     #   group: embergershared
     #   labels: 912772
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: Check where we are
         run: |
           echo "=============================="
