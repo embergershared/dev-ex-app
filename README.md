@@ -1,4 +1,4 @@
-# Dev Ex App Contoso University app
+# Developer Experience Day - Contoso University app
 
 ## Introduction
 
