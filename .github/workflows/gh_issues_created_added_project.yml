@@ -20,7 +20,7 @@ jobs:
     #   group: embergershared
     #   labels: 912772
     steps:
-      - name: Create "My new issue"
+      - name: Check where we are
         run: |
           echo "pwd:"
           pwd
@@ -30,3 +30,9 @@ jobs:
           gh repo set-default
           echo "Create the new issue:"
           gh issue create --title "My new issue" --body "Here are more details."
+
+      - name: Create "My new issue"
+        run: |
+          echo "Set our repo for `gh`:"
+          gh repo set-default
+  
