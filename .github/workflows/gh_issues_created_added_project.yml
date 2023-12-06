@@ -23,7 +23,7 @@ jobs:
     steps:
       # For 'gh' to work, we need to operate in a git repo
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: List issues
         run: |
