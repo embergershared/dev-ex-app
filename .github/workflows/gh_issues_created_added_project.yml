@@ -21,6 +21,7 @@ jobs:
     #   group: embergershared
     #   labels: 912772
     steps:
+      # For 'gh' to work, we need to operate in a git repo
       - name: Checkout
         uses: actions/checkout@v2
 
