@@ -34,6 +34,11 @@ jobs:
           echo "See our repos (gh repo list):"
           gh repo list
 
+      - name: List issues
+        run: |
+          echo "List issues:"
+          gh issue list
+  
       - name: Create "My new issue"
         run: |
           echo "Create the new issue:"
