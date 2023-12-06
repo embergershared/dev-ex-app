@@ -37,7 +37,7 @@ jobs:
           echo "Show edited issue:"
           gh issue view ${{ github.event.issue.number }}
           echo "Get issues already in our project"
-          $IN_PROJ_ISSUES=$(gh issue list -S "project:${{ env.GH_PROJECT }}" --json number --jq .[].number)
+          IN_PROJ_ISSUES=$(gh issue list -S "project:${{ env.GH_PROJECT }}" --json number --jq .[].number)
           if [[ $IN_PROJ_ISSUES =~ ${{ github.event.issue.number }} ]]; then
             echo "Issue is already in the project"
           else
