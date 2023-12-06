@@ -26,6 +26,7 @@ jobs:
           echo "=============================="
           echo "Show where we execute (pwd):"
           pwd
+          ls -al
           echo
           echo "=============================="
           echo "Check the login (gh auth status):"
