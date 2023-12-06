@@ -28,8 +28,6 @@ jobs:
           gh auth status
           echo "Set our repo for `gh`:"
           gh repo set-default
-          echo "Create the new issue:"
-          gh issue create --title "My new issue" --body "Here are more details."
 
       - name: Create "My new issue"
         run: |
