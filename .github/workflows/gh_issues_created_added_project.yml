@@ -12,7 +12,8 @@ on:
 
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  GH_PROJECT: embergershared/2
+  GH_PROJECT_ID: embergershared/2
+  GH_PROJECT_NAME: 'Contoso University App'
 
 jobs:
   move-assigned-card:
@@ -34,11 +35,13 @@ jobs:
   
       - name: Show edited issue
         run: |
-          echo "Get issues already in our project"
-          IN_PROJ_ISSUES=$(gh issue list -S "project:${{ env.GH_PROJECT }}" --json number --jq .[].number)
-          echo "Testing if the issue is already in our project"
+          echo "Getting the issues already in our project"
+          IN_PROJ_ISSUES=$(gh issue list -S "project:${{ env.GH_PROJECT_ID }}" --json number --jq .[].number)
+          echo "Testing if the trigering issue is already in our project"
           if [[ $IN_PROJ_ISSUES =~ ${{ github.event.issue.number }} ]]; then
-            echo "Issue is already in our project"
+            echo "Issue is already in our project: we stop here"
           else
             echo "Issue is not in our project: Adding it in column 'New'"
+            gh auth refresh -s project
+            gh issue edit ${{ github.event.issue.number }} --add-project ${{ env.GH_PROJECT_NAME }}
           fi
