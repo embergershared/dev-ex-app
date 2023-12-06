@@ -14,6 +14,7 @@ env:
 
 jobs:
   move-assigned-card:
+    name: Create an issue when an issue is closed
     runs-on: ubuntu-latest
     # runs-on:
     #   # We use a GH organization Self-hosted runner wired in the Private VNET
@@ -37,6 +38,7 @@ jobs:
       - name: List issues
         run: |
           echo "List issues:"
+          gh --version
           gh issue list
   
       - name: Create "My new issue"
