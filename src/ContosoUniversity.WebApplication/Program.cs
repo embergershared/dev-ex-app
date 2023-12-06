@@ -46,7 +46,10 @@ else
 builder.Services.AddRazorPages();
 if (builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"] != null)
 {
-    builder.Services.AddApplicationInsightsTelemetry(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]);
+    builder.Services.AddApplicationInsightsTelemetry(options =>
+    {
+        options.ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+    });
 }
 else
 {
