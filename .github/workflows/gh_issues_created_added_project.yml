@@ -22,12 +22,17 @@ jobs:
     steps:
       - name: Check where we are
         run: |
-          echo "pwd:"
+          echo "=============================="
+          echo "Show where we execute (pwd):"
           pwd
-          echo "Check the login:"
+          echo
+          echo "=============================="
+          echo "Check the login (gh auth status):"
           gh auth status
-          echo "Set our repo for `gh`:"
-          gh repo set-default
+          echo
+          echo "=============================="
+          echo "See our repos (gh repo list):"
+          gh repo list
 
       - name: Create "My new issue"
         run: |
