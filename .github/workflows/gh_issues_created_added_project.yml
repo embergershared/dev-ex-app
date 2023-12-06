@@ -1,11 +1,13 @@
 # This workflow is a test. It creates a Github issue each time an issue is closed.
 # It uses the `gh` client with a dedicated Access Token with read/write issues permissions.
 
-name: Create an issue on close
+name: Create an issue on closed issue
 on:
   issues:
     types:
       - closed
+  # We also want to be able to run this workflow manually from Github
+  workflow_dispatch:
 
 env:
   GH_TOKEN: ${{ secrets.GHA_TOKEN_ISSUE }}
@@ -20,4 +22,11 @@ jobs:
     steps:
       - name: Create "My new issue"
         run: |
+          echo "pwd:"
+          pwd
+          echo "Check the login:"
+          gh auth status
+          echo "Set our repo for `gh`:"
+          gh repo set-default
+          echo "Create the new issue:"
           gh issue create --title "My new issue" --body "Here are more details."
