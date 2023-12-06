@@ -1,11 +1,11 @@
 # This workflow is a test. It creates a Github issue each time an issue is closed.
 # It uses the `gh` client with a dedicated Access Token with read/write issues permissions.
 
-name: Create an issue on closed issue
+name: Create an issue on edited issue
 on:
   issues:
     types:
-      - closed
+      - edited
   # We also want to be able to run this workflow manually from Github
   workflow_dispatch:
 
@@ -14,7 +14,7 @@ env:
 
 jobs:
   move-assigned-card:
-    name: Create an issue when an issue is closed
+    name: Create an issue when an issue is edited
     runs-on: ubuntu-latest
     # runs-on:
     #   # We use a GH organization Self-hosted runner wired in the Private VNET
@@ -30,7 +30,7 @@ jobs:
           echo "List issues:"
           gh issue list
   
-      - name: Create "My new issue"
+      - name: Show edited issue
         run: |
-          echo "Create the new issue:"
-          gh issue create --title "My new issue" --body "Here are more details."
+          echo "Show edited issue:"
+          gh issue view ${{ github.event.issue.number }}
