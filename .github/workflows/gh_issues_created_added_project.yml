@@ -1,7 +1,7 @@
 # This workflow is a test. It creates a Github issue each time an issue is closed.
 # It uses the `gh` client with a dedicated Access Token with read/write issues permissions.
 
-name: Move assigned card
+name: Create an issue on close
 on:
   issues:
     types:
