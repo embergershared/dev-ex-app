@@ -7,11 +7,12 @@ on:
   issues:
     # opened = created, edited = title or body were edited
     types: [opened,edited]
-  # We also want to be able to run this workflow manually from Github
-  workflow_dispatch:
+  # # We also want to be able to run this workflow manually from Github
+  # workflow_dispatch:
 
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GH_PROJECT: embergershared/2
 
 jobs:
   move-assigned-card:
@@ -35,6 +36,10 @@ jobs:
         run: |
           echo "Show edited issue:"
           gh issue view ${{ github.event.issue.number }}
-          echo "Get current projects"
-          $PROJECTS=$(gh issue view ${{ github.event.issue.number }} --jq .projects)
-          echo "Current projects: $PROJECTS"
+          echo "Get issues already in our project"
+          $IN_PROJ_ISSUES=$(gh issue list -S "project:${{ env.GH_PROJECT }}" --json number --jq .[].number)
+          if [[ $IN_PROJ_ISSUES =~ ${{ github.event.issue.number }} ]]; then
+            echo "Issue is already in the project"
+          else
+            echo "Adding issue to project"
+          fi
