@@ -24,25 +24,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Check where we are
-        run: |
-          echo "=============================="
-          echo "Show where we execute (pwd):"
-          pwd
-          ls -al
-          echo
-          echo "=============================="
-          echo "Check the login (gh auth status):"
-          gh auth status
-          echo
-          echo "=============================="
-          echo "See our repos (gh repo list):"
-          gh repo list
-
       - name: List issues
         run: |
           echo "List issues:"
-          gh --version
           gh issue list
   
       - name: Create "My new issue"
