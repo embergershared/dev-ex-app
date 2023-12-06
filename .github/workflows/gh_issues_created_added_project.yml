@@ -34,12 +34,11 @@ jobs:
   
       - name: Show edited issue
         run: |
-          echo "Show edited issue:"
-          gh issue view ${{ github.event.issue.number }}
           echo "Get issues already in our project"
           IN_PROJ_ISSUES=$(gh issue list -S "project:${{ env.GH_PROJECT }}" --json number --jq .[].number)
+          echo "Testing if the issue is already in our project"
           if [[ $IN_PROJ_ISSUES =~ ${{ github.event.issue.number }} ]]; then
-            echo "Issue is already in the project"
+            echo "Issue is already in our project"
           else
-            echo "Adding issue to project"
+            echo "Issue is not in our project: Adding it in column 'New'"
           fi
