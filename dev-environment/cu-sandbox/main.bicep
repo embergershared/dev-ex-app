@@ -49,16 +49,16 @@ resource hostingPlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   location: location
   kind: 'linux'
   sku: {
-    name: 'B1'
-    tier: 'Basic'
-    size: 'B1'
-    family: 'B'
-    capacity: 1
+    name: 'P1v3'
+    tier: 'PremiumV3'
+    size: 'P1v3'
+    family: 'Pv3'
+    capacity: 2
   }
   properties: {
     perSiteScaling: false
-    elasticScaleEnabled: false
-    maximumElasticWorkerCount: 1
+    elasticScaleEnabled: true
+    maximumElasticWorkerCount: 4
     isSpot: false
     reserved: true
     isXenon: false
@@ -238,20 +238,18 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
     name: databaseName
     location: location
     sku: {
-      name: 'GP_S_Gen5'
-      tier: 'GeneralPurpose'
-      family: 'Gen5'
-      capacity: 2
+      name: 'Basic'
+      tier: 'Basic'
+      capacity: 5
     }
     properties: {
       collation: 'SQL_Latin1_General_CP1_CI_AS'
-      maxSizeBytes: 34359738368
+      maxSizeBytes: 524288000
       catalogCollation: 'SQL_Latin1_General_CP1_CI_AS'
       zoneRedundant: false
       readScale: 'Disabled'
       autoPauseDelay: 60
       requestedBackupStorageRedundancy: 'Local'
-      minCapacity: json('0.5')
       isLedgerOn: false
     }
   }
