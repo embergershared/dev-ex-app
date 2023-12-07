@@ -11,7 +11,9 @@ on:
   workflow_dispatch:
 
 env:
-  GH_MY_TOKEN: ${{ secrets.GH_MY_TOKEN }} # Personal Accee Token (classic) with scopes: gist, project, read:org, repo, workflow
+  # Manually create a Personal Access Token (classic) with scopes: gist, project, read:org, repo, workflow
+  # Store it in the Actions secrets as GH_MY_TOKEN
+  GH_MY_TOKEN: ${{ secrets.GH_MY_TOKEN }}
   # GH_PROJECT_ID: embergershared/2
   GH_PROJECT_NAME: 'Contoso University App'
 
