@@ -10,11 +10,11 @@ on:
   # # We also want to be able to run this workflow manually from Github
   # workflow_dispatch:
 
-permissions:
-  issues: write
+# permissions:
+#   issues: write
 
 env:
-  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GH_PROJECT_ID: embergershared/2
   GH_PROJECT_NAME: 'Contoso University App'
 
@@ -31,6 +31,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: gh auth
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token -s project,repo,workflow
+
       - name: List issues
         run: |
           echo "List issues:"
@@ -46,7 +50,7 @@ jobs:
           else
             echo "Issue is not in our project: Adding it!"
             # gh auth refresh -s project --hostname github.com
-            gh auth logout --hostname github.com
-            echo ${{ secrets.GITHUB_TOKEN }} | gh auth refresh -s project --with-token
+            # gh auth logout --hostname github.com
+            # echo ${{ secrets.GITHUB_TOKEN }} | gh auth refresh -s project --with-token
             gh issue edit ${{ github.event.issue.number }} --add-project '${{ env.GH_PROJECT_NAME }}'
           fi
