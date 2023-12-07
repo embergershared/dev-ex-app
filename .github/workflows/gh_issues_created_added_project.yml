@@ -19,7 +19,7 @@ env:
 
 jobs:
   move-assigned-card:
-    name: Get issue details
+    name: Process the issue
     runs-on: ubuntu-latest
     # runs-on:
     #   # We use a GH organization Self-hosted runner wired in the Private VNET
@@ -34,7 +34,7 @@ jobs:
         run: |
           echo ${{ secrets.GH_MY_TOKEN }} | gh auth login --with-token
 
-      - name: List issues
+      - name: List repo issues
         run: |
           echo "List issues:"
           gh issue list
@@ -48,11 +48,18 @@ jobs:
         run: |
           echo "Getting the project details"
           ORG=$(gh repo view --json owner --jq .owner.login)
+          echo "Organization: $ORG"
           PROJECTS_JSON=$(gh project list --owner $ORG --format 'json')
+          echo "Found projects:"
+          echo $PROJECTS_JSON | jq -C
           # PROJECT_JSON=$(echo $PROJECTS_JSON | jq '.projects[] | select(.title == "Contoso University App")')
           PROJECT_JSON=$(echo $PROJECTS_JSON | jq '.projects[] | select(.title == "${{ env.GH_PROJECT_NAME }}")')
+          echo "Found our project:"
+          echo $PROJECT_JSON | jq -C
           PROJECT_NUMBER=$(echo $PROJECT_JSON | jq '.number')
+          echo "Our project number is: $PROJECT_NUMBER"
           GH_PROJECT_ID=$ORG/$PROJECT_NUMBER
+          echo "Our project ID is: $GH_PROJECT_ID"
           gh project view $PROJECT_ID
 
       - name: Add edited issue to project
