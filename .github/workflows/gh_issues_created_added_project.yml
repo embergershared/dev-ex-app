@@ -17,13 +17,14 @@ env:
   GH_PROJECT_NAME: ${{ vars.GH_PROJECT_NAME }}
 
 jobs:
-  move-assigned-card:
+  assign_project_to_issue:
     name: Process the issue
-    runs-on: ubuntu-latest
-    # runs-on:
-    #   # We use a GH organization Self-hosted runner wired in the Private VNET
-    #   group: embergershared
-    #   labels: 912772
+    # runs-on: ubuntu-latest
+    runs-on:
+      # We use a GH organization Self-hosted runner wired in the Private VNET
+      group: embergershared
+      labels: 912772
+
     steps:
       # For 'gh' to work, we need to operate in a git repo
       - name: Checkout
@@ -33,12 +34,12 @@ jobs:
         run: |
           echo ${{ secrets.GH_MY_TOKEN }} | gh auth login --with-token
 
-      - name: List repo issues
-        run: |
-          echo "List issues:"
-          gh issue list
+      # - name: List repo issues
+      #   run: |
+      #     echo "List issues:"
+      #     gh issue list
   
-      - name: Show edited issue
+      - name: Show issue
         run: |
           echo "Getting the triggered issue details"
           gh issue view ${{ github.event.issue.number }}
@@ -49,19 +50,19 @@ jobs:
           ORG=$(gh repo view --json owner --jq .owner.login)
           echo "Organization: $ORG"
           PROJECTS_JSON=$(gh project list --owner $ORG --format 'json')
-          # echo "Found projects:"
+          # echo "Found these projects:"
           # echo $PROJECTS_JSON | jq -C
           PROJECT_JSON=$(echo $PROJECTS_JSON | jq '.projects[] | select(.title == "${{ env.GH_PROJECT_NAME }}")')
-          # echo "Found our project:"
+          # echo "Found the project:"
           # echo $PROJECT_JSON | jq -C
           PROJECT_NUMBER=$(echo $PROJECT_JSON | jq '.number')
-          # echo "Our project number is: $PROJECT_NUMBER"
+          # echo "The project number is: $PROJECT_NUMBER"
           GH_PROJECT_ID=$ORG/$PROJECT_NUMBER
-          echo "Our project ID is: $GH_PROJECT_ID"
+          echo "The project ID is: $GH_PROJECT_ID"
           # echo "Here are our project details:"
           # gh project view $PROJECT_NUMBER --owner $ORG
 
-      - name: Add edited issue to project
+      - name: Add issue to project
         run: |
           echo "Getting the issues already in the project"
           IN_PROJ_ISSUES=$(gh issue list -S "project:$GH_PROJECT_ID" --json number --jq .[].number)
