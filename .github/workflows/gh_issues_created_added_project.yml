@@ -60,7 +60,7 @@ jobs:
           echo "Our project number is: $PROJECT_NUMBER"
           GH_PROJECT_ID=$ORG/$PROJECT_NUMBER
           echo "Our project ID is: $GH_PROJECT_ID"
-          gh project view $PROJECT_ID
+          gh project view $PROJECT_ID --owner $ORG
 
       - name: Add edited issue to project
         run: |
