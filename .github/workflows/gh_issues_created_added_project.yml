@@ -15,6 +15,7 @@ on:
 
 env:
   # GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GH_MY_TOKEN: ${{ secrets.GH_MY_TOKEN }} # Personal Accee Token (classic) with scopes: gist, project, read:org, repo, workflow
   GH_PROJECT_ID: embergershared/2
   GH_PROJECT_NAME: 'Contoso University App'
 
@@ -33,7 +34,7 @@ jobs:
 
       - name: gh auth
         run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token -s project,repo,workflow
+          echo ${{ secrets.GH_MY_TOKEN }} | gh auth login --with-token
 
       - name: List issues
         run: |
