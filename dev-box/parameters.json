@@ -1,0 +1,96 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vaults_kv_use2_devex_demos_name": {
+            "value": null
+        },
+        "storageAccounts_rgstg912772_name": {
+            "value": null
+        },
+        "virtualMachines_vm_vs2022_custom_name": {
+            "value": null
+        },
+        "galleries_cg_org_alpha_useast2_01_name": {
+            "value": null
+        },
+        "publicIPAddresses_vm_custom_001_ip_name": {
+            "value": null
+        },
+        "devcenters_dc_org_alpha_eastus2_01_name": {
+            "value": null
+        },
+        "networkInterfaces_vm_custom_001863_z1_name": {
+            "value": null
+        },
+        "publicIPAddresses_vm_vs2022_custom_ip_name": {
+            "value": null
+        },
+        "projects_Contoso_University_App_Team_name": {
+            "value": null
+        },
+        "networkSecurityGroups_vm_custom_001_nsg_name": {
+            "value": null
+        },
+        "networkInterfaces_vm_vs2022_custom979_z1_name": {
+            "value": null
+        },
+        "virtualNetworks_vnet_org_alpha_useast2_01_name": {
+            "value": null
+        },
+        "networkSecurityGroups_vm_vs2022_custom_nsg_name": {
+            "value": null
+        },
+        "virtualMachines_vm_custom_vs2022_plusaddons_name": {
+            "value": null
+        },
+        "networkSecurityGroups_vm_org_alpha_team1_nsg_name": {
+            "value": null
+        },
+        "schedules_shutdown_computevm_vm_vs2022_custom_name": {
+            "value": null
+        },
+        "publicIPAddresses_vm_custom_vs2022_plusaddons_ip_name": {
+            "value": null
+        },
+        "routeTables_rt_cac_912772_s1_devexdays_alpha_team2_name": {
+            "value": null
+        },
+        "networkInterfaces_vm_custom_vs2022_plusaddons572_z1_name": {
+            "value": null
+        },
+        "networkSecurityGroups_vm_alpha_team1_custom_001_nsg_name": {
+            "value": null
+        },
+        "networkSecurityGroups_vm_vs2022_win11_custom_001_nsg_name": {
+            "value": null
+        },
+        "networkSecurityGroups_vm_custom_vs2022_plusaddons_nsg_name": {
+            "value": null
+        },
+        "networkconnections_nc_cac_912772_s1_vnet_alpha_team2_name": {
+            "value": null
+        },
+        "virtualNetworks_vnet_cac_912772_s1_devexdays_alpha_team2_name": {
+            "value": null
+        },
+        "disks_vm_custom_001_OsDisk_1_140f06ca6ee949e39d680ff465117791_name": {
+            "value": null
+        },
+        "systemTopics_rgstg912772_bcd80280_2a37_4524_a086_720d1a8fd355_name": {
+            "value": null
+        },
+        "userAssignedIdentities_uai_alphateam2_envtype_devdedicated_name": {
+            "value": null
+        },
+        "virtualMachines_vm_vs2022_win11_custom_001_externalid": {
+            "value": null
+        },
+        "virtualMachines_vm_custom_001_externalid": {
+            "value": null
+        },
+        "virtualNetworks_vnet_cac_912772_s1_hub_networking_externalid": {
+            "value": null
+        }
+    }
+}
