@@ -44,29 +44,29 @@ jobs:
           echo "Getting the triggered issue details"
           gh issue view ${{ github.event.issue.number }}
 
-      - name: Gathering project details
+      - name: Getting project details
         run: |
-          echo "Getting the project details"
+          echo "Looking for project: ${{ env.GH_PROJECT_NAME }}"
           ORG=$(gh repo view --json owner --jq .owner.login)
           echo "Organization: $ORG"
           PROJECTS_JSON=$(gh project list --owner $ORG --format 'json')
-          echo "Found projects:"
-          echo $PROJECTS_JSON | jq -C
-          # PROJECT_JSON=$(echo $PROJECTS_JSON | jq '.projects[] | select(.title == "Contoso University App")')
+          # echo "Found projects:"
+          # echo $PROJECTS_JSON | jq -C
           PROJECT_JSON=$(echo $PROJECTS_JSON | jq '.projects[] | select(.title == "${{ env.GH_PROJECT_NAME }}")')
-          echo "Found our project:"
-          echo $PROJECT_JSON | jq -C
+          # echo "Found our project:"
+          # echo $PROJECT_JSON | jq -C
           PROJECT_NUMBER=$(echo $PROJECT_JSON | jq '.number')
-          echo "Our project number is: $PROJECT_NUMBER"
+          # echo "Our project number is: $PROJECT_NUMBER"
           GH_PROJECT_ID=$ORG/$PROJECT_NUMBER
           echo "Our project ID is: $GH_PROJECT_ID"
-          gh project view $PROJECT_NUMBER --owner $ORG
+          # echo "Here are our project details:"
+          # gh project view $PROJECT_NUMBER --owner $ORG
 
       - name: Add edited issue to project
         run: |
-          echo "Getting the issues already in our project"
+          echo "Getting the issues already in the project"
           IN_PROJ_ISSUES=$(gh issue list -S "project:$GH_PROJECT_ID" --json number --jq .[].number)
-          echo "Testing if the trigering issue is already in our project"
+          echo "Testing if the trigerring issue is already in our project"
           if [[ $IN_PROJ_ISSUES =~ ${{ github.event.issue.number }} ]]; then
             echo "Issue is already in our project: we stop here"
           else
