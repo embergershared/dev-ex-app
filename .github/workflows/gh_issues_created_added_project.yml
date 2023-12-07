@@ -46,7 +46,7 @@ jobs:
           else
             echo "Issue is not in our project: Adding it!"
             # gh auth refresh -s project --hostname github.com
-            gh logout
+            gh auth logout
             echo ${{ secrets.GITHUB_TOKEN }} | gh auth refresh -s project --with-token
             gh issue edit ${{ github.event.issue.number }} --add-project '${{ env.GH_PROJECT_NAME }}'
           fi
