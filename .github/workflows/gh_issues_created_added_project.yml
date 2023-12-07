@@ -39,8 +39,8 @@ jobs:
   
       - name: Show edited issue
         run: |
-          echo "Getting the triggered issue deatils"
-          gh issue view ${{ env.GH_PROJECT_ID }}
+          echo "Getting the triggered issue details"
+          gh issue view ${{ github.event.issue.number }}
 
       - name: Gathering project details
         run: |
