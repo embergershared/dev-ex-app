@@ -12,7 +12,6 @@ on:
 
 permissions:
   issues: write
-  repository_projects: write
 
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,6 +45,6 @@ jobs:
             echo "Issue is already in our project: we stop here"
           else
             echo "Issue is not in our project: Adding it!"
-            # gh auth refresh -s project
+            gh auth refresh -s project --hostname github.com
             gh issue edit ${{ github.event.issue.number }} --add-project '${{ env.GH_PROJECT_NAME }}'
           fi
