@@ -155,13 +155,13 @@ jobs:
           client-id: ${{ vars.AZURE_GHA_CLIENT_ID }}
     
       - name: Deploy API
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZ_API_NAME }}
           package: api-artifact
       
       - name: Deploy APP
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZ_APP_NAME }}
           package: app-artifact
