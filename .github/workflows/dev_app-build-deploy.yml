@@ -26,50 +26,52 @@ jobs:
       labels: 912772
   
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    
-    - name: Setup .NET Core SDK
-      uses: actions/setup-dotnet@v2
-      with:
-        dotnet-version: '6.0.x'
-    
-    - name: Restore solution
-      run: dotnet restore src/ContosoUniversity.sln
-    
-    - name: Build solution
-      run: dotnet build src/ContosoUniversity.sln --configuration ${{ env.CONFIGURATION }} --no-restore
-    
-    - name: Test solution
-      run: dotnet test src/ContosoUniversity.Test/ContosoUniversity.Test.csproj --verbosity normal --logger trx --results-directory TestResults
+      - name: Checkout repository
+        uses: actions/checkout@v3
       
-    - name: Publish APP
-      run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApp src/ContosoUniversity.WebApplication/ContosoUniversity.WebApplication.csproj
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.x'
+      
+      - name: Restore solution
+        run: dotnet restore src/ContosoUniversity.sln
+      
+      - name: Build solution
+        run: dotnet build src/ContosoUniversity.sln --configuration ${{ env.CONFIGURATION }} --no-restore
+      
+      - name: Test solution
+        run: dotnet test src/ContosoUniversity.Test/ContosoUniversity.Test.csproj --verbosity normal --logger trx --results-directory TestResults
+        
+      - name: Publish APP
+        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApp src/ContosoUniversity.WebApplication/ContosoUniversity.WebApplication.csproj
 
-    - name: Publish API
-      run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApi src/ContosoUniversity.API/ContosoUniversity.API.csproj
+      # Publish API code in PublishApi/ folder
+      - name: Publish API
+        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApi src/ContosoUniversity.API/ContosoUniversity.API.csproj
 
-    - name: Display folders content
-      run: |
-        echo "Content of PublishApp/"
-        ls -l PublishApp/
-        echo
-        echo "============================================="
-        echo "Content of PublishApi/"
-        ls -l PublishApi/
-        echo
+      - name: Display folders content
+        run: |
+          echo "Content of PublishApp/"
+          ls -l PublishApp/
+          echo
+          echo "============================================="
+          echo "Content of PublishApi/"
+          ls -l PublishApi/
+          echo
 
-    - name: Upload APP artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: app
-        path: PublishApp
-    
-    - name: Upload API artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: api
-        path: PublishApi
+      # Uploads the PublishApp/ and PublishApi/ folders as (Zip) artifacts
+      - name: Upload APP artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: app
+          path: PublishApp
+      
+      - name: Upload API artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: api
+          path: PublishApi
   
   deploy-api:
     needs: build
@@ -81,15 +83,16 @@ jobs:
       labels: 912772
 
     steps:
+      # Downloads the artifact ZIP and extracts it to the api-artifact/ folder
       - name: Download API artifacts
         uses: actions/download-artifact@v3
         with:
           name: api
           path: api-artifact
 
-      - name: Display api-artifact content
+      - name: Display api-artifact/ content
         run: |
-          echo "Content of PublishApi/"
+          echo "Content of api-artifact/"
           ls -l api-artifact/
           echo
     
@@ -109,10 +112,11 @@ jobs:
           client-id: ${{ vars.AZURE_GHA_CLIENT_ID }}
     
       - name: Deploy API
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZ_API_NAME }}
           package: api-artifact
+          type: ZIP
 
   deploy-app:
     needs: build
