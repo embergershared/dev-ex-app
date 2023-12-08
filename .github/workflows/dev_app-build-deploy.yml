@@ -132,8 +132,8 @@ jobs:
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
           client-id: ${{ vars.AZURE_GHA_CLIENT_ID }}
 
-      - name: Deploy APP
-        uses: azure/webapps-deploy@v2
+      - name: Deploy@v3 APP
+        uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ env.AZ_APP_NAME }}
           package: app-artifact
