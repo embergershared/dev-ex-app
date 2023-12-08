@@ -1,22 +1,6 @@
 name: 'DEV - Solution - Deploy'
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'src/**'
-  
-    # paths-ignore:
-    #   - 'infra/**'
-    #   - '**/*azure-infra.yml'
-    #   - '**/README.md'
-  # pull_request:
-  #   branches: 
-  #     - main
-  #   paths-ignore:
-  #     - 'infra/**'
-
   # We also want to be able to run this workflow manually from Github
   workflow_dispatch:
   
@@ -64,7 +48,17 @@ jobs:
 
     - name: Publish API
       run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApi src/ContosoUniversity.API/ContosoUniversity.API.csproj
-    
+
+    - name: Display folders content
+      run: |
+          echo "Content of PublishApp/"
+          ls -l PublishApp/
+          echo
+          echo "============================================="
+          echo "Content of PublishApi/"
+          ls -l PublishApi/
+          echo
+
     - name: Upload APP artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -87,18 +81,18 @@ jobs:
       labels: 912772
 
     steps:
-      # - name: Download APP artifacts
-      #   uses: actions/download-artifact@v3
-      #   with:
-      #     name: app
-      #     path: app-artifact
-      
       - name: Download API artifacts
         uses: actions/download-artifact@v3
         with:
           name: api
           path: api-artifact
-      
+
+      - name: Display api-artifact content
+        run: |
+              echo "Content of PublishApi/"
+              ls -l api-artifact/
+              echo
+    
       - name: Substitutions API
         uses: microsoft/variable-substitution@v1
         with:
@@ -106,14 +100,6 @@ jobs:
         env:
           ConnectionStrings.ContosoUniversityAPIContext: ${{ secrets.AZURE_CONTOSO_CONN_STRING }}
           ApplicationInsights.ConnectionString: ${{ secrets.AZURE_CONTOSO_APP_INSIGHTS }}
-      
-      # - name: Substitutions APP
-      #   uses: microsoft/variable-substitution@v1
-      #   with:
-      #     files: app-artifact/appsettings.json
-      #   env:
-      #     Api.Address: https://${{ env.AZ_API_NAME }}.azurewebsites.net/
-      #     ApplicationInsights.ConnectionString: ${{ secrets.AZURE_CONTOSO_APP_INSIGHTS }}
       
       - name: Azure Login with OIDC
         uses: Azure/login@v1
@@ -127,12 +113,6 @@ jobs:
         with:
           app-name: ${{ env.AZ_API_NAME }}
           package: api-artifact
-      
-      # - name: Deploy APP
-      #   uses: azure/webapps-deploy@v2
-      #   with:
-      #     app-name: ${{ env.AZ_APP_NAME }}
-      #     package: app-artifact
 
   deploy-app:
     needs: build
@@ -150,20 +130,6 @@ jobs:
           name: app
           path: app-artifact
       
-      # - name: Download API artifacts
-      #   uses: actions/download-artifact@v3
-      #   with:
-      #     name: api
-      #     path: api-artifact
-      
-      # - name: Substitutions API
-      #   uses: microsoft/variable-substitution@v1
-      #   with:
-      #     files: api-artifact/appsettings.json
-      #   env:
-      #     ConnectionStrings.ContosoUniversityAPIContext: ${{ secrets.AZURE_CONTOSO_CONN_STRING }}
-      #     ApplicationInsights.ConnectionString: ${{ secrets.AZURE_CONTOSO_APP_INSIGHTS }}
-      
       - name: Substitutions APP
         uses: microsoft/variable-substitution@v1
         with:
@@ -178,13 +144,7 @@ jobs:
           tenant-id: ${{ vars.AZURE_TENANT_ID }}
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
           client-id: ${{ vars.AZURE_GHA_CLIENT_ID }}
-    
-      # - name: Deploy API
-      #   uses: azure/webapps-deploy@v2
-      #   with:
-      #     app-name: ${{ env.AZ_API_NAME }}
-      #     package: api-artifact
-      
+
       - name: Deploy APP
         uses: azure/webapps-deploy@v2
         with:
