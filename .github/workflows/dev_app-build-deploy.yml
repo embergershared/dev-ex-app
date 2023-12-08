@@ -116,7 +116,8 @@ jobs:
         with:
           app-name: ${{ env.AZ_API_NAME }}
           package: api-artifact
-          type: ZIP
+          type: static
+          target-path: '/home/site/wwwroot'
 
   deploy-app:
     needs: build
