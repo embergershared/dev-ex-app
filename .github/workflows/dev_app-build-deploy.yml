@@ -50,16 +50,6 @@ jobs:
       - name: Publish API
         run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApi src/ContosoUniversity.API/ContosoUniversity.API.csproj
 
-      - name: Display folders content
-        run: |
-          echo "Content of PublishApp/"
-          ls -l PublishApp/
-          echo
-          echo "============================================="
-          echo "Content of PublishApi/"
-          ls -l PublishApi/
-          echo
-
       # Uploads the PublishApp/ and PublishApi/ folders as (Zip) artifacts
       - name: Upload APP artifacts
         uses: actions/upload-artifact@v3
@@ -89,12 +79,6 @@ jobs:
         with:
           name: api
           path: api-artifact
-
-      - name: Display api-artifact/ content
-        run: |
-          echo "Content of api-artifact/"
-          ls -l api-artifact/
-          echo
     
       - name: Substitutions API
         uses: microsoft/variable-substitution@v1
@@ -112,12 +96,10 @@ jobs:
           client-id: ${{ vars.AZURE_GHA_CLIENT_ID }}
     
       - name: Deploy API v3
-        uses: azure/webapps-deploy@v3
+        uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZ_API_NAME }}
           package: api-artifact
-          type: static
-          target-path: '/home/site/wwwroot'
 
   deploy-app:
     needs: build
