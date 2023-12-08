@@ -51,13 +51,13 @@ jobs:
 
     - name: Display folders content
       run: |
-          echo "Content of PublishApp/"
-          ls -l PublishApp/
-          echo
-          echo "============================================="
-          echo "Content of PublishApi/"
-          ls -l PublishApi/
-          echo
+        echo "Content of PublishApp/"
+        ls -l PublishApp/
+        echo
+        echo "============================================="
+        echo "Content of PublishApi/"
+        ls -l PublishApi/
+        echo
 
     - name: Upload APP artifacts
       uses: actions/upload-artifact@v3
@@ -89,9 +89,9 @@ jobs:
 
       - name: Display api-artifact content
         run: |
-              echo "Content of PublishApi/"
-              ls -l api-artifact/
-              echo
+          echo "Content of PublishApi/"
+          ls -l api-artifact/
+          echo
     
       - name: Substitutions API
         uses: microsoft/variable-substitution@v1
