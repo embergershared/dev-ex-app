@@ -83,19 +83,19 @@ jobs:
         dotnet-version: '6.0.x'
     
     - name: Restore
-      run: dotnet restore src/ContosoUniversity.sln
+      run: dotnet restore app-src/ContosoUniversity.sln
     
     - name: Build
-      run: dotnet build src/ContosoUniversity.sln --configuration ${{ env.CONFIGURATION }} --no-restore
+      run: dotnet build app-src/ContosoUniversity.sln --configuration ${{ env.CONFIGURATION }} --no-restore
     
     - name: Test
-      run: dotnet test src/ContosoUniversity.Test/ContosoUniversity.Test.csproj --verbosity normal --logger trx --results-directory TestResults
+      run: dotnet test app-src/ContosoUniversity.Test/ContosoUniversity.Test.csproj --verbosity normal --logger trx --results-directory TestResults
       
     - name: Publish APP
-      run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApp src/ContosoUniversity.WebApplication/ContosoUniversity.WebApplication.csproj
+      run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApp app-src/ContosoUniversity.WebApplication/ContosoUniversity.WebApplication.csproj
 
     - name: Publish API
-      run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApi src/ContosoUniversity.API/ContosoUniversity.API.csproj
+      run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApi app-src/ContosoUniversity.API/ContosoUniversity.API.csproj
     
     - name: Upload APP results
       uses: actions/upload-artifact@v3

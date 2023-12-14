@@ -35,20 +35,20 @@ jobs:
           dotnet-version: '6.0.x'
       
       - name: Restore solution
-        run: dotnet restore src/ContosoUniversity.sln
+        run: dotnet restore app-src/ContosoUniversity.sln
       
       - name: Build solution
-        run: dotnet build src/ContosoUniversity.sln --configuration ${{ env.CONFIGURATION }} --no-restore
+        run: dotnet build app-src/ContosoUniversity.sln --configuration ${{ env.CONFIGURATION }} --no-restore
       
       - name: Test solution
-        run: dotnet test src/ContosoUniversity.Test/ContosoUniversity.Test.csproj --verbosity normal --logger trx --results-directory TestResults
+        run: dotnet test app-src/ContosoUniversity.Test/ContosoUniversity.Test.csproj --verbosity normal --logger trx --results-directory TestResults
         
       - name: Publish APP
-        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApp src/ContosoUniversity.WebApplication/ContosoUniversity.WebApplication.csproj
+        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApp app-src/ContosoUniversity.WebApplication/ContosoUniversity.WebApplication.csproj
 
       # Publish API code in PublishApi/ folder
       - name: Publish API
-        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApi src/ContosoUniversity.API/ContosoUniversity.API.csproj
+        run: dotnet publish --configuration ${{ env.CONFIGURATION }} --output PublishApi app-src/ContosoUniversity.API/ContosoUniversity.API.csproj
 
       # Uploads the PublishApp/ and PublishApi/ folders as (Zip) artifacts
       - name: Upload APP artifacts

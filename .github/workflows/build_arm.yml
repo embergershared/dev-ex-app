@@ -5,7 +5,7 @@ on:
   #   branches: [main]
   #   paths:
   #     # only run if bicep files changed
-  #     - 'dev-environment/cu-sandbox/main.bicep'
+  #     - 'devcenter-devenvironment/cu-sandbox/main.bicep'
   # We also want to be able to run this workflow manually from Github
   workflow_dispatch:
 
@@ -24,16 +24,16 @@ jobs:
         uses: actions/checkout@v3
 
       # - name: Build Bicep -> ARM
-      #   run: python ./dev-environment/tools/build-arm.py
+      #   run: python ./devcenter-devenvironment/tools/build-arm.py
 
       - name: Build Bicep => ARM
         run: |
-          az bicep build --file dev-environment/cu-sandbox/main.bicep --outfile dev-environment/cu-sandbox/azuredeploy.json
+          az bicep build --file devcenter-devenvironment/cu-sandbox/main.bicep --outfile devcenter-devenvironment/cu-sandbox/azuredeploy.json
 
       - name: Commit changes
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git add dev-environment/cu-sandbox/azuredeploy.json
+          git add devcenter-devenvironment/cu-sandbox/azuredeploy.json
           git commit -am "Rebuilt cu-sandbox ARM template"
           git push

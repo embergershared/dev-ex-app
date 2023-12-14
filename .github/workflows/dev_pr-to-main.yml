@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - 'src/**'
-      - 'infra/**'
+      - 'app-src/**'
+      - 'app-infra-bicep/**'
 
   # We also want to be able to run this workflow manually from Github
   workflow_dispatch:
@@ -43,13 +43,13 @@ jobs:
         dotnet-version: '6.0.x'
     
     - name: Restore
-      run: dotnet restore src/ContosoUniversity.sln
+      run: dotnet restore app-src/ContosoUniversity.sln
     
     - name: Build
-      run: dotnet build src/ContosoUniversity.sln --configuration ${{ env.CONFIGURATION }} --no-restore
+      run: dotnet build app-src/ContosoUniversity.sln --configuration ${{ env.CONFIGURATION }} --no-restore
     
     - name: Test
-      run: dotnet test src/ContosoUniversity.Test/ContosoUniversity.Test.csproj --verbosity normal --logger trx --results-directory TestResults
+      run: dotnet test app-src/ContosoUniversity.Test/ContosoUniversity.Test.csproj --verbosity normal --logger trx --results-directory TestResults
 
   infra:
     name: 'Validate Bicep template'
@@ -72,13 +72,13 @@ jobs:
         subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
         client-id: ${{ vars.AZURE_GHA_CLIENT_ID }}
 
-    - name: Validate infra/main.bicep
+    - name: Validate app-infra-bicep/main.bicep
       uses: Azure/arm-deploy@v1
       with:
         scope: subscription
         subscriptionId: ${{ vars.AZURE_SUBSCRIPTION_ID }}
         region: ${{ env.AZ_LOCATION }}
-        template: infra/main.bicep
+        template: app-infra-bicep/main.bicep
         deploymentMode: Validate
         deploymentName: 'gh-actions'
         parameters: environmentName=${{ env.AZ_ENVIRONMENT_NAME }} location=${{ env.AZ_LOCATION }} resourceGroupName="rg-use2-912772-s1-${{ env.AZ_ENVIRONMENT_NAME }}-01" sqlAdminPassword=${{ env.AZ_SQL_SERVER_PASSWORD }} appUserPassword=${{ env.AZ_APP_PASSWORD }} sqlDatabaseName="ContosoUniversity" apiServiceName=${{ env.AZ_API_NAME }} webServiceName=${{ env.AZ_APP_NAME }} isDev="true"
